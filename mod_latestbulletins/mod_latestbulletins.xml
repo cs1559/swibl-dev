@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" method="upgrade" type="module" client="site">
+	<name>Latest Team Bulletins</name> 
+	<author>Chris Strieter</author> 
+	<creationDate>01/01/2014</creationDate>
+	<copyright>Firestorm Technologies, LLC</copyright>
+	<license>This extension in released under the GNU/GPL License - http://www.gnu.org/copyleft/gpl.html</license> 
+	<authorEmail>support@firestorm-technologies.com</authorEmail>
+	<authorUrl>www.swibl-baseball.org</authorUrl>
+	<version>1.0</version>
+	<description>
+	<![CDATA[
+	<h1>JLeague - Latest Team Bulletins Module</h1>
+	<p>
+	This module generates a list of bulletins that have been entered by the teams
+	</p>
+		]]>
+	</description>
+	
+	<files>
+		<filename module="mod_latestbulletins">mod_latestbulletins.php</filename>
+		<folder>tmpl</folder>
+		<folder>css</folder>
+		<file>index.html</file>
+	</files>
+	
+	<config>
+		<fields name="params">
+			<fieldset name="options" label="Display Options">
+				<field name="days" type="text" default="90" label="Days to include" description="Defines the days back that should be included in the display" />
+				<field name="itemsToDisplay" type="text" default="10" label="No. of Items ot Display" description="Defines the number of items to display" />
+			</fieldset>
+			
+			<fieldset
+				name="advanced">
+				<field
+					name="moduleclass_sfx"
+					type="textarea" rows="3"
+					label="Module Suffix"
+					description="Module Suffix" />	
+			</fieldset>
+		</fields>
+	</config>
+	
+</extension>
+	
