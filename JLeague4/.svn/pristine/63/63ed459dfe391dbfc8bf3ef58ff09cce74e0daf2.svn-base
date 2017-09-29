@@ -1,0 +1,66 @@
+select, .uneditable-input {
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+    color: #555555;
+    display: inline-block;
+/*    font-size: 28px; */
+/*    height: 28px !important; */
+    margin-bottom: 9px !important;
+    padding: 4px;
+    width: 210px;
+}
+
+.modal-body {
+	padding-top: 10px !important;
+	padding-bottom: 10px !important;
+}
+.modal-footer {
+	margin-top: 1px !important;
+	padding-top: 10px !important;
+	padding-bottom: 10px !important;
+}
+legend {
+	padding-bottom: 10px !important;	
+}
+
+input {
+font-size: 12px !important;
+}
+
+.input-lg, .input-xsm, .input-sm, .input-med {
+    border-radius: 3px 3px 3px 3px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    padding-left: 10px !important;
+}
+
+.input-xsm {
+	width: 100px !important;
+}
+.input-sm {
+	width: 150px !important;
+}
+.input-med {
+	width: 225px !important;
+}
+.input-lg {
+	width: 300px !important;
+}
+.input-xlg {
+	width: 350px !important;
+}
+
+.alert-heading h4 {
+	margin-bottom: 0px !important;
+}
+
+#s5_component_wrap {
+	padding-top: 0px;
+}
+
+.table-condensed > thead > tr > th, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > tbody > tr > td, .table-condensed > tfoot > tr > td {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}

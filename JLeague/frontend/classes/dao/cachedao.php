@@ -1,0 +1,89 @@
+<?php
+/**
+ * @version 		$Id: cachedao.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 		JLeague
+ * @subpackage 		Data Access Objects
+ * @copyright 		(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license			GNU/GPL, see LICENSE.php
+ */
+
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die( 'Restricted access' );
+
+class JLCacheDAO extends fsBaseDAO{
+	
+	var $tablename = '#__jleague_cache';
+	
+	
+	protected function __construct() {
+		parent::__construct();
+		$db = mFactory::getDBO();
+		$this->setDatabase($db);
+	}
+	
+	function &getInstance() {
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new JLCacheDAO();
+		}
+		return $instance;
+
+	}	
+		
+	/**
+	 * 
+	 * This function will insert a new row into the cache table.
+	 *
+	 * @param $key (Cache key)
+	 * @param $value (value of the cache entry)
+	 * @return boolean
+	 */
+	function insert($key,$value,$expiry = 5) {
+		$query = "INSERT INTO " .$this->getNameQuote( $this->tablename  ) . " (cache_key, asof, expiry, cache_value) VALUES ("
+			. "'" . $key . "',now(),date_add(now(), interval " . $expiry . " minute )," 
+			. "'" . $value . "')";
+		return $this->_insertRow($query);			
+	}
+
+	function findById($key) {
+	}
+
+	/**
+	 * This function will query the cache table to retrieve the appropriate cache entry
+	 *
+	 * @param string $key
+	 * @return array
+	 */
+	function get($key) {
+		$query	= "SELECT cache_key, asof, cache_value FROM " .$this->getNameQuote( $this->tablename  ) . " where cache_key = '" . $key . "' and expiry > now()"	;
+		try {
+			$row = self::_execute($query);
+		} catch (Exception $e) {
+			throw $e;
+		}
+		if (sizeof($row)>0) {
+			$_row = $row[0];
+			return $_row;
+		}
+		return false;
+	}
+
+	function deleteExpired() {
+		$query	= "delete from #__jleague_cache where expiry < now()";
+		try {
+			self::_deleteRow($query);
+		} catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	function deleteByKey($key) {
+		$query	= "delete from #__jleague_cache where cache_key like '" . $key . "%'";
+		try {
+			self::_deleteRow($query);
+		} catch (Exception $e) {
+			throw $e;
+		}
+		
+	}
+}

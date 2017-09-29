@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * @version		$Id: baseview.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	FST Framework
+ * @subpackage	Core
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license		GNU/GPL
+ */
+// Disallow direct access to this file
+defined('_FSTLIB') or die('Restricted access');
+
+// include_once('exception.php');
+
+/**
+ * The fsView is the foundation view that all views extend from.
+ *
+ */
+class fsResponse {
+	
+	protected static $_body = null;
+	protected static $_headers = array();
+	
+	function __construct() {
+		/*
+		$rc = new ReflectionClass($this);
+		$methods = $rc->getMethods(ReflectionMethod::IS_PUBLIC);
+		foreach ($methods as $method) {
+			$this->_tasks[] = $method->getName();
+		}
+		*/
+	}
+	
+	static function getInstance() {
+		return new fsResponse();
+	}
+	
+	function getBody() {
+		return self::$_body;
+	}
+	function setBody($content) {
+		self::$_body = $content;	
+	}
+	
+	public function allowCache() {
+		return true;
+	}
+	
+	public static function getHeaders()
+	{
+		return self::$_headers;
+	}
+	
+	public static function setHeader($name, $value, $replace = false)
+	{
+		$name = (string) $name;
+		$value = (string) $value;
+	
+		if ($replace)
+		{
+			foreach (self::$_headers as $key => $header)
+			{
+				if ($name == $header['name'])
+				{
+					unset(self::$_headers[$key]);
+				}
+			}
+		}
+	
+		self::$_headers[] = array('name' => $name, 'value' => $value);
+	}
+	
+	public static function sendHeaders()
+	{
+		if (!headers_sent())
+		{
+			foreach (self::$_headers as $header)
+			{
+				if ('status' == strtolower($header['name']))
+				{
+					// 'status' headers indicate an HTTP status, and need to be handled slightly differently
+					header(ucfirst(strtolower($header['name'])) . ': ' . $header['value'], null, (int) $header['value']);
+				}
+				else
+				{
+					header($header['name'] . ': ' . $header['value'], false);
+				}
+			}
+		}
+	}
+	
+	public static function toString($compress=false) {
+		$data = self::getBody();
+		if (self::allowCache() === false)
+		{
+			self::setHeader('Cache-Control', 'no-cache', false);
+		
+			// HTTP 1.0
+			self::setHeader('Pragma', 'no-cache');
+		}
+		
+		self::sendHeaders();
+
+		return (string) $data;
+	}
+	
+	public function __toString() {
+		// return only the body if this is running within Joomla
+		if (!FS_JOOMLA) {
+			return self::toString();
+		} else {
+			return self::getBody();
+		}
+	}
+	
+
+
+}
+?>

@@ -1,0 +1,302 @@
+
+CREATE TABLE IF NOT EXISTS `joom_jleague_bulletins` (
+  `id` int(11) NOT NULL auto_increment,
+  `teamid` int(11) NOT NULL,
+  `type` int not null,
+  `bulletin_title` varchar(60) not null,
+  `bulletin_desc` text,
+  `contactname` varchar(30) not null,
+  `contactemail` varchar(100),
+  `contactphone` varchar(12),
+  `published` tinyint,
+  `date_inserted` timestamp,
+  `properties` text,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+
+
+
+
+drop table `#__jleague_sponsor`;
+drop table `#__jleague_campaign`;
+CREATE TABLE IF NOT EXISTS `jos_jleague_sponsor` (
+  `id` int(11) NOT NULL auto_increment,
+  `sponsorname` varchar(30) NOT NULL,
+  `contactname` varchar(30) not null,
+  `contactemail` varchar(100),
+  `contactphone` varchar(12),
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `jos_jleague_campaign` (
+  `id` int(11) NOT NULL auto_increment,
+  `sponsor_id` int(11) NOT NULL,
+  `campaign_name` varchar(30) not null,
+  `notes` text,
+  `startdate` date,
+  `enddate` date,  
+  `clickthru` varchar(250),
+  `clicks` int,
+  `published` tinyint,  
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+
+
+CREATE TABLE IF NOT EXISTS `jos_jleague_team_stats` (
+  `id` int(11) NOT NULL auto_increment,
+  `teamid` int(11) NOT NULL,
+  `teamname` varchar(30) not null,
+  `season` int(11) NOT NULL,
+  `division_name` varchar(30) NOT NULL,
+  `wins` int(11),
+  `losses` int(11),
+  `ties` int(11),
+  `runs_scored` int(11),
+  `runs_allowed` int(11),    
+  `w_avgrundiff` float,
+  `l_avgrundiff` float,
+  `rpi` float,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM;
+
+
+
+CREATE TABLE IF NOT EXISTS `jos_jleague_rpi` (
+  `id` int(11) NOT NULL,
+  `rpi` float default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM;
+
+
+ALTER TABLE `jos_jleague_scores` 
+	ADD `enteredby` VARCHAR( 30 ) NULL COMMENT 'User who entered the score',
+	ADD `updatedby` VARCHAR( 30 ) NULL COMMENT 'User who last updated the score',
+	ADD `dateupdated` TIMESTAMP NULL COMMENT 'date record was last updated';
+
+
+CREATE TABLE IF NOT EXISTS `#__jleague_cache` (
+  `cache_key` varchar(60) NOT NULL,
+  `asof` timestamp,
+  `expiry` timestamp, 
+  `cache_value` longtext,
+  PRIMARY KEY  (`key`)
+)  ENGINE=MyISAM;
+
+
+CREATE TABLE IF NOT EXISTS `#__jleague_userprefs` (
+  `id` int(11) NOT NULL,
+  `uname` varchar(60) NOT NULL,
+  `properties` text,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+
+CREATE TABLE IF NOT EXISTS `#__jleague_contacts` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(60) NOT NULL,
+  `email` varchar(30),
+  `phone` varchar(10),
+  `cellphone` varchar(10),
+  `properties` text,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `#__jleague_roster` (
+  `id` int(11) NOT NULL auto_increment,
+  `season` int(11) not null,
+  `teamid` int(11) not null,
+  `datecreated` date, 
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `#__jleague_players` (
+  `id` int(11) NOT NULL auto_increment,
+  `firstname` varchar(20) NOT NULL,
+  `lastname` varchar(35) NOT NULL,
+  `date_of_birth` date,
+  `city` varchar(20),  
+  `state` varchar(2),  
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `#__jleague_rosterplayers` (
+  `id` int(11) NOT NULL auto_increment,
+  `rosterid` int(11) NOT NULL,
+  `playerid` int(11) not null,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+
+CREATE TABLE IF NOT EXISTS `#__jleague_fields` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(40) NOT NULL,
+  `keycode` varchar(30),
+  `type` int(3) not NULL,
+  `properties` text,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `#__jleague_fields_values` (
+  `id` int(11) NOT NULL auto_increment,
+  `teamid` int(11) not null,
+  `fieldid` int(11) not null,
+  `value` text,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `#__jleague_sponsor` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` int(11) not null,
+  `address1` varchar(30),
+  `address2` varchar(30),
+  `city` varchar(20),  
+  `state` varchar(2),
+  `zipcode` varchar(10),  
+  `phone` varchar(10),  
+  `email` text,
+  `website` text,    
+  `contactname` varchar(30),  
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `#__jleague_bulletin_types` (
+ `id` int(11) NOT NULL auto_increment,
+ `description` varchar(30),
+ `priority` int(11) NOT NULL auto_increment,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+
+CREATE TABLE IF NOT EXISTS `#__jleague_bulletins` (
+  `id` int(11) NOT NULL auto_increment,
+  `type` int(11) not null,
+  `title` varchar(60),
+  `message` text,
+  `post_date` date,
+  `post_by` int(11),
+  `properties` text,
+  `published` tinyint,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+
+CREATE TABLE IF NOT EXISTS `#__jleague_team_venues` (
+  `id` int(11) NOT NULL auto_increment,
+  `teamid` int(11) not null,
+  `venueid` int(11) not null,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `#__jleague_venues` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(40),
+  `address1` varchar(30),
+  `address2` varchar(30),
+  `city` varchar(20),
+  `state` varchar(2),
+  `zipcode` varchar(10),
+  `description` text,
+  `latitude` varchar(30),
+  `longitude` varchar(30),
+  `properties` text,
+  `published` tinyint,  
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `jos_jleague_simple_roster` (
+  `id` int(11) NOT NULL auto_increment,
+  `season` int(11) not null,
+  `teamid` int(11) not null,
+  `firstname` varchar(25) not null, 
+  `lastname` varchar(35) not null, 
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+
+
+create table jos_jleague_recordhistory 		
+  ENGINE=MyISAM
+	select id as team_id, season, season_title, division_id, division_name, teamname, runs_scored, runs_allowed, wins, losses, ties, ( wins *  2 ) + (losses *  0 ) + (ties *  1 ) points from ( 
+				select id, season, season_title, division_id, division_name, teamname, sum(runs_scored) runs_scored, sum(runs_allowed) runs_allowed, sum(wins) wins,sum(losses) losses, sum(ties) ties, sum(points) points from
+				( 
+				select  hometeam_id id, score.season, seastbl.title season_title, divmap.division_id, divtbl.name division_name, team.name teamname,  sum(hometeam_score) runs_scored, sum(awayteam_score) runs_allowed, sum(if(hometeam_score > awayteam_score,1,0)) wins, sum(if(hometeam_score < awayteam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(hometeam_points) points, 'homegame' game 
+				from jos_jleague_scores score, jos_jleague_teams team, jos_jleague_seasons seastbl, jos_jleague_divmap divmap, jos_jleague_division divtbl  
+				where hometeam_id = team.id and score.season = seastbl.id and team.id = divmap.team_id 
+						and score.season = divmap.season and divmap.division_id = divtbl.id 
+						and conference_game like 'Y' and score.gamestatus = 'C'
+					group by team.name, season, divmap.division_id 
+				UNION 
+				select  awayteam_id id, score.season, seastbl.title season_title,divmap.division_id,divtbl.name division_name, team.name teamname, sum(awayteam_score) runs_scored, sum(hometeam_score) runs_allowed, sum(if(awayteam_score > hometeam_score,1,0)) wins, sum(if(awayteam_score < hometeam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(awayteam_points) points, 'awaygame' game 
+				from jos_jleague_scores score, jos_jleague_teams team, jos_jleague_seasons seastbl, jos_jleague_divmap divmap, jos_jleague_division divtbl  
+				where awayteam_id = team.id and score.season = seastbl.id and team.id = divmap.team_id 
+						and score.season = divmap.season and divmap.division_id = divtbl.id 
+						and conference_game like 'Y' and score.gamestatus = 'C'
+						group by team.name, season, divmap.division_id
+				) as recordtbl
+				group by teamname, season, division_id
+				) as stdgs 
+
+
+alter table jos_jleague_recordhistory add PRIMARY KEY  (team_id, season);
+
+
+CREATE TABLE IF NOT EXISTS `jos_jleague_subscriptions` (
+  `id` int(11) NOT NULL auto_increment,
+  `userid` int(11) not null,
+  `type` int(11) not null,
+  `properties` text, 
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+
+-- phpMyAdmin SQL Dump
+-- version 3.4.11.1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Dec 16, 2013 at 05:09 PM
+-- Server version: 5.0.15
+-- PHP Version: 5.3.17
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `swibl_test`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jos_jleague_standings`
+--
+
+CREATE TABLE IF NOT EXISTS `jos_jleague_temp_standings` (
+  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `league_id` int(9) NOT NULL,
+  `season` int(9) NOT NULL,
+  `division_id` int(9) NOT NULL,
+  `position` int(9) NOT NULL,
+  `team_id` int(9) NOT NULL,
+  `teamname` varchar(50) NOT NULL,
+  `wins` int(5) NOT NULL,
+  `losses` int(5) NOT NULL,
+  `ties` int(5) NOT NULL,
+  `points` int(5) NOT NULL,
+  `runs_scored` int(11) NOT NULL,
+  `runs_allowed` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+
+
+

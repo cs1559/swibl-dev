@@ -1,0 +1,655 @@
+<?php
+
+/**
+ * @version			$Id: address.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 		SWIBL Mobile
+ * @subpackage		Conrollers
+ * @copyright 		(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license			GNU/GPL
+ */
+
+defined( '_FSTLIB' ) or die( 'Restricted access' );
+
+require_once(FST_LIB_CORE . 'controller.php');
+
+class mTournaments extends mBaseController {
+
+	
+	/**
+	 * This function will generate a list of active teams.
+	 * 
+	 * @throws Exception
+	 */
+	function viewTournaments() {
+		$app = &mFactory::getApp();
+		
+		$doc = $app->getDocument();
+		$doc->setTitle("View Tournaments");
+
+		$svc = & JLTeamService::getInstance();
+		
+		$seasonsvc = & JLSeasonService::getInstance();
+		// Try to get the currently ACTIVE season.  If not available, then get the most
+		// recent season.
+		try {
+			$season = $seasonsvc->getMostRecentSeason();
+		} catch (Exception $e) {
+			throw $e;
+		}
+		
+// 		$cache = & JLCache::getInstance();
+// 		$keyid = $season->getId();
+// 		try {
+// 			$view = $cache->get("viewTeamList",$keyid);
+// 			$view->display();
+// 		} catch (Exception $e) {
+// 			//$filter = JLHtml::getSeasonSelectList('seasonid', $season->getId(),true,'onchange="getTeamsForSeason(this.value);"');
+			$svc = &JLTeamService::getInstance();
+			$teams = $svc->getTeamsInSeason($season->getId(),1);
+			if (_APPDEBUG) {
+				foreach ($teams as $team) {
+					$app->writeDebug($team->getName(), true);
+				}
+			}
+			$view = new fsView(APP_TEMPLATES_PATH);
+			$tmpl = new fsTemplate("activeteams");
+			$tmpl->setObject("teams",$teams);
+			$view->addTemplate($tmpl);
+			$view->render();
+// 			$cache->store("viewTeamList",$keyid,$view);
+// 		}
+	}
+	
+	/**
+	 * This function will view a Team profile.
+	 */
+	function viewTeamProfile() {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		
+		$ssvc = &JLSecurityService::getInstance();
+		
+		$req = fsRequest::getInstance();
+		$teamid = $req->getValue("teamid");
+		
+		$svc = &JLTeamService::getInstance();
+		$tview = $svc->getTeamView($teamid);
+		
+		$doc = $app->getDocument();
+		$team = $tview->getTeam();
+		
+		$doc->setTitle("Team Profile - " . $team->getName());
+		
+		$view = new mTeamView(APP_TEMPLATES_PATH);
+		
+		if ($ssvc->canEditTeamProfile($team)) {
+			$submenu = $view->getTeamProfileMenu("teamprofile_menu", "", "input-block-level", $team->getId(), $team->getSlug());
+		} else {
+			$submenu = null;
+		}
+		/* Determine if private fields are visible to the user */
+		if ($ssvc->isUserAssociatedWithTeam()) {
+			$view->setAttribute("seePrivateFields", true);
+		} else {
+			$view->setAttribute("seePrivateFields", false);
+		}
+		
+		$div = $tview->getDivision();
+		$standingssvc = &JLStandingsService::getInstance();
+		$standings = $standingssvc->getStandings(
+				$div->getLeagueId(),
+				$div->getSeasonId(),
+				$div->getId());
+		
+		// Construct the DIVISION STANDINGS for the team profile
+		$standings_tmpl = new fsTemplate("teamprofile.standings");
+		$standings_tmpl->setAlias("standingsHtml");
+		$standings_tmpl->setObject("standings",$standings);
+		
+		$tmpl = new fsTemplate("teamprofile");		
+		$tmpl->setObject("submenu",$submenu);
+		$tmpl->setObject("team",$team);
+		$tmpl->setObject("config",$config);
+		$tmpl->setObject("recordhistory",$tview->getRecordHistory());
+		$tmpl->setObject("schedule",$tview->getSchedule());
+		$tmpl->setObject("division",$tview->getDivision());
+		$tmpl->setObject("teamview",$tview);
+		$tmpl->setObject("activerecord",$tview->getFormattedRecord());
+		
+		$ctmpl = new fsTemplate("teamprofile.view.contacts");
+		$ctmpl->setAlias("contactsHtml");
+		$ctmpl->setObject("contacts", $tview->getTeamContacts());
+
+		$stmpl = new fsTemplate("teamprofile.view.schedule");
+		$stmpl->setAlias("scheduleHtml");
+		$stmpl->setObject("games", $tview->getSchedule());
+		$stmpl->setObject("team",$team);
+		
+		
+		$tmpl->addTemplate($standings_tmpl);
+		$tmpl->addTemplate($ctmpl);
+		$tmpl->addTemplate($stmpl);
+		
+		$view->addTemplate($tmpl);
+		$view->render();
+		
+	}
+	
+	/**
+	 * This function will present the Edit Team Profile view
+	 */
+    function editTeamProfile() {
+	
+    	$app = &mFactory::getApp();
+    	$ssvc = &JLSecurityService::getInstance();
+    	
+    	$req = fsRequest::getInstance();
+    	$teamid = $req->getValue("teamid");
+    	
+    	$svc = &JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+				
+        if (!JLSecurityService::isAuthorizedTask($team)) {
+        	$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "Not authorized to EDIT Team Profile","error");        	
+        }
+		
+    	$view = new mTeamView(APP_TEMPLATES_PATH);
+		$tmpl = new fsTemplate("teamprofile.edit");
+		
+		if ($ssvc->canEditTeamProfile($team)) {
+			$submenu = $view->getTeamProfileMenu("teamprofile_menu", "", "input-block-level", $team->getId(), $team->getSlug());
+		} else {
+			$submenu = null;
+		}
+		
+// 		$view->addPathway(JLText::getText('JL_PW_TEAM_PROFILE'),'index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid='.$teamid);		
+// 		$view->addPathway(JLText::getText('JL_PW_EDIT_TEAM_PROFILE'));
+				
+		$tmpl->setObject('team',$team);
+		$view->addTemplate($tmpl);
+		$view->render();
+    }
+
+    /**
+     * This function will display the screen used to upload a logo to the team profile.
+     */
+	function uploadLogo() {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$ssvc = &JLSecurityService::getInstance();
+
+		$req = fsRequest::getInstance();
+		$teamid = $req->getValue("teamid");
+		
+		$svc = &JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+
+// 		if (!JLSecurityService::isAuthorizedTask($team)) {
+// 			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "Not authorized to EDIT Team Profile","error");
+// 		}
+		
+		$view = new mTeamView(APP_TEMPLATES_PATH);
+		$tmpl = new fsTemplate("teamprofile.uploadlogo");
+		$tmpl->setObject("team", $team);
+		$tmpl->setObject("config", $config);
+		$view->addTemplate($tmpl);
+		$view->render();
+	}
+	
+	/**
+	 * This function will display the schedule and provide the options to allow the owner to make changes
+	 * 
+	 */
+	function manageSchedule() {
+
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$ssvc = &JLSecurityService::getInstance();
+		
+		$req = fsRequest::getInstance();
+		$teamid = $req->getValue("teamid");
+		
+		$svc = &JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+		
+		if (!JLSecurityService::isAuthorizedTask($team)) {
+			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "Not authorized to EDIT Team Profile","error");
+		}		
+		
+		$seasonsvc = & JLSeasonService::getInstance();
+		try {
+			$season = $seasonsvc->getActiveSeason();
+		} catch (Exception $e) {
+			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "You cannot manage schedule without a season being ACTIVE","error");
+			return;
+		}
+
+		// Create an empty game to initialize the template
+		$game = &mFactory::createGame();
+		$game->setSeason($season->getId());
+		$game->setDivisionId($team->getDivision()->getId());
+		$game->setConferenceGame(true);
+		
+		$viewhelper = new JLGameViewHelper($game);
+		
+		$view = new mTeamView(APP_TEMPLATES_PATH);
+
+		$tmpl = new fsTemplate("teamprofile.schedule");
+		$tmpl->setObject("team", $team);
+		$tmpl->setObject("game", $game);
+		$tmpl->setObject("season",$season);
+		$tmpl->setObject("helper",$viewhelper);
+		
+		$ttmpl = new fsTemplate("teamprofile.schedule.table");
+		$ttmpl->setAlias("scheduletable");
+		
+		$games = $svc->getAllTeamGames($teamid,$season->getId());
+		$ttmpl->setObject("team", $team);
+		$ttmpl->setObject("games", $games);
+		$ttmpl->setObject("config", $config);
+		$ttmpl->setObject("season", $season);
+		
+		
+		$tmpl->addTemplate($ttmpl);
+
+		// 		$tmpl->setObject('team',$team);
+// // 		$tmpl->setObject('game',$obj);
+// 		$tmpl->setObject('season',$season);
+// 		$tmpl->setObject('helper',$viewhelper);
+// 		$tmpl->setObject('submenu',$submenu);
+// 		$tmpl->setObject('submenu2',$submenu2);
+		$view->addTemplate($tmpl);
+		$view->render();
+		
+		return;
+		
+		/*
+		
+		$obj = & JLFactory::createGame();
+		$obj->setSeason($season->getId());
+		$obj->setDivisionId($team->getDivision()->getId());
+		
+		$viewhelper = new JLGameViewHelper($obj);
+		$view = new JLTeamProfileView();
+		$submenu = $view->getSubmenu($team);
+		$submenu2 = $view->getNewSubmenu($team);
+		
+		
+		$tmpl = new JLTemplate("teamprofile.schedule");
+		$tmpl->setObject('team',$team);
+		$tmpl->setObject('game',$obj);
+		$tmpl->setObject('season',$season);
+		$tmpl->setObject('helper',$viewhelper);
+		$tmpl->setObject('submenu',$submenu);
+		$tmpl->setObject('submenu2',$submenu2);
+		$view->addTemplate($tmpl);
+		
+		$tservice = & JLTeamService::getInstance();
+		$games = $tservice->getAllTeamGames($teamid,$season->getId());
+		
+		$tmpl2 = new JLTemplate("scheduletable");
+		$tmpl2->setObject('games',$games);
+		$tmpl2->setObject('teamid',$team->getId());
+		$tmpl2->setObject('helper',$viewhelper);
+		$currentgamestable = $tmpl2->getContent();
+		
+		$tmpl->setObject('currentseasonsgames',$currentgamestable);
+		//		$html = $tmpl->getContent();
+		$view->display();
+		*/		
+	}
+	
+	/**
+	 * This function in the controller is used to initialize the "manage roster" function
+	 */
+	function manageRoster() {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$ssvc = &JLSecurityService::getInstance();
+		
+		$req = fsRequest::getInstance();
+		$teamid = $req->getValue("teamid");
+		
+		$svc = &JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+		
+		if (!JLSecurityService::isAuthorizedTask($team)) {
+			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "Not authorized to EDIT Team Profile","error");
+		}
+		
+		//$psvc = & JLPlayerService::getInstance();
+		
+		// Get the season
+		$ssvc = & JLSeasonService::getInstance();
+		try {
+			$season = $ssvc->getActiveSeason();
+
+		
+		} catch (Exception $e) {
+			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "No active season.  Rosters cannot be managed without the season being defined","error");
+		}
+
+		if (_APPDEBUG) {
+			$app->addDebugMessage("Retrieving roster for team " . $team->getName() . " - Season " . $season->getTitle());
+		}
+		
+
+		// Get Roster / Players
+		$rsvc = & JLSimpleRosterService::getInstance();
+		$roster = $rsvc->getRoster($teamid, $season->getId());
+		$players = $roster->getPlayers();
+		
+		if (_APPDEBUG) {
+			$app->addDebugMessage("Total # of players on roster " . count($player));
+		}
+
+		
+		$view = new mTeamView(APP_TEMPLATES_PATH);
+		
+		$tmpl = new fsTemplate("teamprofile.roster");
+		$tmpl->setObject("team", $team);
+		$tmpl->setObject("roster",$roster);
+		
+		$ttmpl = new fsTemplate("teamprofile.roster.table");
+		$ttmpl->setAlias("rostertable");
+		$ttmpl->setObject("team", $team);
+		$ttmpl->setObject("season",$season);
+		$ttmpl->setObject("roster", $roster);
+		$ttmpl->setObject("players",$players);
+		$ttmpl->setObject("config", $config);
+		
+		$tmpl->addTemplate($ttmpl);
+
+		$view->addTemplate($tmpl);
+		$view->render();
+		
+		
+		
+	}
+
+	/**
+	 * This function will obtain and render the initial table of team contacts
+	 */
+	function manageContacts() {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$ssvc = &JLSecurityService::getInstance();
+		
+		$req = fsRequest::getInstance();
+		$teamid = $req->getValue("teamid");
+		
+		$svc = &JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+		
+		if (!JLSecurityService::isAuthorizedTask($team)) {
+			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "Not authorized to EDIT Team Profile","error");
+		}
+		
+		$contacts = $svc->getTeamContacts($teamid);
+				
+		$view = new mTeamView(APP_TEMPLATES_PATH);
+		
+		$tmpl = new fsTemplate("teamprofile.contacts");
+		$tmpl->setObject("team", $team);
+		
+		$ttmpl = new fsTemplate("teamprofile.contacts.table");
+		$ttmpl->setAlias("contactstable");
+		$ttmpl->setObject("contacts", $contacts);
+		$tmpl->addTemplate($ttmpl);
+		
+		$view->addTemplate($tmpl);
+		$view->render();
+		
+	}
+
+	/**
+	 * This function actually performs the file upload of the graphic image
+	 */
+	function executeUploadLogo(){
+		$app = &mFactory::getApp();
+		if (_APPDEBUG) {
+			$app->writeDebug("Executing logo upload", true);
+		}
+		
+		$config = $app->getConfig();
+		$ssvc = &JLSecurityService::getInstance();
+		
+    	$req = fsRequest::getInstance();
+    	$teamid = $req->getValue("teamid");
+		
+		$svc =  & JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+		
+// 		jimport('joomla.filesystem.file');
+		
+		$file = $req->getValue("Filedata");
+		$name = $_FILES["Filedata"]["name"];
+		$tmp_name = $_FILES["Filedata"]["tmp_name"];
+		$filename=$teamid . "_". strtolower(str_replace(' ','_',$name));
+		$folder = $config->getProperty('logo_folder');
+		$filepath	= $app->getSitePath() . DS . $folder.$filename;
+		
+		if (_APPDEBUG) {
+			$app->writeDebug("Uploaded Filename = " . $name, true);
+			$app->writeDebug("Temporary Filename = " . $tmp_name, true);
+			$app->writeDebug("New Filename = " . $filename, true);
+			$app->writeDebug("Logo Folder = " . $folder, true);
+			$app->writeDebug("Full Output Filename = " . $filepath, true);
+		}
+		
+		if (move_uploaded_file($tmp_name, $filepath)) {
+			if (_APPDEBUG) {
+				$app->writeDebug("File was successfully uploaded", true);
+			}
+		} else {
+			if (_APPDEBUG) {
+				$app->writeDebug("File upload error - code = " . $_FILES["Filedata"]["error"], true);
+				// TODO - need to perform a redirect
+			}
+		}
+
+		$image = new fsSimpleImage();
+		$image->load($folder . DS . $filename);
+		$image->resize($config->getProperty('max_logo_width'),$config->getProperty('max_logo_height'));
+		$image->save($filepath );
+		$image->resize($config->getProperty('max_thumbnail_width'),$config->getProperty('max_thumbnail_height'));
+		$image->save($folder . DS . "thumb-".$filename);
+		
+		$team->setLogo($filename);
+		
+		if (!$svc->save($team)) {
+			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "Upload file failed","error");
+		}
+		$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "File upload successful","success");
+	}
+	
+	function getteamcontactlist() {
+		$app = &mFactory::getApp();
+		
+		$ssvc = &JLSeasonService::getInstance();
+		$season = $ssvc->getMostRecentSeason();
+					
+		if (!JLSecurityService::isAuthorizedTask($season)) {
+			$app->redirect($url,$msg,'error');
+			
+	   		$msg = "Access to detailed team contact information is restricted.  Only coaches/managers and league administrators can perform this function.  ";
+	   		$msg .= "If you believe you received this message in error, please email " . $app::cloakEmail("support@swibl-baseball.org");
+	  		$app->redirect($url,$msg,'error');
+	   		return;
+	    }
+	
+			$agegroups = JLUserService::getInterestedAgeGroups($season->getId());
+	
+			$svc = & JLDivisionService::getInstance();
+			$divisions = $svc->getDivisionsWithinAgeGroup($season->getId(), $agegroups);
+			$tsvc = &JLTeamService::getInstance();
+			$teams = $tsvc->getTeamsInDivisions($divisions);
+		
+			$view = new mTeamView(APP_TEMPLATES_PATH);
+			
+			$tmpl = new fsTemplate('teamcontacts');
+			$tmpl->setObject('divisions',$divisions);
+			$tmpl->setObject('season',$season);
+			$tmpl->setObject('config',$app->getConfig());
+	//		$tmpl->setObject('teams',$teams);
+	//		$tableview = new JLTemplate('listteamsresults');
+	//		$tableview->setObject('teams',$teams);
+	//		$tableview->setObject('totalteams',sizeof($teams));
+	//		$tableview->setObject('season',$season);
+	//		$wrapper->addTemplate($tableview);
+			$view->addTemplate($tmpl);
+			$view->render();
+	}
+	
+	/**
+	 * The function to display the list of venues
+	 */
+	function updateFieldInfo() {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$ssvc = &JLSecurityService::getInstance();
+		
+		$req = fsRequest::getInstance();
+		$teamid = $req->getValue("teamid");
+		
+		$svc = &JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+		
+		if (!JLSecurityService::isAuthorizedTask($team)) {
+			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "Not authorized to EDIT Team Profile","error");
+		}
+		
+		$venues = $svc->getTeamVenues($teamid);
+				
+		$view = new mTeamView(APP_TEMPLATES_PATH);
+				
+		$tmpl = new fsTemplate("teamprofile.venue");
+		$tmpl->setObject('team',$team);
+		
+		$tmpl2 = new fsTemplate("teamprofile.venue.table");
+		$tmpl2->setAlias("currentvenuestable");
+		$tmpl2->setObject('venues',$venues);
+		$tmpl2->setObject('teamid',$teamid);
+		$tmpl->addTemplate($tmpl2);			
+		$view->addTemplate($tmpl);
+		$view->render();
+	}
+	
+	
+	
+	function doUpdate() {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$ssvc = &JLSecurityService::getInstance();
+		
+		$req = fsRequest::getInstance();
+		$teamid = $this->getReqValue("teamid",0);
+		
+		$svc = &JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+		
+		if (!JLSecurityService::canEditTeamProfile($team)) {
+			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "Not authorized to EDIT Team Profile","error");
+		}
+
+// 		//capture Team ID
+// 		$teamid = $this->getReqValue("teamid",0);
+		
+		if (_APPDEBUG) {
+			$app->writeDebug("Executing update to Team Id = " . $teamid, true);
+		}
+
+		// get team service
+		$svc = &JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+
+		$view = new mTeamView(APP_TEMPLATES_PATH);
+		$view->bindRequest($team);
+		
+		if (!$svc->save($team)) {
+			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $teamid, "Operation failed ...","error");
+// 			$mainframe->redirect( JRoute::_("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $teamid) , JLText::getText('JL_RECORD_SAVE_UNSUCCESSFUL') );
+		}
+		$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $teamid, "Record Saved ...","Success");
+// 		$mainframe->redirect( JRoute::_("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $teamid) , JLText::getText('JL_RECORD_SAVE_SUCCESSFUL') );
+		
+	}
+	
+
+	function addTeamVenue() {
+
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$ssvc = &JLSecurityService::getInstance();
+		
+		$req = fsRequest::getInstance();
+		$teamid = $req->getValue("teamid");
+		$venueid = $req->getValue("venueid");
+		
+		if ($teamid == null) {
+			echo "ERROR:  Missing TEAM ID value";
+			return;
+		}
+		if ($venueid == null) {
+			echo "ERROR:  Missing VENUE ID value";
+			return;
+		}
+		
+		$svc = &JLTeamService::getInstance();
+		$team = $svc->getRow($teamid);
+		
+		// 		if (!JLSecurityService::isAuthorizedTask($team)) {
+		// 			$app->redirect("index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=" . $team->getSlug(), "Not authorized to EDIT Team Profile","error");
+		// 		}
+
+		if (!$svc->addTeamVenue($teamid, $venueid)) {
+			echo "ERROR:  Add Team Venue failed";
+			return;
+		}
+		
+		$venues = $svc->getTeamVenues($teamid);
+		
+		$view = new mTeamView(APP_TEMPLATES_PATH);
+		
+		$tmpl2 = new fsTemplate("teamprofile.venue.table");
+		$tmpl2->setAlias("currentvenuestable");
+		$tmpl2->setObject('venues',$venues);
+		$tmpl2->setObject('teamid',$teamid);
+		
+		$view->addTemplate($tmpl2);
+		$view->render();
+		
+	}
+	
+	function removeTeamVenue() {
+	
+		if (!isset($_REQUEST["teamid"])) {
+			echo "ERROR:  Missing TEAM ID value";
+			return;
+		}
+		if (!isset($_REQUEST["venueid"])) {
+			echo "ERROR:  Missing VENUE ID value";
+			return;
+		}
+	
+		$service = & JLTeamService::getInstance()	;
+		$teamid = $_REQUEST["teamid"];
+		$venueid = $_REQUEST["venueid"];
+		if (!$service->removeTeamVenue($teamid, $venueid)) {
+			echo "ERROR:  Remove Team Venue failed";
+			return;
+		}
+		$venues = $service->getTeamVenues($teamid);
+		
+		$view = new mTeamView(APP_TEMPLATES_PATH);
+		$tmpl2 = new fsTemplate("teamprofile.venue.table");
+		$tmpl2->setAlias("currentvenuestable");
+		$tmpl2->setObject('venues',$venues);
+		$tmpl2->setObject('teamid',$teamid);
+		$view->addTemplate($tmpl2);
+		$view->render();
+	}
+	
+	
+	
+}  

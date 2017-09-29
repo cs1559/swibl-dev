@@ -1,0 +1,24 @@
+# Blocking Bing / MSN Crawler
+ErrorDocument 503 "System Undergoing Maintenance"
+RewriteEngine On
+RewriteCond %{HTTP_USER_AGENT} (bing|msn) [NC]
+RewriteRule .* - [R=503,L] 
+
+RewriteCond %{REQUEST_URI} "/umpires/" 
+RewriteRule (.*) $1 [L]
+#RewriteCond %{REQUEST_URI} "/umpires/" 
+#RewriteRule (.*)$ $1 [L]
+
+#RewriteCond %{HTTP_HOST} !^wiki.swibl-baseball.org$ [NC]
+#RewriteRule ^(.*)$ http://swibl-baseball.org/j15/$1 [R=301,L]
+RewriteRule ^(.*)$ http://swibl-baseball.org/j3/$1 [R=301,L]
+
+
+
+<IfModule prefork.c>
+RewriteEngine On
+
+</IfModule>
+#9ee0cc89ab9fa7a6e1b673b9f238b15638cd92551b0e91ab950d0b67
+
+

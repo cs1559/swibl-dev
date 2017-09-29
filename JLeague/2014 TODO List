@@ -1,0 +1,4 @@
+2014 Changes
+- Change the logic of record history to pull from the STANDINGS table.
+- Catch an invalid JLeague Controller name and redirect to a common error message.  
+  Ths can be recreated by entering a controller name that does not exist.

@@ -1,0 +1,225 @@
+<?php
+/**
+ * @version 		$Id: gameviewhelper.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 		JLeague
+ * @subpackage 		Helpers
+ * @copyright 		(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license			GNU/GPL, see LICENSE.php
+ */
+
+
+class JLGameViewHelper extends fsBaseObject {
+	
+	private $game = null;
+	
+	public function __construct(JLGame $game) {
+		$this->game = $game;
+	}
+	
+	/**
+	 * This function will generate a select list for avialable home teams.
+	 *
+	 * @param string $elementname
+	 * @param string $event
+	 * @return string
+	 */
+	public function getHomeTeamSelectList($elementname=null,$event=null) {
+		$game = $this->game;
+			require_once(JLEAGUE_SERVICES_PATH . DS . 'divisionservice.class.php');
+			$svc = &JLDivisionService::getInstance();
+			$teamslist[] =JHTML::_('select.option', '', '-- Select Team --       ' );
+			if ($game->getDivisionId() == 0) {
+				 return JHTML::_('select.genericlist' , $teamslist, "hometeam_id", 'class="inputbox" '. $event,'value', 'text', 0);
+			}
+			$teams = $svc->getCompetingTeams($game->getDivisionId());			
+			foreach ($teams as $team) {
+				$teamslist[] =JHTML::_('select.option', $team->getId(), $team->getName() . " ( " . $team->getCoachName() . " )" );
+			}
+			$sellist =JHTML::_('select.genericlist' , $teamslist, "hometeam_id", 'class="inputbox" '. $event,'value', 'text', $game->getHometeamId());
+			return $sellist;			
+	}
+
+	/**
+	 * This will generate an input element for the home team.
+	 *
+	 * @return string
+	 */
+	public function getHomeTeamInput() {
+		return $this->getInputElement("hometeam_name",$this->game->getHometeam(),50,50);
+	}
+	
+	public function getAwayTeamSelectList($elementname=null,$event=null) {
+		$game = $this->game;
+		require_once(JLEAGUE_SERVICES_PATH . DS . 'divisionservice.class.php');
+		$svc = &JLDivisionService::getInstance();
+		$teamslist[] =JHTML::_('select.option', '', '-- Select Team --       ' );
+		if ($game->getDivisionId() == 0) {
+			 return JHTML::_('select.genericlist' , $teamslist, "awayteam_id", 'class="inputbox" '. $event,'value', 'text', 0);
+		}
+		$teams = $svc->getCompetingTeams($game->getDivisionId());			
+		$teamslist[] =JHTML::_('select.option', '', '-- Select Team --       ' );
+		foreach ($teams as $team) {
+			$teamslist[] =JHTML::_('select.option', $team->getId(), $team->getName() . " ( " . $team->getCoachName() . " )" );
+		}
+		$sellist =JHTML::_('select.genericlist' , $teamslist, "awayteam_id", 'class="inputbox" '. $event,'value', 'text', $game->getAwayTeamId());
+		return $sellist;	
+			
+	}
+
+	public function getAwayTeamInput() {
+		return $this->getInputElement("awayteam_name",$this->game->getAwayteam(),50,50);
+	}
+	
+	public function getHomeTeamLeagueFlag($event="") {
+		$state = "";
+		if ($this->game->getHomeLeagueFlag() == "Y") {
+			$state = "checked";
+		}
+		return $this->getCheckboxElement("cb_league_hometeam",$state,$event);
+	}
+
+	public function getAwayTeamLeagueFlag($event="") {
+		$state = "";
+		if ($this->game->getAwayLeagueFlag() == "Y") {
+			$state = "checked";
+		}
+		return $this->getCheckboxElement("cb_league_awayteam",$state,$event);
+	}
+	
+	/**
+	 * This function will return the division name.
+	 *
+	 * @return String
+	 */
+	public function getDivisionName() {
+		require_once(JLEAGUE_SERVICES_PATH . DS . 'divisionservice.class.php');
+		$svc = & JLDivisionService::getInstance();
+		// php echo JLHtml::getDivisionSelectList('division_id',0, $season->getId()); 
+/*
+ 
+ 		if ($this->game->id == 0) {
+			if ($this->game->getSeason()>0) {
+				$seasonid = $this->game->getSeason();
+			} else {
+				$seasonid = 0;
+			}
+			if ($this->game->getDivisionId() > 0) {
+				$divid = $this->game->getDivisionId();
+			} else {
+				$divid = 0;
+			}
+			return JLHtml::getDivisionSelectList('division_id',$divid, $seasonid,null,'onchange="updateTeamsSelectList();"');
+		}
+*/
+		$division = $svc->getRow($this->game->getDivisionId());
+		return $division->getName() . $this->getHiddenInputELement("division_id",$this->game->getDivisionId());
+	}
+	
+	public function getSeasonTitle() {
+		if ($this->game->id == 0) {
+			$html = JLHtml::getSeasonSelectList('season_id',0, null,'onchange="updateDivisionSelectList();"');
+			return $html;
+		}
+		require_once(JLEAGUE_SERVICES_PATH . DS . 'seasonservice.class.php');
+		$svc = & JLSeasonService::getInstance();
+		$season = $svc->getRow($this->game->getSeason());
+		return $season->getTitle() . $this->getHiddenInputELement("season_id",$this->game->getSeason());
+	}	
+	
+	public function getConferenceGame() {
+		$options = array (
+			JHTML::_('select.option', 'N', JLText::getText('Non-League Game')),
+			JHTML::_('select.option', 'Y', JLText::getText('League Game'))
+		);
+		return JHTML::_('select.genericlist' , $options, "conference_game" , ' class="input" ', 'value', 'text', $this->game->getConferenceGame()  ); 		
+	}
+	
+	public function getGameStatus($element_name, $event=null) {
+		$options = array (
+			JHTML::_('select.option', 'S', JLText::getText('Scheduled')),
+			JHTML::_('select.option', 'D', JLText::getText('Suspended')),
+			JHTML::_('select.option', 'C', JLText::getText('Complete')),
+			JHTML::_('select.option', 'R', JLText::getText('Rained Out')),
+			JHTML::_('select.option', 'X', JLText::getText('Cancelled'))
+		);
+		return JHTML::_('select.genericlist' , $options, $element_name , ' class="input" '. $event, 'value', 'text', $this->game->getGameStatus()  ); 		
+	}
+	public function getGameStatusDesc($val) {
+		switch ($val) {
+			case 'C':
+				return 'Complete';
+			case 'S':
+				return 'Scheduled';
+			case 'D':
+				return 'Suspended';				
+			case 'X':
+				return 'Cancelled';
+			case 'R':
+				return 'Rained Out';								
+			default:
+				return 'Unknown';
+		}
+	}
+	
+	public function isAwayTeamInLeague() {
+		if ($this->game->getAwayLeagueFlag() == "Y") {
+			return true;	
+		} 
+		return false;
+	}
+	public function isHomeTeamInLeague() {
+		if ($this->game->getHomeLeagueFlag() == "Y") {
+			return true;	
+		} 
+		return false;
+	}
+	
+	/**
+	 * This function returns the CSS class name for the home teams input field.
+	 *
+	 * @return String
+	 */
+	public function getHomeTeamInputClass() {
+		if ($this->isHomeTeamInLeague()) {
+			return "inputOff";
+		} 
+		return "inputOn";
+	}
+	/**
+	 * This function returns the CSS class name for the away teams input field.
+	 *
+	 * @return String
+	 */
+	public function getAwayTeamInputClass() {
+		if ($this->isAwayTeamInLeague()) {
+			return "inputOff";
+		} 
+		return "inputOn";
+	}
+	/**
+	 * This function returns the CSS class name for the home teams selectlist field.
+	 *
+	 * @return String
+	 */
+	public function getHomeTeamSelectListClass() {
+		if ($this->isHomeTeamInLeague()) {
+			return "inputOn";
+		} 
+		return "inputOff";
+	}
+	/**
+	 * This function returns the CSS class name for the away teams select field.
+	 *
+	 * @return String
+	 */
+	public function getAwayTeamSelectListClass() {
+		if ($this->isAwayTeamInLeague()) {
+			return "inputOn";
+		} 
+		return "inputOff";
+	}	
+	
+	
+}
+
+?>

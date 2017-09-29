@@ -1,0 +1,126 @@
+/*  Individual Division */			
+			select * from ( 
+			 select division_id, id, season, teamname, wins,losses, ties, wins+losses+ties total_games, ( wins * 2) + (losses * 0) + (ties * 1) points, 
+			  runs_scored, runs_allowed, (wins / (wins + losses + ties)) winpct from 
+			 ( 
+			 select division_id, id, season, teamname,sum(wins) wins,sum(losses) losses, sum(ties) ties, sum(points) points, sum(runs_scored) runs_scored, sum(runs_allowed) runs_allowed from
+			 (  
+			 select m.division_id, team.id, "18" season, team.name teamname, 0 wins, 0 losses, 0 ties, 0 points, 0 runs_allowed, 0 runs_scored, 'nogame' game from joom_jleague_divmap m, joom_jleague_teams team where m.division_id = 168 and m.published = 1 	and season = 18 and m.team_id = team.id 
+			 UNION
+			 select  m.division_id, hometeam_id id, score.season, team.name teamname, sum(if(hometeam_score > awayteam_score,1,0)) wins, sum(if(hometeam_score < awayteam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(hometeam_points) points, sum( awayteam_score ) runs_allowed, sum( hometeam_score ) runs_scored,'homegame' game
+			 from joom_jleague_scores score, joom_jleague_teams team, joom_jleague_divmap m  
+			 where score.hometeam_id = team.id and score.hometeam_id = m.team_id  and m.published = 1 and score.season = 18 and gamestatus = 'C' and conference_game = 'Y' and m.division_id = 168
+			 group by division_id, id, team.name, season 
+			 UNION 
+			 select  m.division_id, awayteam_id id, score.season, team.name teamname, sum(if(awayteam_score > hometeam_score,1,0)) wins, sum(if(awayteam_score < hometeam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(awayteam_points) points, sum( hometeam_score ) runs_allowed, sum( awayteam_score ) runs_scored, 'awaygame' game 
+			 from joom_jleague_scores score, joom_jleague_teams team, joom_jleague_divmap m 
+			 where score.awayteam_id = team.id and score.awayteam_id = m.team_id and m.published = 1 and score.season = 18 and gamestatus = 'C' and conference_game = 'Y'  and m.division_id = 168
+			 group by division_id, id, team.name, season
+			 ) as recordtbl
+			 group by division_id, id, teamname, season
+			 ) as stdgs 
+			 ) as stdgstable 
+			 order by points desc, wins desc, runs_allowed, teamname
+			 
+
+/* All Divisions */
+			select * from ( 
+			 select division_id, id, season, teamname, wins,losses, ties, wins+losses+ties total_games, ( wins * 2) + (losses * 0) + (ties * 1) points, 
+			  runs_scored, runs_allowed, (wins / (wins + losses + ties)) winpct from 
+			 ( 
+			 select division_id, id, season, teamname,sum(wins) wins,sum(losses) losses, sum(ties) ties, sum(points) points, sum(runs_scored) runs_scored, sum(runs_allowed) runs_allowed from
+			 (  
+			 select m.division_id, team.id, "18" season, team.name teamname, 0 wins, 0 losses, 0 ties, 0 points, 0 runs_allowed, 0 runs_scored, 'nogame' game from joom_jleague_divmap m, joom_jleague_teams team where m.published = 1 	and season = 18 and m.team_id = team.id 
+			 UNION
+			 select  m.division_id, hometeam_id id, score.season, team.name teamname, sum(if(hometeam_score > awayteam_score,1,0)) wins, sum(if(hometeam_score < awayteam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(hometeam_points) points, sum( awayteam_score ) runs_allowed, sum( hometeam_score ) runs_scored,'homegame' game
+			 from joom_jleague_scores score, joom_jleague_teams team, joom_jleague_divmap m  
+			 where score.hometeam_id = team.id and score.hometeam_id = m.team_id  and m.published = 1 and score.season = 18 and gamestatus = 'C' and conference_game = 'Y'
+			 	and score.season = m.season  
+			 group by division_id, id, team.name, season 
+			 UNION 
+			 select  m.division_id, awayteam_id id, score.season, team.name teamname, sum(if(awayteam_score > hometeam_score,1,0)) wins, sum(if(awayteam_score < hometeam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(awayteam_points) points, sum( hometeam_score ) runs_allowed, sum( awayteam_score ) runs_scored, 'awaygame' game 
+			 from joom_jleague_scores score, joom_jleague_teams team, joom_jleague_divmap m 
+			 where score.awayteam_id = team.id and score.awayteam_id = m.team_id and m.published = 1 and score.season = 18 and gamestatus = 'C' and conference_game = 'Y' 
+			 	and score.season = m.season 
+			 group by division_id, id, team.name, season
+			 ) as recordtbl
+			 group by division_id, id, teamname, season
+			 ) as stdgs 
+			 ) as stdgstable 
+			 order by division_id, points desc, wins desc, losses, ties desc, teamname
+			 
+			 
+			 
+			 
+			 
+			/* QUERY TO GENERATE DATA FOR TOURNAMENT SEEDING */
+	select stdgstable.division_id, stdgstable.parent_divid, stdgstable.id, stdgstable.seasonid, d2.name, teamname, d1.name, wins,losses, ties, wins+losses+ties total_games, ( wins * 2) + (losses * 0) + (ties * 1) points, 
+			  runs_scored, runs_allowed, (wins / (wins + losses + ties)) winpct 
+		from ( 
+			 select division_id, parent_divid, id, seasonid, teamname, wins,losses, ties, wins+losses+ties total_games, ( wins * 2) + (losses * 0) + (ties * 1) points, 
+			  runs_scored, runs_allowed, (wins / (wins + losses + ties)) winpct from 
+			 ( 
+			 select division_id, id, parent_divid, seasonid, teamname,sum(wins) wins,sum(losses) losses, sum(ties) ties, sum(points) points, sum(runs_scored) runs_scored, sum(runs_allowed) runs_allowed from
+			 (  
+			 select m.division_id, d.parent_divid,team.id, "18" seasonid, team.name teamname, 0 wins, 0 losses, 0 ties, 0 points, 0 runs_allowed, 0 runs_scored, 'nogame' game from joom_jleague_divmap m, joom_jleague_division d, joom_jleague_teams team where m.division_id = d.id and m.published = 1 	and m.season = 18 and m.team_id = team.id 
+			 UNION
+			 select  m.division_id, d.parent_divid, hometeam_id id, score.season as seasonid, team.name teamname, sum(if(hometeam_score > awayteam_score,1,0)) wins, sum(if(hometeam_score < awayteam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(hometeam_points) points, sum( awayteam_score ) runs_allowed, sum( hometeam_score ) runs_scored,'homegame' game
+			 from joom_jleague_scores score, joom_jleague_teams team, joom_jleague_divmap m, joom_jleague_division d
+			 where score.hometeam_id = team.id and score.hometeam_id = m.team_id 
+ 			 	and score.season = m.season  
+			 	and m.published = 1 and score.season = 18 and gamestatus = 'C' and conference_game = 'Y' and 
+			 	m.division_id = d.id
+			 group by division_id, parent_divid, id, teamname, seasonid 
+			 UNION 
+			 select  m.division_id, d.parent_divid, awayteam_id id, score.season as seasonid, team.name teamname, sum(if(awayteam_score > hometeam_score,1,0)) wins, sum(if(awayteam_score < hometeam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(awayteam_points) points, sum( hometeam_score ) runs_allowed, sum( awayteam_score ) runs_scored, 'awaygame' game 
+			 from joom_jleague_scores score, joom_jleague_teams team, joom_jleague_divmap m, joom_jleague_division d 
+			 where score.awayteam_id = team.id and score.awayteam_id = m.team_id 
+ 			 	and score.season = m.season  
+			 	and m.published = 1 and score.season = 18 and gamestatus = 'C' and conference_game = 'Y'  
+			 	and m.division_id = d.id
+			 group by division_id, parent_divid, id, teamname, seasonid
+			 ) as recordtbl
+			 group by division_id,  parent_divid, id, teamname, seasonid
+			 ) as stdgs 
+			 ) as stdgstable, joom_jleague_division d1, joom_jleague_division d2
+			 where stdgstable.division_id = d1.id and stdgstable.parent_divid = d2.id
+			 order by parent_divid, points desc, wins desc, runs_allowed asc, teamname
+			 
+			 
+			 
+			 
+		 select  m.division_id, d.parent_divid, awayteam_id id, score.season as seasonid, team.name teamname, sum(if(awayteam_score > hometeam_score,1,0)) wins, sum(if(awayteam_score < hometeam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(awayteam_points) points, sum( hometeam_score ) runs_allowed, sum( awayteam_score ) runs_scored, 'awaygame' game 
+			 from joom_jleague_scores score, joom_jleague_teams team, joom_jleague_divmap m, joom_jleague_division d 
+			 where score.awayteam_id = team.id 
+			 	and score.awayteam_id = m.team_id 
+			 	and score.division_id = m.division_id
+			 	and m.published = 1 
+			 	and score.season = 18 
+			 	and gamestatus = 'C' 
+			 	and conference_game = 'Y'  
+			 	and m.division_id = d.id
+			 group by parent_divid, id, team.name, seasonid
+			 
+			 
+			 
+
+
+select division_id, id, season, teamname, wins, losses, ties, (wins / (wins + losses + ties)) winpct , runs_allowed, runs_scored
+from (
+	select division_id, id, 18 season, teamname,sum(wins) wins,sum(losses) losses, sum(ties) ties, runs_allowed, runs_scored 
+	from  ( 
+		select  m.division_id, hometeam_id id, score.season, team.name teamname, sum(if(hometeam_score > awayteam_score,1,0)) wins, sum(if(hometeam_score < awayteam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties,   sum( awayteam_score ) runs_allowed, sum( hometeam_score ) runs_scored, "homegame" game  
+		from joom_jleague_scores score, joom_jleague_teams team, joom_jleague_divmap m   
+		where score.hometeam_id = m.team_id and m.season = score.season and hometeam_id = team.id and hometeam_id in (668,495) and  awayteam_id in (668,495) and score.season = 18 and conference_game = "Y" and gamestatus = "C"  
+		group by team.name, score.season  
+		UNION  
+		select  m.division_id, awayteam_id id, score.season, team.name teamname, sum(if(awayteam_score > hometeam_score,1,0)) wins, sum(if(awayteam_score < hometeam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties,  sum( hometeam_score ) runs_allowed, sum( awayteam_score ) runs_scored, "awaygame" game  
+		from joom_jleague_scores score, joom_jleague_teams team, joom_jleague_divmap m   
+		where score.awayteam_id = m.team_id and m.season = score.season and awayteam_id = team.id and hometeam_id in (668,495) and  awayteam_id in (668,495)  and score.season = 18 and conference_game = "Y" and gamestatus = "C"  
+		group by team.name, score.season  
+		)  as recordtbl 
+		group by teamname, season  
+	) as stdgs group by wins desc, id, teamname
+
+
+			 

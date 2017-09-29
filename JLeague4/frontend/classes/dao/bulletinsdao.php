@@ -1,0 +1,342 @@
+<?php
+/**
+ * @version		$Id: baseview.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	FST Framework
+ * @subpackage	Core
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license		GNU/GPL
+ */
+
+
+class JLBulletinsDAO extends fsBaseDAO {
+	
+	var $tablename = '#__jleague_bulletins';
+
+		/**
+	 * This function will find a specific team.
+	 *
+	 * @param int $id
+	 * @return JLTeam
+	 */
+	function findById($id) {
+		$iid = (int) $id;
+		$query = "select * from #__jleague_bulletins where id = " . $iid;
+		return parent::_getRow($query);
+	}
+	
+	protected function __construct() {
+		//parent::__construct();
+	}
+	
+	static function getInstance() {
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new JLBulletinsDAO();
+		}
+		$db = mFactory::getDBO();
+		$instance->setDatabase($db);
+		return $instance;
+	}	
+		
+   
+	/**
+	 * This will map the the database row to the Team Object
+	 *
+	 * @param unknown_type $row
+	 * @return unknown
+	 */	
+	function loadObject($row) {
+    	$obj = new JLBulletin();
+    	$obj->setId($row->id);
+    	$obj->setType($row->type);
+    	$obj->setCategory($row->category);
+    	$obj->setTeamId($row->teamid);
+    	$obj->setSponsorId($row->sponsorid);
+    	$obj->setTitle($row->bulletin_title);
+    	$obj->setCreateDate(JLUtil::dateconvert($row->date_inserted,3));
+    	$obj->setDescription($row->bulletin_desc);
+    	$obj->setContactEmail($row->contactemail);
+    	$obj->setContactPhone($row->contactphone);
+    	$obj->setContactName($row->contactname);
+    	$obj->setDateInserted($row->date_inserted);
+    	$obj->setUpdatedBy($row->updatedby);
+    	return $obj;
+	}
+
+	/**
+	 * This function will return an array of Contacts fora specific team.
+	 *
+	 * @param int $teamid
+	 * @return array
+	 */
+	function getTeamBulletins($teamid, $limit = 400) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric (JLBulletinsDAO::getTeamBulletins)");
+		}
+    	$iid = (int) $teamid;
+    	$query = 'SELECT * FROM #__jleague_bulletins WHERE teamid = ' . $iid . ' and category="T" order by date_inserted desc';
+    	$rows = $this->_execute($query); 
+    	if (is_array($rows)) {
+    		$bulletins = array();
+    		foreach ($rows as $row) {
+    			$bulletin = $this->loadObject($row);
+    			$bulletins[] = $bulletin;
+    		}
+    		return $bulletins;
+    	}
+    	return null;
+    } 
+    
+    /**
+     * This function will return an array of Contacts fora specific team.
+     *
+     * @param int $teamid
+     * @return array
+     */
+    function getSponsorBulletins($sponsorid, $limit = 400) {
+    	if (!is_numeric($sponsorid)) {
+    		throw new  Exception("Sponsor Id is not numeric (JLBulletinsDAO::getSponsorBulletins)");
+    	}
+    	$iid = (int) $sponsorid;
+    	$query = 'SELECT * FROM #__jleague_bulletins WHERE sponsorid = ' . $iid . ' and category="S" order by date_inserted desc';
+    	$rows = $this->_execute($query);
+    	if (is_array($rows)) {
+    		$bulletins = array();
+    		foreach ($rows as $row) {
+    			$bulletin = $this->loadObject($row);
+    			$bulletins[] = $bulletin;
+    		}
+    		return $bulletins;
+    	}
+    	return null;
+    }
+    
+    
+    /**
+     * This funciton will associate a contact object to a specific team.
+     *
+     *CREATE TABLE IF NOT EXISTS `#__jleague_bulletins` (
+  `id` int(11) NOT NULL auto_increment,
+  `teamid` int(11) NOT NULL,
+  `bulletin_title` varchar(60) not null,
+  `bulletin_desc` text,
+  `contactname` varchar(30) not null,
+  `contactemail` varchar(100),
+  `contactphone` varchar(12),
+  `published` tinyint,
+  `date_inserted` timestamp,
+  `properties` text,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+     * @param JLBulletin $obj
+     * @return boolean
+     */
+    function insert(JLBulletin $obj) {
+    	$app = &mFactory::getApp();
+    	$user = $app->getUser();
+		$query = 'INSERT INTO ' .$this->getNameQuote( '#__jleague_bulletins'  ) . ' (id, teamid, sponsorid, category, type, bulletin_title, bulletin_desc, contactname, contactemail, contactphone, '
+    		.' date_inserted, updatedby, published, properties) '
+			. ' VALUES (0,'
+			. '"' . $obj->getTeamId() . '",'
+			. '"' . $obj->getSponsorId() . '",'
+			. '"' . $obj->getCategory() . '",' 											
+			. '"' . $obj->getType() . '",' 								
+			. '"' . addslashes($obj->getTitle()) . '",'
+			. '"' . addslashes($obj->getDescription()). '",'
+			. '"' . $obj->getContactName() . '",'
+			. '"' . $obj->getContactEmail() . '",'					
+			. '"' . $obj->getContactPhone() . '",'
+			. ' now(),' 
+			. '"' . $user->username . '", '
+			. '"' . $obj->getPublished(). '",'
+			. '"' . $obj->getFormattedProperties() . '"'			
+			.  ')';
+		//echo $query;
+		return $this->_insertRow($query);			
+    }
+     
+
+    /**
+     * Update the bulletin table.
+     * 
+     * @param JLBulletin $obj
+     * @return boolean
+     */
+    function update(JLBulletin $obj) {
+    	$app = &mFactory::getApp();
+    	$user = $app->getUser();
+    	 
+    	$query = 'update ' .$this->getNameQuote( $this->tablename  ) . ' set ' 
+      		. ' teamid = "' . $obj->getTeamId() .'", '
+			. ' sponsorid = "' . $obj->getSponsorId().'", '      	
+			. ' category = "' . $obj->getCategory() .'", '  								
+			. ' type = "' . $obj->getType() .'", '      				
+			. ' bulletin_title = "' . addslashes($obj->getTitle()) .'", '
+			. ' bulletin_desc = "' . addslashes($obj->getDescription()) .'", '		
+			. ' contactemail = "' . $obj->getContactEmail() .'", '					
+			. ' contactphone = "' . $obj->getContactPhone() .'", '
+			. ' contactname = "' . $obj->getContactName().'", '
+			. ' published = "' . $obj->getPublished() .'", '
+			. ' updatedby = "' . $obj->getUpdatedBy() .'", '
+			. ' properties = "' . $obj->getFormattedProperties() .'" '
+			. ' where id = ' . $obj->getId();		
+    	return $this->_updateRow($query);
+    }
+    
+    /**
+     *  The "promote" function essentially updates the creation date which will cause the bulletin to behave as if it is brand new. 
+     */
+    function promote($id) {
+    	$query = 'update ' .$this->getNameQuote( $this->tablename  ) . ' set '
+    		. ' date_inserted = now() ' 
+    		. ' where id = ' . $id;
+    	return $this->_updateRow($query);
+    	 
+    }
+    
+    /**
+     * This function returns all of the bulletin board items based on the # of days passed by the calling
+     * function.  In addition, the client can limit the number of rows returned.
+     * 
+     * @param number $days
+     * @param number $rows
+     * @return multitype:JLBulletinBoardItem
+     */
+    function getLeagueBulletinBoardItems($days = 180, $limit = 200) {
+    	/*$query = "SELECT b . * , t.name as 'teamname', t.logo as 'teamlogo'
+    			FROM `#__jleague_bulletins` b, `#__jleague_teams` t
+    			WHERE b.teamid = t.id and b.type <> 5
+    			and date_inserted > date_sub(curdate(), interval 180 day) order by b.date_inserted desc LIMIT 0, " . $limit;
+    	*/
+    	
+    	$query = "SELECT * from (
+SELECT b . * , t.name as 'teamname', t.logo as 'teamlogo'
+    			FROM `#__jleague_bulletins` b, `#__jleague_teams` t
+    			WHERE b.teamid = t.id and b.type <> 5
+    			and date_inserted > date_sub(curdate(), interval 180 day)
+    		union
+    		select b.*, null, null
+    			FROM #__jleague_bulletins b
+    			WHERE b.type <> 5 and (b.teamid = 0 or b.teamid is null)
+    			and date_inserted > date_sub(curdate(), interval 180 day)
+    ) bulletins_tmp
+order by date_inserted desc LIMIT 0, " . $limit;
+    	    	
+    	
+    	$cache = & JLCache::getInstance();
+    	$cache_key = 'getLeagueBulletinBoardItems_' . $days . '_' . $limit;
+    	try {
+    		$rows = $cache->get($cache_key);
+    	} catch (Exception $e) {
+    		$rows = $this->_execute($query);
+    		$cache->store($cache_key,null,$rows);
+    	}
+
+		$retArray = array();
+		foreach ($rows as $row) {
+			$obj = new JLBulletinBoardItem();
+			$obj->setId($row->id);
+			$obj->setCategory($row->category);
+			$obj->setType($row->type);
+			$obj->setTeamId($row->teamid);
+			$obj->setTitle($row->bulletin_title);
+			$obj->setCreateDate(JLUtil::dateconvert($row->date_inserted,3));
+			$obj->setDescription($row->bulletin_desc);
+			$obj->setContactEmail($row->contactemail);
+			$obj->setContactPhone($row->contactphone);
+			$obj->setContactName($row->contactname);
+			$obj->setDateInserted($row->date_inserted);
+			$obj->setUpdatedBy($row->updatedby);
+			$obj->setTeamName($row->teamname);
+			$obj->setTeamLogo($row->teamlogo);
+			$retArray[] = $obj;
+		}
+		return $retArray;  	
+    	
+    }
+    
+    
+    /**
+     * This function returns all of the bulletin board items based on the # of days passed by the calling
+     * function.  In addition, the client can limit the number of rows returned.
+     *
+     * @param number $days
+     * @param number $rows
+     * @return multitype:JLBulletinBoardItem
+     */
+    function getBulletinItemsByCategory($catid=null, $limit = 200) {
+    	if (!is_numeric($catid)) {
+    		throw new  Exception("Category ID is not numeric");
+    	}
+    	
+/*    	$query = "SELECT b . * , t.name as 'teamname', t.logo as 'teamlogo'
+    			FROM `#__jleague_bulletins` b, `#__jleague_teams` t
+    			WHERE b.teamid = t.id and b.type = " . $catid . " 
+    			and date_inserted > date_sub(curdate(), interval 180 day) order by b.date_inserted desc LIMIT 0, " . $limit;
+    */
+    	$query = "SELECT * from ( 
+SELECT b . * , t.name as 'teamname', t.logo as 'teamlogo'
+    			FROM `#__jleague_bulletins` b, `#__jleague_teams` t
+    			WHERE b.teamid = t.id and b.type = " . $catid . "  
+    			and date_inserted > date_sub(curdate(), interval 180 day) 
+    		union
+    		select b.*, null, null
+    			FROM #__jleague_bulletins b
+    			WHERE b.type = " . $catid . "  and (b.teamid = 0 or b.teamid is null)
+    			and date_inserted > date_sub(curdate(), interval 180 day) 
+    ) bulletins_tmp
+order by date_inserted desc LIMIT 0, " . $limit;
+    			
+    	
+    	/*
+select * from (
+SELECT b . * , t.name as 'teamname', t.logo as 'teamlogo'
+    			FROM `#__jleague_bulletins` b, `#__jleague_teams` t
+    			WHERE b.teamid = t.id and b.type = 2 
+    			and date_inserted > date_sub(curdate(), interval 180 day) 
+    		union
+    		select b.*, "", ""
+    			FROM #__jleague_bulletins b
+    			WHERE b.type = 2 and (b.teamid = 0 or b.teamid is null)
+    			and date_inserted > date_sub(curdate(), interval 180 day) 
+    ) bulletins_tmp
+order by date_inserted desc
+    	 * 
+    	 */
+    	$cache = & JLCache::getInstance();
+    	$cache_key = 'getBulletinItemsByCategory_' . $catid . '_' . $limit;
+    	try {
+    		$rows = $cache->get($cache_key);
+    	} catch (Exception $e) {
+    		$rows = $this->_execute($query);
+    		$cache->store($cache_key,null,$rows);
+    	}
+    
+    	$retArray = array();
+    	foreach ($rows as $row) {
+    		$obj = new JLBulletinBoardItem();
+    		$obj->setId($row->id);
+    		$obj->setCategory($row->category);
+    		$obj->setType($row->type);
+    		$obj->setTeamId($row->teamid);
+    		$obj->setSponsorId($row->sponsorid);
+    		$obj->setTitle($row->bulletin_title);
+    		$obj->setCreateDate(JLUtil::dateconvert($row->date_inserted,3));
+    		$obj->setDescription($row->bulletin_desc);
+    		$obj->setContactEmail($row->contactemail);
+    		$obj->setContactPhone($row->contactphone);
+    		$obj->setContactName($row->contactname);
+    		$obj->setDateInserted($row->date_inserted);
+    		$obj->setUpdatedBy($row->updatedby);
+    		$obj->setTeamName($row->teamname);
+    		$obj->setTeamLogo($row->teamlogo);
+    		$retArray[] = $obj;
+    	}
+    	return $retArray;
+    	 
+    }
+    
+    
+
+}

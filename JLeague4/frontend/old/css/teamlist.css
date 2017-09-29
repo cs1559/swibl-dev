@@ -1,0 +1,28 @@
+.teamlist-row {
+	border:1px solid #D2D2D2;	
+	margin-bottom: 5px;
+}
+td.teamlist-logo {
+	/* width: 85px; */	
+}
+.teamlist-teamname {
+	color: #2276C2;
+	font-size: 16px;	
+	font-weight: bold;
+}
+.teamlist-col1 {
+	width: 85px;
+}
+.teamlist-col2 {
+	width: 250px;
+}
+.teamlist-col3 {
+	width: 250px;
+}
+.teamlist-col4 {
+	width: 130px;
+}
+.teamlist-col5 {
+	width: 100px;
+}
+

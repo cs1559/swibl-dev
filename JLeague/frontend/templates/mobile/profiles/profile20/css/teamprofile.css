@@ -1,0 +1,76 @@
+@CHARSET "ISO-8859-1";
+.teamprofile-wrapper {
+	padding: 10px;
+	background: #F9F9F9;
+}
+.teamprofile-heading {
+    font-size: 26px !important;
+    font-weight: bold !important;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    border: 2px solid #a1a1a1;
+    padding: 10px 40px; 
+    background: #778899;
+    border-radius: 10px;
+}
+.teamprofile-component {
+    border: 1px solid #778899;
+    margin-bottom: 15px;
+    background: #fff;
+}
+.teamprofile-component-header > h3 {
+	margin: 0px !important;	
+	text-align: center;
+	color: #ffffff;
+}
+.teamprofile-component-header {
+	/* background-color: #008dd5; */
+	background-color: #778899;
+}
+.teamprofile-component-content {
+	padding: 10px;
+}
+.teamprofile-division-name {
+    color: red;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.swibl-table-max {
+	/*line-height: 8px; */
+}	
+.teamprofile-table {
+	line-height: 18px;
+}
+.teamprofile-table th {
+	text-align: left;
+}
+.teamprofile-schedule-table {
+	line-height: 18px;
+}
+.teamprofile-component-scrollable-content {
+	overflow-y: scroll;
+	max-height: 280px; 
+}
+.teamprofile-teamname {
+	font-weight: bold;
+	text-align: left;
+}
+.teamprofile-col1 {
+	height: inherit;
+}
+.teamprofile-col2 {
+	height: inherit;
+}
+
+.teamprofile-record-table > th {
+	background: #778899;
+}
+#teamprofile-standings {
+	max-height: 350px;
+}
+#teamprofile-upcomgingames {
+	height: inherit;
+}
+

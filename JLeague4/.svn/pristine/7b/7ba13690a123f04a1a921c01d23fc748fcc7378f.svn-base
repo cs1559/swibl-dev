@@ -1,0 +1,146 @@
+<?php
+/**
+ * @version		$Id: baseview.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	FST Framework
+ * @subpackage	Core
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license		GNU/GPL
+ */
+
+
+class JLBulletinsDAO extends fsBaseDAO {
+	
+	var $tablename = '#__jleague_bulletins';
+
+		/**
+	 * This function will find a specific team.
+	 *
+	 * @param int $id
+	 * @return JLTeam
+	 */
+	function findById($id) {
+		$iid = (int) $id;
+		$query = "select * from #__jleague_bulletins where id = " . $iid;
+		return parent::_getRow($query);
+	}
+	
+	protected function __construct() {
+		//parent::__construct();
+	}
+	
+	static function getInstance() {
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new JLBulletinsDAO();
+		}
+		$db = mFactory::getDBO();
+		$instance->setDatabase($db);
+		return $instance;
+	}	
+		
+   
+	/**
+	 * This will map the the database row to the Team Object
+	 *
+	 * @param unknown_type $row
+	 * @return unknown
+	 */	
+	function loadObject($row) {
+    	$obj = new JLBulletin();
+    	$obj->setId($row->id);
+    	$obj->setType($row->type);
+    	$obj->setTeamId($row->teamid);
+    	$obj->setTitle($row->bulletin_title);
+    	$obj->setDescription($row->bulletin_desc);
+    	$obj->setContactEmail($row->contactemail);
+    	$obj->setContactPhone($row->contactphone);
+    	$obj->setContactName($row->contactname);
+    	$obj->setDateInserted($row->date_inserted);
+    	return $obj;
+	}
+
+	/**
+	 * This function will return an array of Contacts fora specific team.
+	 *
+	 * @param int $teamid
+	 * @return array
+	 */
+	function getTeamBulletins($teamid) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric (JLBulletinsDAO::getTeamBulletins)");
+		}
+    	$iid = (int) $teamid;
+    	$query = 'SELECT * FROM #__jleague_bulletins WHERE teamid = ' . $iid;
+    	$rows = $this->_execute($query); 
+    	if (is_array($rows)) {
+    		$bulletins = array();
+    		foreach ($rows as $row) {
+    			$bulletin = $this->loadObject($row);
+    			$bulletins[] = $bulletin;
+    		}
+    		return $bulletins;
+    	}
+    	return null;
+    } 
+    
+    /**
+     * This funciton will associate a contact object to a specific team.
+     *
+     *CREATE TABLE IF NOT EXISTS `joom_jleague_bulletins` (
+  `id` int(11) NOT NULL auto_increment,
+  `teamid` int(11) NOT NULL,
+  `bulletin_title` varchar(60) not null,
+  `bulletin_desc` text,
+  `contactname` varchar(30) not null,
+  `contactemail` varchar(100),
+  `contactphone` varchar(12),
+  `published` tinyint,
+  `date_inserted` timestamp,
+  `properties` text,
+  PRIMARY KEY  (`id`)
+)  ENGINE=MyISAM;
+
+     * @param JLBulletin $obj
+     * @return boolean
+     */
+    function insert(JLBulletin $obj) {
+		$query = 'INSERT INTO ' .$this->getNameQuote( '#__jleague_bulletins'  ) . ' (id, teamid, type, bulletin_title, bulletin_desc, contactname, contactemail, contactphone, '
+    		.' date_inserted, published, properties) '
+			. ' VALUES (0,'
+			. '"' . $obj->getTeamId() . '",'
+			. '"' . $obj->getType() . '",' 								
+			. '"' . $obj->getTitle() . '",'
+			. '"' . $obj->getDescription(). '",'
+			. '"' . $obj->getContactName() . '",'
+			. '"' . $obj->getContactEmail() . '",'					
+			. '"' . $obj->getContactPhone() . '",'
+			. ' now(),' 
+			. '"' . $obj->getPublished(). '",'
+			. '"' . $obj->getFormattedProperties() . '"'			
+			.  ')';
+		return $this->_insertRow($query);			
+    }
+     
+
+    /**
+     * Update the bulletin table.
+     * 
+     * @param JLBulletin $obj
+     * @return boolean
+     */
+    function update(JLBulletin $obj) {
+    	$query = 'update ' .$this->getNameQuote( $this->tablename  ) . ' set ' 
+      		. ' teamid = "' . $obj->getTeamId() .'", '
+			. ' type = "' . $obj->getType() .'", '      				
+			. ' bulletin_title = "' . $obj->getTitle() .'", '
+			. ' bulletin_desc = "' . $obj->getDescription() .'", '		
+			. ' contactemail = "' . $obj->getContactEmail() .'", '					
+			. ' contactphone = "' . $obj->getContactPhone() .'", '
+			. ' contactname = "' . $obj->getContactName().'", '
+			. ' published = "' . $obj->getPublished() .'", '
+			. ' properties = "' . $obj->getFormattedProperties() .'" '
+			. ' where id = ' . $obj->getId();		
+    	return $this->_updateRow($query);
+    }
+    
+}

@@ -1,0 +1,21 @@
+<div id="registration-wrapper" style="height: 750px;">
+
+	<div class="jleague-title">
+	<h2>Online Registration</h2>
+	</div>
+
+	<form name="registrationform-seasonselect" method="post" action="index.php">
+	<br/>
+	Select the SEASON are you registering for:
+	
+	<?php
+		$jstring =  'getRegistrationForm(this.value,' . $reg->getTeamId() . ');';
+		//echo JLHtml::getRegistrationOpenSeasonList('seasonid','',null,'onchange="' . $jstring . '"'); 
+		echo mHtmlHelper::getRegistrationOpenSeasonList('seasonid', '', 'registrationOpenSelectList',false,$jstring);
+	?>
+					
+	<div id="entryform"></div>
+	
+	</form>
+
+</div>

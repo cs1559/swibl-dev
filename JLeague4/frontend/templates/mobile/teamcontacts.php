@@ -1,0 +1,92 @@
+<style type="text/css">
+@media print {
+	input#btnPrint {
+		display: none;
+	}
+}
+</style>
+
+<?php 
+
+if (isset($_REQUEST["format"])) {
+	if ($_REQUEST["format"] == "raw") {
+ ?>
+ 
+<SCRIPT LANGUAGE="JavaScript"> 
+// This script was supplied free by Hypergurl 
+// http://www.hypergurl.com <!-- 
+	if (window.print) { 
+		document.write('<form>' + '<input id="btnPrint" type=button name=print value="Print this page" ' + 'onClick="javascript:window.print()"> </form>'); 
+	} 
+// End hide --> 
+</script>
+<?php
+	}
+} else {
+?>
+	<p>
+	<a href="javascript:void(0);" title="Create Printer Friendly Version" onClick="openWindow('<?php echo JRoute::_('index.php?option=com_jleague&controller=teams&task=getteamcontactlist&tmpl=component&format=raw'); ?>');">Create Printer Friendly Version</a>
+	</p>
+<?php	
+}
+?>
+
+<div class="jleague-title">
+	<h2><?php echo $season->getTitle(); ?> SWIBL Team Contacts</h2>
+</div>
+<p>	
+	NOTE:  The contact list is limited to only those teams that play within the same age group as your team(s).  If additional contact
+	information is needed, please contact the League Commissioner.
+</p>
+<?php
+	foreach ($divisions as $div) { 
+		?><h3><?php echo $div->getName();?></h3>
+		<?php
+		$svc = &JLDivisionService::getInstance();
+		$contacts = $svc->getTeamConactsWithinDivision($div->getId());
+		$prevtname = null;
+		$firstindiv = true;
+?>
+	<table class="team-contact-list">
+		<tbody>
+			<tr>
+				<th class="contact-list-header"><?php echo JLText::getText('Team'); ?></th>
+				<th class="contact-list-header"><?php echo JLText::getText('Coach/Contact'); ?></th>
+				<th class="contact-list-header"><?php echo JLText::getText('Primary'); ?></th>
+				<th class="contact-list-header"><?php echo JLText::getText('Phone'); ?></th>
+				<th class="contact-list-header"><?php echo JLText::getText('Email'); ?></th>
+			</tr>
+	
+<?php
+	foreach ($contacts as $contact) {
+		if ($contact->teamname != $prevtname) {
+			if (!$firstindiv) {
+				//	echo "<tr><td colspan='6'>&nbsp;</td></tr>";		
+			} 
+			$teamname = $contact->teamname;
+			$prevtname = $contact->teamname;
+			$firstindiv = false;
+		} else {
+			$teamname = "";
+		}
+?>
+		<tr>
+			<td><?php echo $teamname; ?></td>
+			<td><?php echo $contact->name; ?></td>
+			<td><?php echo ($contact->primarycontact) ? "Yes" : "No"; ?></td>
+			<td><?php echo $contact->phone; ?></td>
+			<td><?php echo mJoomlaApp::cloakEmail($contact->email); ?></td>
+		</tr>			
+<?php		
+	}
+?>
+		</tbody>
+	</table>	
+
+<?php
+	}  // division foreach
+?>
+<div id="printroster-message" class="centerjust">
+<br/><hr/>
+<?php echo $config->getProperty('copyright_notice'); ?>
+</div>

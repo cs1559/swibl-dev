@@ -1,0 +1,88 @@
+<?php
+?>
+
+<style>
+ #map-canvas {
+  	width: 100%; 
+  	height: 300px;
+	margin: 0;
+	padding: 15px;
+}
+.sponsor-profile-heading {
+	background-image: url('images/pattern4.png');
+	color: #ffffff !important;
+	text-align: center !important;
+	padding-top: 24px !important;
+	padding-bottom: 24px !important;
+	line-height: 20px !important;
+	margin-bottom: 15px !important;
+}
+
+.sponsor-profile-heading h1 {
+	font-size: 36px !important;
+	margin-bottom: 5px !important;
+}
+</style>
+<div class="sponsor-profile-container">
+
+
+	<div class="sponsor-profile-heading jumbotron">
+
+		<div class="row">
+			<div class="col-md-3">
+				<img class="xx-teamprofile-team-logo" alt="SWIBL Team Logo" 
+					src="images/final-logo.gif">
+			</div>
+			<div class="col-md-9">
+				<h1><?php echo $sponsor->getName(); ?></h1>
+  		<?php echo $_view->getFormattedAddress($sponsor); ?>
+  		<p><?php echo $submenu; ?></p>
+			</div>
+		</div>
+
+
+	</div>
+
+</div>
+
+<?php 
+	if ($editable) {
+?>
+<p>
+<ul class="nav nav-pills">
+	  <li class="active"><a href="index.php?option=com_jleague&controller=sponsors&task=profile&id=<?php echo $sponsor->getId(); ?>">Profile Home</a></li>
+	  <li><a href="index.php?option=com_jleague&controller=sponsors&task=manageBulletins&id=<?php echo $sponsor->getId(); ?>">Post Bulletin</a></li>
+</ul>
+</p>
+<?php 
+
+	}
+?>
+<div class="row">
+
+	<div class="col-md-6">
+
+		<div class="panel panel-default">
+			<div class="swibl-panel-heading panel-heading ">
+				<h4 class="panel-title">Sponsor Contact</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-xs-3 col-md-3">
+						<img style="height: 75px; width: 75px;" src="/components/com_jleague/assets/img/blankProfile.jpg"/>
+					</div>
+					<div class="col-xs-9 col-md-9">
+					<?php echo $sponsor->getContactName(); ?><br/>
+					<?php echo $sponsor->getContactEmail(); ?><br/>
+					<?php echo $sponsor->getContactPhone(); ?>
+					</div>
+				</div>					
+			</div>
+		</div>
+		
+	</div>
+	
+	<div class="col-md-6">
+		   <div id="map-canvas"></div>
+	</div>
+</div>

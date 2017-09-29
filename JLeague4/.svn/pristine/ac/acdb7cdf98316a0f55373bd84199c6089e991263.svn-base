@@ -1,0 +1,53 @@
+<p>Below are the various mailing lists that you can subscribe to. Please provide us your name, email address and phone number and check the desired 
+lists you wish to subscribe too. Our email lists are managed via i-Contact. You will be able to UNSUBSCRIBE at anytime. <br /><br />
+
+<strong>NOTE:</strong> If you subscribe, please make sure that you check your SPAM folder periodically as our emails may be tagged as SPAM.  Emails are
+delivered using <a href="http://www.icontact.com">iContact</a> . 
+<br /><br /><br />
+</p>
+<form id="icpsignup1370" class="form-horizontal" accept-charset="UTF-8" action="https://app.icontact.com/icp/signup.php" method="post" name="icpsignup">
+<fieldset>
+<input name="redirect" type="hidden" value="http://swibl-baseball.org/" /> <input name="errorredirect" type="hidden" value="http://www.icontact.com/www/signup/error.html" />
+<div id="SignUp">
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-sm-2 control-label" for="teamid">Email:</label>
+  <div class="controls">
+    <input id="fields_email" name="fields_email" required="" class="input-lg" type="text" >
+   </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-2 control-label" for="teamid">First Name:</label>
+  <div class="controls">
+    <input id="fields_fname" name="fields_fname" required="" class="input-md" type="text" >
+   </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-2 control-label" for="teamid">Last Name:</label>
+  <div class="controls">
+    <input id="fields_lname" name="fields_lname" required="" class="input-md" type="text" >
+   </div>
+</div>
+
+
+<div class="form-group">
+  <label class="col-sm-2 control-label" for="teamid">Phone:</label>
+  <div class="controls">
+    <input id="fields_phone" name="fields_phone" required="" class="input-sm" type="text" >
+   </div>
+</div>
+
+<div class="form-group">
+  <div class="controls col-sm-offset-2">
+    <button type="submit" class="btn btn-primary">Submit</button>
+   </div>
+</div>
+
+
+
+</div>
+</fieldset>
+</form>

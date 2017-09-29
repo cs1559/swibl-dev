@@ -1,0 +1,285 @@
+@import url(profile.css);
+@import url(scoreboard.css);
+@import url(teamlist.css);
+@import url(playerselectlist.css);
+
+.tooltip{ position: absolute; top: 0; left: 0; z-index: 3; display: none; }
+
+
+.system_message {
+	color: red;
+}
+
+.inputOn {
+	display: inline;
+}
+
+.inputOff {
+	display: none;
+}
+
+.ajax-loading-text {
+	color: #2276C2;
+}
+.clr {
+	clear: both;
+}
+
+.left-pad10 {
+	padding-left: 10px;
+}
+.width-5 {
+	width: 5%;
+}
+.width-10 {
+	width: 10%;
+}
+.width-20 {
+	width: 20%;
+}
+.width-25 {
+	width: 25%;
+}
+.width-35 {
+	width: 35%;
+}
+.width-45 {
+	width: 45%;
+}
+.width-55 {
+	width: 55%;
+}
+
+.width-75 {
+	width: 75%;
+}
+.width-80 {
+	width: 80%;
+}
+.width-90 {
+	width: 90%;
+}
+.width-95 {
+	width: 95%;
+}
+
+.width-100 {
+	width: 100%;
+}
+.pad5 {
+	padding: 5px;
+}
+.pad20 {
+	padding: 20px;
+}
+
+.leftjust {
+	text-align: left;
+}
+.rightjust {
+	text-align: right;
+}
+.centerjust {
+	text-align: center;
+}
+.valign-top {
+	vertical-align: top;
+}
+
+.ui-widget {
+	font-family:Arial,Helvetica,sans-serif !important;
+	font-size: 12px;
+	color:#646464 !important;
+}
+.ui-widget-content {
+	color: #646464 !important;
+}
+
+#system-message dd {
+	background:		#e6e6e6;	
+}
+
+
+
+/*  ------------- GENERAL STYLINGS ---------------- */
+div.jleague-section-block {
+	margin-bottom: 10px;
+}
+div.jleague-section-header {
+	background-color:#E6E6E6;
+	border:1px solid #000000;
+	text-align:center;
+	height: 26px;
+}
+div.jleague-section-header h3 {
+	margin-top: 3px;
+	margin-bottom: 2px;
+}
+.jleague-filter-table {
+	width: 100%;
+}
+.jleague-title {
+	border-bottom: 1px solid #CCCCCC;
+}
+.roster-table {
+	border-collapse:collapse;
+	font-size: 11px;
+}
+.roster-table-cell-header {
+background-color:#2276C2;
+color:#FFFFFF;
+}
+
+/*  ----------------- GAMES HISTORY  -------------------- */
+#games-table {
+	width: 100%;
+	border: 1px solid #D3D3D3;
+	border-collapse:collapse;
+	font-size: 11px;
+}
+/* #2276C2; */
+.games-table-cell-header {
+background-color:#002AAA;
+color:#FFFFFF;
+text-align: left;
+}
+th.games-table-cell-header
+text-shadow: 0 0 0 !important;
+}
+.games-table-cell-center {
+	text-align: center;
+}
+.games-non-complete-message {
+	color: red;
+}
+tr.game-table-row-even {
+	background-color: #d3d3d3;	
+}
+tr.game-table-row-odd {
+	background-color: #FFFFFF;	
+} 
+
+
+
+/*  ----------------- RECORD HISTORY  -------------------- */
+#recordhistory-table {
+	width: 100%;
+	border-collapse:collapse;
+	border: 1px solid #D3D3D3;
+	font-size: 11px;
+}
+
+/* #6666FF */
+#recordhistory-table th {
+background-color:#002AAA;
+color:#FFFFFF;
+padding-left:5px;
+padding-right:5px;
+text-align:center;
+text-shadow: 0 0 0 !important;
+}
+.recordhistory-cell-center {
+	text-align: center;
+}
+
+/*  ----------------- STANDINGS -------------------- */
+
+#standings-table {
+	width: 100%;
+	margin-top: 10px;
+}
+
+#standings-adspace {
+	display: none;
+}
+
+#standings-criteria {
+	display: none;
+}
+#standings-filter {
+	float: right; 
+	font-weight: bold; 
+	clear: both;
+}
+#standings-league-description {
+/*	float: left; */
+	font-size: 18px;
+	font-weight: bold;
+	color: #2276C2;
+}
+
+#standings-wrapper {
+	width: 100%;
+	margin-top: 15px;
+}
+
+#standings-body {
+/*	float: left; */
+	display: block;
+}
+
+#standings-note {
+	margin-top: 25px;
+	font-size: 10px;
+	font-style: italic;	
+}
+td.standings-table-division-header {
+	background-color: #E6E6E6;
+	border: 1px solid #000000;
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+	color: #2276C2;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+td.standings-table-division-header h3 {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+.standings-table-division-subheader-row {
+	font-weight: bold;
+}
+.standings-table-stats-cell-header {
+	text-align: center;
+}
+.standings-table-stats-cell {
+	width: 50px;
+	text-align: center;
+}
+
+
+/*  ----------- SCOREBOARD -------------------- */
+.scoreboard-header {
+	background-color: #282828;
+	border: 1px solid #FFFF00;
+	text-align: center;
+	color: #FFFF00;
+}
+.scoreboard-header h3 {
+	color: #FFFF00;
+}
+
+.upcoming-games-table {
+	width: 100%;
+}
+.upcoming-games-header {
+	background-color: #222222;
+	border: 1px solid #FFFF00;
+	text-align: center;
+	color: #FFFF00;
+		
+}
+
+
+.team-current-venues-table {
+	width: 75%;
+}	
+table.team-current-venues-table th {
+	text-align: left;	
+}
+
+#team-contact-list {
+	width: 100%;	
+}

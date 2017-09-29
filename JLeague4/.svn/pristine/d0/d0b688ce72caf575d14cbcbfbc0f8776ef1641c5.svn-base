@@ -1,0 +1,17 @@
+create index scores_idx1
+on joom_jleague_scores (season, conference_game, gamestatus);
+
+create index scores_idx2
+on joom_jleague_scores (hometeam_id, season);
+
+create index scores_idx3
+on joom_jleague_scores (awayteam_id, season);
+
+create index division_season_idx
+on joom_jleague_division (season)
+
+create index divmap_season_idx
+on joom_jleague_divmap (season, division_id)
+
+create index bulletins_teamid_idx
+on joom_jleague_bulletins (teamid);

@@ -1,0 +1,152 @@
+<?php
+/**
+ * @version		$Id: gamesservice.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	JLeague
+ * @subpackage	Services
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC - All Rights Reserved
+ * @license		GNU/GPL, see LICENSE.php
+ */
+
+class JLGamesService  extends mBaseService  {
+	
+	protected function __construct() {
+		parent::__construct();
+	}
+	
+	/**
+	 * This function will return an instance of the JLGameService service object.
+	 *
+	 * @return JLGamesService
+	 */
+	static function getInstance() {
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new JLGamesService();
+		}
+		return $instance;
+	}		
+		
+	protected function getDao() {
+		$dao = &JLGamesDAO::getInstance();
+		return $dao;
+	}
+
+	/**
+	 * Returns a GAME object.
+	 *
+	 * @param int $id
+	 * @return JLGame
+	 */
+	function getGame($id) {
+		if (!is_numeric($id)) {
+			throw new  Exception("Game ID is not numeric");
+		}		
+		$dao = $this->getDao();
+		return $dao->findById($id);
+	}
+	
+	/**
+	 * This fucntion will save a game object.
+	 *
+	 * @param JLGame $obj
+	 * @return unknown
+	 */
+	function save(JLGame $obj) {
+		if (!parent::save($obj)) {
+			throw new  Exception("Game information was not saved");
+		}
+		$app = &mFactory::getApp();
+		$dispatcher = $app->getEventDispatcher();
+		$dispatcher->trigger('onSaveGame',$obj);
+		return true;
+	}
+	
+	function postScore(JLGame $obj) {
+		if (!parent::save($obj)) {
+			throw new  Exception("Game information was not saved");
+		}
+		$app = &mFactory::getApp();
+		$dispatcher = $app->getEventDispatcher();
+		$dispatcher->trigger('afterPostScore',$obj);
+		return true;
+		
+	}
+	/**
+	 * This function will return an array of games for a given season.  This function will filter the rows
+	 * for only "COMPLETED" games (see gamestatus = 'c').  Any scheduled games will be omitted from the return
+	 * array.
+	 *
+	 * @param int $season
+	 * @return array
+	 */
+	function getMostRecentGamesForSeason($season=null, $number_of_games = 10) {
+		$dao = $this->getDao();
+		$filter = array();
+		$filter[] = " gamestatus = 'C' ";	
+		if ($season != null) {
+			$filter[] = " season = " . $season;
+		}
+		$rows = $dao->getRecords(0,$number_of_games,' order by game_date desc ',$filter);
+		return $rows;	
+	}
+
+	/**
+	 * This function will return an array of "scheduled" games that are upcoming.  Any past games will not be
+	 * returned.  In addition, this will only show "league" games.
+	 * 
+	 * @param int $days
+	 * @param int $maxgames
+	 * @param boolean $leagueonly
+	 * @return array
+	 */
+	function getUpcomingGames($days=14,$maxgames=500,$leagueonly=true,$cache=false) {
+		$cache = & JLCache::getInstance();
+		
+		try {
+			$rows = $cache->get('getUpcomingGames');
+		} catch (Exception $e) {
+			$dao = $this->getDao();
+			$filter = array();
+			$filter[] = " gamestatus = 'S' ";
+			$filter[] = " conference_game = 'Y' ";
+			//		$filter[] = " game_date <= (now() + " . $days . ")";	
+	        $filter[] = " (DATE_SUB(CURDATE(),INTERVAL 1 DAY) <= game_date and game_date <= date_add(curdate(), interval " . $days . " day)) ";		
+	        $filter[] = " (DATE_ADD(CURDATE(),INTERVAL 1 DAY) <= game_date and game_date <= date_add(curdate(), interval " . $days . " day)) ";
+			$rows = $dao->getRecords(0,$maxgames,' order by game_date asc ',$filter);
+			if ($cache) {
+				$cache->store('getUpcomingGames',null,$rows);
+			}
+		}
+		return $rows;	
+	}
+	
+	/*
+	function getUpcomingGames($days=14,$maxgames=500,$leagueonly=true) {
+		$cache = & JLCache::getInstance();
+	
+		try {
+			$rows = $cache->get('getUpcomingGames');
+		} catch (Exception $e) {
+			$dao = $this->getDao();
+			$filter = array();
+			$filter[] = " gamestatus = 'S' ";
+			$filter[] = " conference_game = 'Y' ";
+			//		$filter[] = " game_date <= (now() + " . $days . ")";
+			$filter[] = " (DATE_SUB(CURDATE(),INTERVAL 1 DAY) <= game_date and game_date <= date_add(curdate(), interval " . $days . " day)) ";
+			$rows = $dao->getRecords(0,$maxgames,' order by game_date asc ',$filter);
+			$cache->store('getUpcomingGames',null,$rows);
+		}
+		return $rows;
+	}
+	*/
+	function getTeamGamesForSeasonSummary($teamid,$season) {
+		
+	}
+	
+	function getTeamGamesForSeasonDetail($teamid, $season) {
+		
+	}
+
+}
+
+?>

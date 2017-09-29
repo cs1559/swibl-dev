@@ -1,0 +1,124 @@
+/* ===================================== */
+/* (c) 2014 SWIBL                        */
+/* ===================================== */
+/*
+body {
+	 background-image: url("http://localhost/smobile/img/background-black2.jpg");  
+	 background-repeat: no-repeat; 
+	 padding-top: 40px;
+}
+*/
+
+.quicklink-select {
+	width: 100%;
+}
+
+.vcenter {
+	vertical-align: middle;
+}
+.standings-accordion {
+	width: 95%;
+}
+
+.swibl-box {
+	background-color: white;
+	padding: 10px;
+	margin: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border-style:solid;
+	border-width:2px;	
+}
+.fs-content-wrapper {
+	background-color: #FFFFFF;
+	margin-top: 9px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+-webkit-border-bottom-right-radius: 10px;
+-webkit-border-bottom-left-radius: 10px;
+-moz-border-radius-bottomright: 10px;
+-moz-border-radius-bottomleft: 10px;
+border-bottom-right-radius: 10px;
+border-bottom-left-radius: 10px;
+}
+.swibl-logo-intext {
+	margin: 10px;
+	float: left;
+	height: 150px;
+	width: 150px;
+}
+.swibl-media-object {
+	width: 64px;
+	height: 64px;
+}
+.swibl-profile-geninfo {
+	margin: 10px;
+}
+.swibl-panel-heading > h4 {
+	margin-top: 0px;
+	padding-top: 0px;
+}
+.swibl-panel-heading {
+	font-size: 14px;
+	height: 38px;
+}
+
+#teamprofile_menu {
+	max-width: 50%;
+}
+
+/* ===================================== */
+/* BOOTSTRAP OVERRIDES                   */
+/* ===================================== */
+
+.alert-info {
+	background-color: #000089;
+	color: #FFFFFF;
+	text-shadow: none;
+}
+
+.container-narrow {
+	width: 700px;
+}
+.jumbotron {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-color: #000000;
+	background-image: url("../../img/background-black.jpg");
+	color: #ffffff;
+}
+.jumbotron h2{
+	font-size: 50px;
+}
+.jumbotron {
+	background-image: linear-gradient(top , #0f0f0f, #0000de 100.0%);
+	background-color:#0f0f0f; 
+	color: #FFFFFF;
+}
+.panel-heading {
+	border-color: #000000;
+	background-color: #333399 !important;
+	color: #FFFFFF !important;
+}
+a.accordion-toggle {
+	color: #FFFFFF;
+}
+.accordion-inner {
+	background-color: #ffffff;
+}
+.accordion-heading {
+	height: 30px;
+}
+.accordion-heading h4 {
+	font-size:	14px;
+}
+.accordion-heading, .accordion-toggle {
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+}
+
+
+
+

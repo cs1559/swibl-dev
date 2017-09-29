@@ -1,0 +1,66 @@
+<?php
+
+require_once('config.php');
+//require_once(FST_LIBRARY_PATH . DS . 'google' . DS . 'googleservice.php');
+require_once(FST_LIBRARY_PATH . DS . 'database' . DS . 'database.php');
+
+class mFactory {
+	
+	function getConfig() {
+		return mConfig::getInstance();
+	} 
+	static function getApp() {
+		if (FS_JOOMLA) {
+			$app = &mJoomlaApp::getInstance();
+		} else {
+			$app = &mApp::getInstance();
+		}
+		return $app;
+	}
+	static function getDBO() {
+		/**
+		 * If this is running within Joomla, then retrieve the sites configuration information
+		 */
+		if (FS_JOOMLA) {
+			$config = &JFactory::getConfig();		
+			$host 		= $config->get('config.host');
+			$user 		= $config->get('config.user');
+			$password 	= $config->get('config.password');
+			$database	= $config->get('config.db');
+			$prefix 	= $config->get('config.dbprefix');
+			$driver 	= $config->get('config.dbtype');
+			$debug 		= $config->get('config.debug');
+			$db			=& JFactory::getDBO();
+			return $db;
+		} else {
+			$config = self::getConfig();
+			$host 		= $config->getPropertyValue("db.host");
+			$user 		= $config->getPropertyValue("db.user");
+			$password 	= $config->getPropertyValue("db.password");
+			$database	= $config->getPropertyValue("db.database");
+		}
+		$options = array(
+				"database"=>$database,
+				"host"=>$host,
+				"user"=>$user,
+				"password"=>$password);
+		$db = &fsDatabase::getInstance($options);
+		$db->setPrefix("jos");
+		return $db;
+	}
+	
+	function &getDocument() {
+		$document =& JFactory::getDocument();
+		return $document;
+	}
+	
+	function getGeocoder() {
+		$svc = &fsGoogleService::getInstance();
+		return $svc->getGeocoder();
+	}
+	
+	function getUrlShortener() {
+		$svc = &fsGoogleService::getInstance();
+		return $svc->getUrlShortener();
+	}
+}

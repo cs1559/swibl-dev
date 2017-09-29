@@ -1,0 +1,11 @@
+<?php
+
+defined('_APPEXEC') or die('Restricted access');
+
+class mBaseView extends fsView {
+
+	function getUrl($url) {
+		return mRouter::translateUrl($url);
+	}
+
+}

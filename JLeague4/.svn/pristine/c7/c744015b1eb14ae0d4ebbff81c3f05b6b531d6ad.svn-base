@@ -1,0 +1,682 @@
+// ==========================================================
+//  Email List
+// ==========================================================
+
+select email,name, count(*) from 
+(
+	SELECT coachname as name, coachemail as email from jos_jleague_teams
+	where id in (
+		select team_id from jos_jleague_divmap where season = 9
+	)
+	union
+	SELECT name, email from jos_jleague_teamcontacts
+	where teamid in (
+		select team_id from jos_jleague_divmap where season = 9
+	) 
+) as tmp1
+where length(email)>0
+and LOCATE(';', email) <= 0
+and LOCATE('@', email) > 0
+and LOCATE(' or ', email) <= 0
+group by email
+
+
+// ==========================================================
+//  Teams with no OWNER
+// ==========================================================
+SELECT * FROM `jos_jleague_teams` where ownerid = 0 and id in (select team_id from jos_jleague_divmap where season = 9)
+
+// ==========================================================
+//  QUERY TO GENERATE REGISTRATION REPORT
+//  ** The first select generates list of those who have been
+//		assigned to a divisiongo.
+//	** The second list are unassigned teams
+// ==========================================================
+SELECT dm.id, team_id, teamname, dm.name, address, city, state, email, phone, cellphone, dm.agegroup, d.name, existingteam, dm.published,  if(tournament,"Yes","No") as tournament1, regdate, registeredby,if(paid,"Yes","No") as paid1,
+  if(paid,"Paid"," ") as team_sanction_25,
+  if(paid,"Paid"," ") as league_sanction_20,
+  if(paid,"Paid"," ") as insurance,
+  if(paid,"Paid"," ") as league_tournament_325,
+  if(paid,"Paid"," ") as admin_fee,
+  if(paid,"Paid"," ") as total_collected,
+  if(paid,"Paid"," ") as check_number
+FROM jos_jleague_divmap dm, jos_jleague_division d
+WHERE dm.division_id = d.id
+AND dm.season =9
+UNION
+SELECT dm.id, team_id, teamname, dm.name, address, city, state, email, phone, cellphone, dm.agegroup, "Unassigned", existingteam, dm.published, if(tournament,"Yes","No") as tournament1, regdate, registeredby,if(paid,"Yes","No") as paid1,
+  if(paid,"Paid"," ") as team_sanction_25,
+  if(paid,"Paid"," ") as league_sanction_20,
+  if(paid,"Paid"," ") as insurance,
+  if(paid,"Paid"," ") as league_tournament_325,
+  if(paid,"Paid"," ") as admin_fee,
+  if(paid,"Paid"," ") as total_collected,
+  if(paid,"Paid"," ") as check_number
+FROM jos_jleague_divmap dm
+WHERE dm.division_id = 0
+AND dm.season =9
+
+insert into jos_jleague_recordhistory (team_id, season, season_title, division_id, division_name, teamname, runs_scored, runs_allowed, wins, losses, ties, points)
+				select id, season, season_title, division_id, division_name, teamname, sum(runs_scored) runs_scored, sum(runs_allowed) runs_allowed, sum(wins) wins,sum(losses) losses, sum(ties) ties, sum(points) points from
+				( 
+				select  hometeam_id id, score.season, seastbl.title season_title, divmap.division_id, divtbl.name division_name, team.name teamname,  sum(hometeam_score) runs_scored, sum(awayteam_score) runs_allowed, sum(if(hometeam_score > awayteam_score,1,0)) wins, sum(if(hometeam_score < awayteam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(hometeam_points) points, 'homegame' game 
+				from jos_jleague_scores score, jos_jleague_teams team, jos_jleague_seasons seastbl, jos_jleague_divmap divmap, jos_jleague_division divtbl  
+				where hometeam_id = team.id and score.season = seastbl.id and team.id = divmap.team_id 
+						and score.season = divmap.season and divmap.division_id = divtbl.id 
+						and conference_game like 'Y' and score.gamestatus = 'C'
+						and divmap.season = 8
+					group by id, team.name, season, divmap.division_id 
+				UNION 
+				select  awayteam_id id, score.season, seastbl.title season_title,divmap.division_id,divtbl.name division_name, team.name teamname, sum(awayteam_score) runs_scored, sum(hometeam_score) runs_allowed, sum(if(awayteam_score > hometeam_score,1,0)) wins, sum(if(awayteam_score < hometeam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(awayteam_points) points, 'awaygame' game 
+				from jos_jleague_scores score, jos_jleague_teams team, jos_jleague_seasons seastbl, jos_jleague_divmap divmap, jos_jleague_division divtbl  
+				where awayteam_id = team.id and score.season = seastbl.id and team.id = divmap.team_id 
+						and score.season = divmap.season and divmap.division_id = divtbl.id 
+						and conference_game like 'Y' and score.gamestatus = 'C'
+						and divmap.season = 8
+						group by id, team.name, season, divmap.division_id
+				) as recordtbl
+				group by id, teamname, season, division_id
+				
+
+
+// ==========================================================
+//  Report
+//  1) Stats table needs to be created and updated before running this
+// ==========================================================
+
+select dm.id, team_id, dm.teamname, dm.name, address, city, state, email, phone, cellphone, agegroup, division_name, wins, losses, ties, runs_scored, runs_allowed, 
+		w_avgrundiff, l_avgrundiff, rpi
+from jos_jleague_divmap as dm 
+left join (
+	select * from jos_jleague_team_stats
+) as ts
+on dm.team_id = ts.teamid
+where dm.season = 9
+ 
+ 
+// ==========================================================
+//  Count of teams within the divisions
+// ==========================================================
+select ts.name,ts.sort_order,count(*)
+from jos_jleague_divmap as dm 
+left join (
+	select * from jos_jleague_division
+) as ts
+on dm.division_id = ts.id
+where dm.season = 9
+group by ts.sort_order, ts.name
+order by ts.sort_order, ts.name
+
+
+ 
+
+// ==========================================================
+// Score differential (WINS)
+// ==========================================================
+
+select avg(win_diff) from 
+(
+SELECT hometeam_id as teamid,hometeam_score - awayteam_score win_diff, 0 loss_diff FROM `jos_jleague_scores`
+where hometeam_id = 181
+and season = 8
+and (hometeam_score - awayteam_score) > 0
+and conference_game = 'Y'
+and gamestatus = 'C'
+union
+SELECT awayteam_id as teamid, awayteam_score - hometeam_score win_diff, 0 loss_diff FROM `jos_jleague_scores`
+where awayteam_id = 181
+and season = 8
+and (awayteam_score - hometeam_score) > 0
+and conference_game = 'Y'
+and gamestatus = 'C'
+) win1
+
+
+// ==========================================================
+// Score differential (LOSS)
+// ==========================================================
+
+select avg(win_diff) from  
+(
+SELECT id,hometeam_score - awayteam_score win_diff FROM `jos_jleague_scores`
+where hometeam_id = 181
+and season = 8
+and (hometeam_score - awayteam_score) < 0
+and conference_game = 'Y'
+and gamestatus = 'C'
+union
+SELECT id, awayteam_score - hometeam_score win_diff FROM `jos_jleague_scores`
+where awayteam_id = 181
+and season = 8
+and (awayteam_score - hometeam_score) < 0
+and conference_game = 'Y'
+and gamestatus = 'C'
+) win1
+
+
+
+// ==========================================================
+// Teams candidates to move up
+// ==========================================================
+SELECT r.id, t.name, d1.name, d1.agegroup, r.rpi
+FROM `jos_jleague_rpi` r, jos_jleague_teams t, jos_jleague_divmap d, jos_jleague_division d1
+WHEre r.id = t.id
+and d.team_id = t.id
+and d.season = 8
+and d.division_id = d1.id
+and r.rpi > .55
+and d1.name like "%American%"
+and d1.agegroup < 14
+
+
+// ==========================================================
+// Teams candidates to move DOWN
+// ==========================================================
+SELECT r.id, t.name, d1.name, d1.agegroup, r.rpi
+FROM `jos_jleague_rpi` r, jos_jleague_teams t, jos_jleague_divmap d, jos_jleague_division d1
+WHEre r.id = t.id
+and d.team_id = t.id
+and d.season = 8
+and d.division_id = d1.id
+and r.rpi < .45
+and d1.name like "%National%"
+and d1.agegroup < 14
+
+
+// ==========================================================
+// LIst of teams who have NOT registered
+// ==========================================================
+select team_id, division_id, dm.season, t.name, d.agegroup, t.coachname, t.coachemail, t.coachphone 
+from jos_jleague_divmap dm, jos_jleague_division d, jos_jleague_teams t
+where dm.season = 8 and dm.division_id = d.id
+and d.agegroup < 14
+and dm.team_id = t.id
+and team_id not in (
+select team_id from jos_jleague_divmap where season = 9 and team_id > 0) 
+order by d.agegroup
+	
+
+// ==========================================================
+// RPI report (test)
+// ==========================================================
+SELECT r.id, t.name, d1.name, d1.agegroup, r.rpi
+FROM `jos_jleague_rpi` r, jos_jleague_teams t, jos_jleague_divmap d, jos_jleague_division d1
+WHEre r.id = t.id
+and d.team_id = t.id
+and d.season = 8
+and d.division_id = d1.id
+
+
+
+// ========================================================================================
+// Queries for calculating RPI
+// ==========================================================
++The basic formula is 25% team winning percentage, 50% opponents' average winning percentage, 
+and 25% opponents' opponents' average winning percentage.
+
+// ========================================================================================
+
+// Query 0 - get team win pct
+Select team_id, teamname, wins, losses, (wins / (losses + wins)) winpct 
+from jos_jleague_standings
+where team_id = 315
+ 
+// Query 1 - list opponents
+Select temp2.team_id, s.teamname, s.wins, s.losses, (s.wins / (s.losses + s.wins)) winpct from 
+(select distinct team_id from
+(SELECT hometeam_id as team_id
+FROM `jos_jleague_scores`
+WHERE `season` =8 and conference_game = 'Y' and awayteam_id = 315
+union 
+SELECT awayteam_id as team_id
+FROM `jos_jleague_scores`
+WHERE `season` =8 and conference_game = 'Y' and hometeam_id = 315
+) temp
+order by team_id
+) temp2, jos_jleague_standings s
+where temp2.team_id = s.team_id
+and s.season = 8
+
+// Query #2 - average opponents winning percentage
+Select average((s.wins / (s.losses + s.wins))) winpct from 
+(select distinct team_id from
+(SELECT hometeam_id as team_id
+FROM `jos_jleague_scores`
+WHERE `season` =8 and conference_game = 'Y' and awayteam_id = 315
+union 
+SELECT awayteam_id as team_id
+FROM `jos_jleague_scores`
+WHERE `season` =8 and conference_game = 'Y' and hometeam_id = 315
+) temp
+order by team_id
+) temp2, jos_jleague_standings s
+where temp2.team_id = s.team_id
+and s.season = 8
+
+
+
+
+// ========================================================================================
+// query to list rows based on property values
+// ========================================================================================
+SELECT * FROM `jos_jleague_notifications` WHERE properties like '%teamid=14\r\n%'
+
+
+// ========================================================================================
+// ROSTER REPORT
+// ========================================================================================
+select ts.id, ts.name, d.agegroup, d.name, playercount from (
+SELECT t.id, t.name, playercount
+FROM joom_jleague_teams t
+LEFT JOIN (
+  SELECT teamid, count( *  ) as playercount
+	FROM joom_jleague_simple_roster
+	where season = 14
+	GROUP BY teamid
+) pc on (t.id = pc.teamid)
+) as ts, joom_jleague_divmap dm, joom_jleague_division d
+where ts.id = dm.team_id
+and dm.season = 14
+and dm.published = 1
+and dm.division_id = d.id
+order by ts.name, d.agegroup
+
+
+// OLD ROSTER TABLE
+SELECT t.name, dm.division_id, d.agegroup, playercount
+FROM jos_jleague_roster r, jos_jleague_teams t, jos_jleague_divmap dm, jos_jleague_division d,
+  (
+  SELECT rosterid, count( *  ) as playercount
+	FROM jos_jleague_rosterplayers
+	GROUP BY rosterid
+  ) as pc
+WHERE r.teamid = t.id
+AND r.season = dm.season
+AND t.id = dm.team_id
+and dm.division_id = d.id
+and r.id = rc.rosterid
+and r.season = 6
+
+// ========================================================================================
+// MISSING ROSTER REPORT
+// ========================================================================================
+select t.id, t.name, d.name
+from joom_jleague_teams t, joom_jleague_divmap dm, joom_jleague_division d
+where t.id not in 
+	(
+		SELECT teamid
+		FROM joom_jleague_simple_roster r, (
+		SELECT rosterid, count( * ) AS playercount
+		FROM joom_jleague_simple_roster
+		GROUP BY rosterid
+		) AS pc
+		WHERE r.id = pc.rosterid
+		and r.season = 6
+	)
+and dm.season = 6
+and t.id = dm.team_id 
+and dm.division_id = d.id
+
+
+// ========================================================================================
+// MISSING SIMPLE ROSTER REPORT
+// ========================================================================================
+select t.id, t.name, d.name
+from joom_jleague_teams t, joom_jleague_divmap dm, joom_jleague_division d
+where t.id not in 
+	(
+		SELECT teamid
+		FROM joom_jleague_simple_roster r
+		WHERE r.season = 14
+	)
+and dm.season = 14
+and t.id = dm.team_id 
+and dm.division_id = d.id
+
+
+// ========================================================================================
+// POTENTIAL DUPLICATE GAMES
+// ========================================================================================
+select game_date, hometeam_id, awayteam_id, count(*) from jos_jleague_scores
+where season = 6 and hometeam_id > 0 and awayteam_id > 0
+group by game_date, hometeam_id, awayteam_id
+
+select game_date, hometeam_id, awayteam_id, count(*) total_game from jos_jleague_scores
+where season = 6 
+group by game_date, hometeam_id, awayteam_id
+having total_game > 1
+
+
+
+// ========================================================================================
+// Query to identify teams who have no owner.
+// ========================================================================================
+SELECT * FROM `jos_jleague_teams` 
+WHERE (ownerid is null or ownerid = 0) 
+	and id in (select team_id from jos_jleague_divmap where season=6)
+
+
+// ========================================================================================
+// Query to identify teams who have no owner.
+// ========================================================================================
+select t.id,t.name, dm.season, dm.division_id
+from jos_jleague_teams t, 
+(
+	SELECT dm1.team_id, dm1.season, dm1.division_id 
+	FROM `jos_jleague_divmap` dm1, (
+		SELECT id, team_id,max(season) as maxseason FROM `jos_jleague_divmap` 
+		group by team_id
+	) as dm2
+	where dm1.team_id = dm2.team_id and dm1.season = dm2.maxseason
+	order by team_id
+	) as dm
+where t.id = dm.team_id and season = 6 and (ownerid is null or ownerid = 0) order by division_id
+
+
+
+// ========================================================================================
+// QUERY TO DEFAULT TEAM CLASSIFICATIONS TO "AA"
+//			id, teamid, fieldid, value
+// ========================================================================================
+insert into jos_jleague_fields_values (id, teamid, fieldid, value) 
+	select 0, id, 2, "AA"  
+	from jos_jleague_teams
+
+	
+
+// ========================================================================================
+// query to retrieve custom fields and values for a specific team
+// ========================================================================================
+select * from jos_jleague_fields as q1
+left join (
+	select * from jos_jleague_fields_values
+        where teamid = 1
+) as q2 on (q1.id = q2.fieldid)
+
+
+// ========================================================================================
+// Count # of divisions within a season
+// ========================================================================================
+SELECT distinct division_id FROM `jos_jleague_divmap` WHERE season = 1
+
+// ========================================================================================
+// Query Teams and filter by season
+// ========================================================================================
+SELECT t.* FROM `jos_jleague_teams` as t, `jos_jleague_divmap` as dm
+	where t.id = dm.team_id
+	and season = 1
+
+
+// ========================================================================================
+// Query to retrieve the most recent division id and season a team played in
+// ========================================================================================
+select t.*, dm.season, dm.division_id
+from jos_jleague_teams t, 
+(
+	SELECT dm1.team_id, dm1.season, dm1.division_id 
+	FROM `jos_jleague_divmap` dm1, (
+		SELECT id, team_id,max(season) as maxseason FROM `jos_jleague_divmap` 
+		group by team_id
+	) as dm2
+	where dm1.team_id = dm2.team_id and dm1.season = dm2.maxseason
+	order by team_id
+	) as dm
+where t.id = dm.team_id
+
+
+// ========================================================================================
+// Create Team Contacts Table
+// ========================================================================================
+CREATE TABLE IF NOT EXISTS `jos_jleague_teamcontacts` ( 
+	`id` INT NOT NULL AUTO_INCREMENT, 
+	`teamid` int not null,
+	`name` varchar(50) NOT NULL, 
+	`email` text, 
+	`phone` varchar(15),
+	`role` int,  
+	`userid` int, 
+	PRIMARY KEY (`id`)
+ )
+ 
+// Update Team Contact info
+//UPDATE TABLE_1 LEFT JOIN TABLE_2 ON TABLE_1.COLUMN_1= TABLE_2.COLUMN_2
+//SET TABLE_1.COLUMN = EXPR WHERE TABLE_2.COLUMN2 IS NULL
+
+update jos_jleague_teams
+left join jos_jleague_teamcontacts on jos_jleague_teams.id = jos_jleague_teamcontacts.teamid
+set jos_jleague_teams.coachname = jos_jleague_teamcontacts.name,
+	jos_jleague_teams.coachemail = jos_jleague_teamcontacts.email,
+	jos_jleague_teams.coachphone = jos_jleague_teamcontacts.phone
+	
+	
+// ========================================================================================
+// Insert data into Team Contacts
+// ========================================================================================
+insert into jos_jleague_teamcontacts (id, teamid, name, email, phone, role) 
+	select 0, user_id, cb_contactname, cb_contactemail, cb_contactphone, 2 
+	from jos_comprofiler
+	where cb_profiletype = 'Team';
+	
+// ========================================================================================
+// Insert SECONDARY data into Team Contacts
+// ========================================================================================
+insert into jos_jleague_teamcontacts (id, teamid, name, email, phone, role) 
+	select 0, user_id, cb_secondarycontact, cb_secondaryemail, cb_secondaryphone, 3 
+	from jos_comprofiler
+	where cb_profiletype = 'Team';
+	
+// ========================================================================================
+// Insert data from comprofiler into TEAM table
+// ========================================================================================
+insert into jos_jleague_teams (id, name, division_id, website_url, logo, active, city, state)
+	select id, cb_teamname, null, cb_teamwebsite, null, cb_teamactive, cb_teamcity, cb_teamstate
+	from jos_comprofiler
+	where cb_profiletype = 'Team';
+	
+// ========================================================================================	
+// Standings LIST Query
+// ========================================================================================
+SELECT s.*,l.name, d.name, seasons.title FROM `jos_jleague_standings` as s,
+`jos_jleague_division` d, `jos_jleague_leagues` l, `jos_jleague_seasons` seasons
+where s.league_id = l.id
+and s.division_id = d.id
+and s.season = seasons.id
+
+
+// ========================================================================================	
+// QUery to UPDATE the registrations (Divmap) table for older records
+// ========================================================================================
+update jos_jleague_divmap
+left join jos_jleague_teams on jos_jleague_teams.id = jos_jleague_divmap.team_id
+set jos_jleague_divmap.teamname = jos_jleague_teams.name,
+  jos_jleague_divmap.name = jos_jleague_teams.coachname,
+  jos_jleague_divmap.email = jos_jleague_teams.coachemail,
+  jos_jleague_divmap.city = jos_jleague_teams.city,
+  jos_jleague_divmap.state = jos_jleague_teams.state,  
+  jos_jleague_divmap.phone = jos_jleague_teams.coachphone,
+  jos_jleague_divmap.existingteam = true
+  
+// ========================================================================================	
+// QUery to INSERT fields into the VENUES table
+// ========================================================================================
+insert into jos_jleague_venues (id, name, address1, address2, city, state,zipcode, description, latitude,longitude, published)
+	select id, name, address1, address2, city, state, zipcode, description, latitude, longitude, published  
+	from jos_gmaps_markers
+
+// ========================================================================================
+// 	Add RUNS_SCORED and RUNS_ALLOWED to the standings table.
+// ========================================================================================
+ALTER TABLE `jos_jleague_standings` ADD `runs_scored` INT NOT NULL AFTER `points` ,
+ADD `runs_allowed` INT NOT NULL AFTER `runs_scored` ;
+
+
+// ========================================================================================
+// 	This query will update the standings table with the runs allowed and runs scored
+// ========================================================================================
+update jos_jleague_standings as s,
+	(select * from (
+	 select id, season, teamname,sum(runs_scored) runs_scored, sum(runs_allowed) runs_allowed from
+	 ( 
+		 select  hometeam_id id, score.season, team.name teamname, sum( hometeam_score ) runs_scored, sum( awayteam_score ) runs_allowed, 'homegame' game
+		 from jos_jleague_scores score, jos_jleague_teams team, jos_jleague_divmap m 
+		 where score.hometeam_id = team.id and score.hometeam_id = m.team_id and score.season = m.season and gamestatus = 'C' and conference_game = 'Y'
+		 group by id, season 
+		 UNION 
+		 select  awayteam_id id, score.season, team.name teamname, sum( awayteam_score ) runs_scored, sum( hometeam_score ) runs_allowed, 'awaygame' game 
+		 from jos_jleague_scores score, jos_jleague_teams team, jos_jleague_divmap m 
+		 where score.awayteam_id = team.id and score.awayteam_id = m.team_id and score.season = m.season and gamestatus = 'C' and conference_game = 'Y' 
+		 group by id, season
+	 ) as recordtbl
+	 group by id, season
+	 ) summary
+	) as temp
+set s.runs_scored = temp.runs_scored,
+ s.runs_allowed = temp.runs_allowed
+where s.team_id = temp.id
+ and s.season = temp.season
+
+ 
+insert into jos_jleague_simple_roster (id,season,teamid,firstname,lastname) 
+SELECT 0,r.season,r.teamid,p.firstname,p.lastname
+FROM jos_jleague_roster r, jos_jleague_rosterplayers rp, jos_jleague_players p
+WHERE r.id = rp.rosterid
+AND rp.playerid = p.id
+
+
+
+// ========================================================================================
+// 	This query will generate the teams record for a specific season
+// ========================================================================================
+
+	select id as team_id, season, season_title, division_id, division_name, teamname, runs_scored, runs_allowed, wins, losses, ties, ( wins *  2 ) + (losses *  0 ) + (ties *  1 ) points from ( 
+				select id, season, season_title, division_id, division_name, teamname, sum(runs_scored) runs_scored, sum(runs_allowed) runs_allowed, sum(wins) wins,sum(losses) losses, sum(ties) ties, sum(points) points from
+				( 
+				select team.id, seasons.id season, seasons.title season_title, divmap.division_id, divtbl.name division_name, team.name teamname, 0 wins, 0 losses, 0 ties, 0 points, 0 runs_scored, 0 runs_allowed, 'nogame' game 
+				from jos_jleague_divmap divmap, jos_jleague_teams team, jos_jleague_seasons seasons, jos_jleague_division divtbl where divmap.season = 8 and divmap.team_id = team.id 
+				and divmap.season = seasons.id and divmap.division_id = divtbl.id
+					group by team.name, season, divmap.division_id 
+				UNION
+				select  hometeam_id id, score.season, seastbl.title season_title, divmap.division_id, divtbl.name division_name, team.name teamname,  sum(hometeam_score) runs_scored, sum(awayteam_score) runs_allowed, sum(if(hometeam_score > awayteam_score,1,0)) wins, sum(if(hometeam_score < awayteam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(hometeam_points) points, 'homegame' game 
+				from jos_jleague_scores score, jos_jleague_teams team, jos_jleague_seasons seastbl, jos_jleague_divmap divmap, jos_jleague_division divtbl  
+				where hometeam_id = team.id and score.season = seastbl.id and team.id = divmap.team_id 
+						and score.season = divmap.season and divmap.division_id = divtbl.id 
+						and conference_game like 'Y' and score.gamestatus = 'C'  and score.season = 8
+					group by team.name, season, divmap.division_id 
+				UNION 
+				select  awayteam_id id, score.season, seastbl.title season_title,divmap.division_id,divtbl.name division_name, team.name teamname, sum(awayteam_score) runs_scored, sum(hometeam_score) runs_allowed, sum(if(awayteam_score > hometeam_score,1,0)) wins, sum(if(awayteam_score < hometeam_score,1,0)) losses, sum(if(hometeam_score = awayteam_score,1,0)) ties, sum(awayteam_points) points, 'awaygame' game 
+				from jos_jleague_scores score, jos_jleague_teams team, jos_jleague_seasons seastbl, jos_jleague_divmap divmap, jos_jleague_division divtbl  
+				where awayteam_id = team.id and score.season = seastbl.id and team.id = divmap.team_id 
+						and score.season = divmap.season and divmap.division_id = divtbl.id 
+						and conference_game like 'Y' and score.gamestatus = 'C' and score.season = 8
+						group by team.name, season, divmap.division_id
+				) as recordtbl
+			group by teamname, season, division_id
+		) as stdgs 
+
+
+// ========================================================================================
+// 	This query will generate a teams roster for a given year
+// ========================================================================================
+
+SELECT r.id as roster_id, r.teamid, rp.playerid, p.firstname, p.lastname
+FROM jos_jleague_roster as r, jos_jleague_rosterplayers as rp, jos_jleague_players as p
+WHERE r.teamid =223 and r.season = 6
+and r.id = rp.rosterid
+and rp.playerid = p.id
+
+insert into jos_jleague_simple_roster (id,season,teamid,firstname,lastname)
+SELECT 0, 8, r.teamid, p.firstname, p.lastname
+FROM jos_jleague_roster as r, jos_jleague_rosterplayers as rp, jos_jleague_players as p
+WHERE r.teamid =223 and r.season = 6
+and r.id = rp.rosterid
+and rp.playerid = p.id
+
+
+
+
+// ========================================================================================
+// 	query for Johnny Mac Shirts
+// ========================================================================================
+select t.id, t.name, d.name, d.agegroup from joom_jleague_divmap dm, joom_jleague_division d, joom_jleague_teams t
+where dm.season = 14 and dm.published =1 
+and dm.division_id = d.id
+and dm.team_id = t.id
+order by d.sort_order, d.agegroup, t.name
+
+
+
+
+
+
+
+
+
+
+
+
+
+ORIGINAL
+
+select * from (
+SELECT t.*, dm.season, dm.division_id, dm.agegroup, dm.registered
+from joom_jleague_teams t 
+LEFT JOIN
+(
+	SELECT dm1.team_id, dm1.season, dm1.division_id, d.agegroup, dm1.published as registered
+	FROM `joom_jleague_divmap` dm1,
+	`joom_jleague_division` d,
+	(
+	SELECT id, team_id,max(season) as maxseason FROM `joom_jleague_divmap` where season = 14
+	group by team_id
+	) as dm2
+	where dm1.team_id = dm2.team_id and dm1.season = dm2.maxseason and dm1.division_id = d.id and dm1.published = 1
+	order by team_idz
+) as dm
+on t.id = dm.team_id
+) as tmptbl1 
+where id in ( 
+	select team_id from joom_jleague_divmap where season = 14 and published = 1
+) 
+order by name, agegroup
+
+
+
+NEW
+
+
+select * from (
+SELECT t.*, dm.season, dm.division_id, dm.agegroup, dm.registered
+from joom_jleague_teams t 
+LEFT JOIN
+(
+	SELECT dm1.team_id, dm1.season, dm1.division_id, d.agegroup, dm1.published as registered
+	FROM `joom_jleague_divmap` dm1,
+	`joom_jleague_division` d
+	where dm1.division_id = d.id and dm1.published = 1 and dm1.season = 14
+	order by team_id
+) as dm
+on t.id = dm.team_id
+) as tmptbl1 
+where id in ( 
+	select team_id from joom_jleague_divmap where season = 14 and published = 1
+) 
+order by name, agegroup
+
+		$selectquery = "select * from (SELECT t.*, dm.season, dm.division_id, dm.agegroup, dm.registered
+			from #__jleague_teams t
+			LEFT JOIN
+			(
+			SELECT dm1.team_id, dm1.season, dm1.division_id, d.agegroup, dm1.published as registered
+			FROM `#__jleague_divmap` dm1,
+				`#__jleague_division` d 
+				where dm1.division_id = d.id and dm1.published = 1 and dm1.season = " . $season . "
+				order by team_id
+			) as dm2
+			where dm1.team_id = dm2.team_id and dm1.season = dm2.maxseason and dm1.division_id = d.id and dm1.published = 1  
+			order by team_id
+			) as dm
+			on t.id = dm.team_id) as tmptbl1 ";
+			
+			
+
+

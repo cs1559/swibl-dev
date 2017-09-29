@@ -1,0 +1,19 @@
+	
+	<div class="jleague-title">
+	<h2><?php echo $team->getName(); ?> - Manage Contacts</h2>
+	</div>
+	
+	<p><strong>NOTE:  The head coach should be added by editing the TEAM PROFILE.  It should not be added as a contact. </strong></p>
+	
+	<div id="team-current-contacts-list">
+		<?php echo $contactstable; ?>
+	</div>
+	
+	<form class="button-form">
+    <button id="cancelButton" 
+    	name="cancelButton" 
+    	class="btn btn-primary"
+    	formmethod="post"
+    	formaction="<?php echo mRouter::translateUrl('index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid='. $team->getSlug()); ?>"
+    	value="Return">Return to Profile</button>
+	</form>

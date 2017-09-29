@@ -1,0 +1,40 @@
+<?php
+?>
+
+<style>
+
+.sponsor-profile-heading {
+background-image:url('images/pattern4.png');
+color: #ffffff !important;
+text-align: center !important;
+padding-top: 24px !important; 
+padding-bottom: 24px !important;
+line-height: 20px !important;
+}
+.sponsor-profile-heading h1 {
+font-size: 36px !important;
+margin-bottom: 5px !important;
+}
+
+</style>
+<div class="sponsor-profile-container">
+
+
+<div class="sponsor-profile-heading jumbotron">
+
+<div class="row">
+	<div class="col-md-3">
+		<img class="xx-teamprofile-team-logo" alt="SWIBL Team Logo" src="images/final-logo.gif">
+	</div>
+  	<div class="col-md-9">
+  		<h1><?php echo $sponsor->getName(); ?></h1>
+  		<?php echo $_view->getFormattedAddress($sponsor); ?>
+  		<p><?php echo $submenu; ?></p>
+  	</div>
+</div>
+
+
+</div>
+
+
+</div>

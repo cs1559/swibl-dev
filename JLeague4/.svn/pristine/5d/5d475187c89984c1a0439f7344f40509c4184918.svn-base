@@ -1,0 +1,242 @@
+<?php
+?>
+
+<div class="teamprofile-wrapper">
+
+	<div style="">
+
+		<div class="teamprofile-header">
+			<!--  Row 0 -->
+			<div class="row">
+				<div class="teamprofile-heading">
+					<h1><?php echo $team->getName();?></h1>
+					<?php
+						if ($submenu != null) {
+					?>
+						<div id="teamprofile-menu-wrapper" class="center-block"><?php echo $submenu; ?> </div>
+					<?php
+						}
+					?>				
+					
+				</div>
+			</div>
+			<!--  Row 1 -->
+			<div class="row">
+
+				<div class="col-md-6">
+					<div id="profile-card-logo">
+						<img class="teamprofile-team-logo"
+							src="/j3/<?php echo $config->getProperty('logo_folder') . $team->getLogo();?>"
+							alt="SWIBL Team Logo" />
+
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="teamprofile-geninfo">
+						<h4>Team Information</h4>
+						<table id="teaminfo-profile-table" class="">
+						<?php
+						/*
+						if ($submenu != null) {
+							?>
+						<tr>
+								<td colspan="2">
+									<div id="teamprofile-menu-wrapper" class="center-block"><?php echo $submenu; ?> </div>
+								</td>
+							</tr>
+							
+						<?php
+						}
+						*/
+						?>				
+						<tr>
+								<td class="teamprofile-info-col1">City:</td>
+								<td class="teamprofile-info-col2"><?php echo $team->getCity() . ", " .$team->getState(); ?></td>
+							</tr>
+							<tr>
+								<td class="teamprofile-info-col1"><?php echo $team->getFieldName("FLD_USSSA_NUMBER"); ?></td>
+								<td class="teamprofile-info-col2">
+								<?php echo $_view->getUSSSAProfileUrl($teamview); ?>
+							</td>
+							</tr>
+							<tr>
+								<td class="teamprofile-info-col1"><?php echo $team->getFieldName("FLD_CLASSIFICATION"); ?></td>
+								<td class="teamprofile-info-col2"><?php echo $team->getFieldValue("FLD_CLASSIFICATION"); ?></td>
+							</tr>
+							<tr>
+								<td class="teamprofile-info-col1">Age Group:</td>
+								<td class="teamprofile-info-col2"><?echo $team->getAgeGroup(); ?></td>
+							</tr>
+							<tr>
+								<td class="teamprofile-info-col1">Head Coach:</td>
+								<td class="teamprofile-info-col2"><?php echo $team->getCoachName(); ?></td>
+							</tr>
+							<tr>
+								<td class="teamprofile-info-col1">Phone:</td>
+								<td class="teamprofile-info-col2"><?php echo $team->getCoachPhone(); ?></td>
+							</tr>
+							<tr>
+								<td class="teamprofile-info-col1">Website:</td>
+								<td class="teamprofile-info-col2"><?php echo $team->getWebsite(); ?></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<!--  End of Row 1 -->
+
+		</div>
+
+		<hr class="teamprofile-hr" />
+
+		<!--  Row 2 -->
+		<div class="panel panel-default">
+			<div class="swibl-panel-heading panel-heading ">
+				<h4 class="panel-title">Dashboard</h4>
+			</div>
+			<div>
+				<div class="panel-body">
+
+					<div class="row teamprofile-row">
+
+						<div class="col-md-6">
+							<h3>Record History</h3>
+
+							<div id="teamprofile-recordhistory-detail">
+								<table id="recordhistory-table" style="width: 100%">
+									<thead>
+										<tr class="recordhistory-header-row">
+											<th class=""><?php echo JLText::getText('Season'); ?></th>
+											<th class=""><?php echo JLText::getText('Division'); ?></th>
+											<th class="centerjust"><?php echo JLText::getText('Wins'); ?></th>
+											<th class="centerjust"><?php echo JLText::getText('Losses'); ?></th>
+											<th class="centerjust"><?php echo JLText::getText('Ties'); ?></th>
+											<th class="centerjust"><?php echo JLText::getText('RS'); ?></th>
+											<th class="centerjust"><?php echo JLText::getText('RA'); ?></th>
+										</tr>
+									</thead>
+									<tbody>
+						<?php
+						foreach ( $recordhistory as $obj ) {
+							?>
+								<tr>
+											<td class=""><?php echo $obj->getSeason();?></td>
+											<td class=""><?php echo $obj->getDivisionName();?></td>
+											<td class="centerjust"><?php echo $obj->getWins();?></td>
+											<td class="centerjust"><?php echo $obj->getLosses();?></td>
+											<td class="centerjust"><?php echo $obj->getTies();?></td>
+											<td class="centerjust"><?php echo $obj->getRunsScored();?></td>
+											<td class="centerjust"><?php echo $obj->getRunsAllowed();?></td>
+										</tr>
+					<?php
+						}
+						?>
+						</tbody>
+								</table>
+
+'
+								<?php
+								$i = 0;
+								?>
+				<h3>Upcoming Games</h3>
+							<table class="swibl-table-max">
+				<?php
+				if (count ( $upcominggames ) > 0) {
+					foreach ( $upcominggames as $game ) {
+						?>
+						<tr>
+									<td class="vcenter">
+										<?php echo $game->getGameDate(); ?>
+										<!-- 
+										<div class="date">
+											<p><?php echo date('d',$game->getGameDate());?>
+												<span><?php echo date('M',$game->getGameDate());?></span>
+											</p>
+										</div>
+										 -->
+
+									</td>
+									<td><img class="teamprofile-team-logo-mini"
+										src="/j3/<?php echo $config->getProperty('logo_folder') . 'default-logo.jpg';?>"
+										alt="SWIBL Team Logo" /></td>
+									<td class="vcenter"><?php echo $_view->getOpponent($team, $game); ?><br />
+										<span class="teamprofile-subtext"><?php echo $game->getLocation(); ?></span>
+									</td>
+								</tr>
+					<?php
+						$i ++;
+					}
+				} else {
+					echo "No Upcoming Games scheduled for the current season";
+				}
+				?>	
+				</table>
+
+				
+
+
+							</div>
+
+						</div>
+						<div class="col-md-6">
+				<?php echo $standingsHtml; ?>
+				
+
+						</div>
+					</div>
+					<!--  End of Row 2 -->
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<div class="panel panel-default">
+		<div class="swibl-panel-heading panel-heading ">
+			<h4 class="panel-title">Contacts</h4>
+		</div>
+		<div>
+			<div class="panel-body">
+				<?php
+				echo $contactsHtml;
+				?>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="panel panel-default">
+		<div class="swibl-panel-heading panel-heading ">
+			<h4 class="panel-title">Team Schedule</h4>
+		</div>
+		<div>
+			<div class="panel-body">
+				<?php
+				echo $scheduleHtml;
+				?>
+			</div>
+		</div>
+	</div>
+
+	
+	<div class="panel panel-default">
+		<div class="swibl-panel-heading panel-heading ">
+			<h4 class="panel-title">Team Bulletins / Announcements</h4>
+		</div>
+		<div>
+			<div class="panel-body">
+				
+				<?php
+				echo $bulletinsHtml;
+				?>
+			</div>
+		</div>
+	</div>
+	
+
+
+</div>
+<!--  End of Group -->
+
+<div></div>

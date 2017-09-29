@@ -1,0 +1,207 @@
+<?php
+/**
+ * @version		$Id: season.class.php 441 2012-10-20 22:16:19Z cs1559 $
+ * @package 	JLeague
+ * @subpackage	Objects
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license		GNU/GPL, see LICENSE.php
+ */
+
+
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die( 'Restricted access' );
+
+// require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS . 'baseobject.class.php');
+
+class JLSeason extends fsBaseObject  {
+
+	var $id = null;
+	var $title = null;
+	var $description = null;
+	var $active = null;
+	var $published = null;
+	var $registrationopen = 0;
+	var $total_divisions = 0;
+	var $total_teams = 0;
+	var $total_teams_paid = 0;
+	var $total_games = 0;
+	var $total_leaguegames = 0;
+	var $total_scheduledgames = 0;
+	var $total_registrations = 0;
+	var $status = null;
+	var $registrationstart = null;
+	var $registrationend = null;
+	var $registrationtemplate = null;
+	var $registrationemailtemplate = null;
+	var $registrationonly = null;
+	var $registrationnote = null;
+	var $publishstandings = null;
+	var $setupfinal = false;
+	
+    function __construct() {
+    	parent::__construct();
+    	$this->id = 0;
+    }
+    
+    function setId($inParm) {
+    	$this->id = $inParm;
+    }
+    function getId() {
+    	return $this->id;
+    }
+    function setTitle($inParm) { 
+    	$this->title = $inParm;
+    }
+    function getYear() {
+    	return $this->title;
+    }
+    function getTitle() {
+    	return $this->title;
+    }
+    function setDescription($inParm) {
+    	$this->description = $inParm;
+    }
+    function getDescription() {
+    	return $this->description;
+    }
+    function setActive($inParm) {
+    	$this->active = $inParm;
+    } 
+    function isActive() {
+    	return $this->active;
+    }
+    function getActive() {
+    	return $this->active;
+    }
+    function setRegistrationOpen($bool) {
+    	$this->registrationopen = $bool;
+    }
+    function isRegistrationOpen() {
+    	return $this->registrationopen;
+    }
+	
+	/**
+	 * This will set the published indicator
+	 *
+	 * @param boolean $inParm
+	 */
+	function setPublished($inParm) {
+		$this->published = $inParm;
+	}
+	
+	/**
+	 * This will return a boolean indicating whether or not the league is published
+	 *
+	 * @return boolean
+	 */
+	function getPublished() {
+		return $this->published;
+	}
+    
+	function getTotalDivisions() {
+		return $this->total_divisions;
+	}
+	function setTotalDivisions($totdiv) {
+		$this->total_divisions = $totdiv;
+	}
+	
+	function getTotalTeams() {
+		return $this->total_teams;
+	}
+	function setTotalTeams($teams) {
+		$this->total_teams = $teams;
+	}
+	
+	function getTotalGames() {
+		return $this->total_games;
+	}
+	function setTotalGames($games) {
+		$this->total_games = $games;
+	}
+
+	function getTotalLeagueGames() {
+		return $this->total_leaguegames;
+	}
+	function setTotalLeagueGames($games) {
+		$this->total_leaguegames = $games;
+	}	
+	function getStatus() {
+		return $this->status;
+	}
+	function setStatus($stat) {
+		$this->status = $stat;
+	}
+	function getTotalRegistrations() {
+		return $this->total_registrations;
+	}
+	function setTotalRegistrations($reg) {
+		$this->total_registrations = $reg;
+	}
+	function setTotalScheduledGames($games) {
+		$this->total_scheduledgames = $games;
+	}
+	function getTotalScheduledGames() {
+		return $this->total_scheduledgames;
+	}
+	function setTeamsPaid($cnt) {
+		$this->total_teams_paid = $cnt;
+	}
+	function getTeamsPaid() {
+		return $this->total_teams_paid;
+	}
+	
+//		var $registrationStart = null;
+	//var $registrationEnd = null;
+	//var $registrationtemplate = null;
+	
+	function getRegistrationTemplate() {
+		return $this->registrationtemplate;
+	}
+	function setRegistrationTemplate($tmpl) {
+		$this->registrationtemplate = $tmpl;
+	}
+	function getRegistrationEmailTemplate() {
+		return $this->getPropertyValue("registrationemailtemplate");
+	}
+	function setRegistrationEmailTemplate($tmpl) {
+		$this->addProperty("registrationemailtemplate", $tmpl);
+	}	
+	function getRegistrationStart() {
+		return $this->registrationstart;
+	}
+	function setRegistrationStart($start) {
+		$this->registrationstart = $start;
+	}
+	function getRegistrationEnd() {
+		return $this->registrationend;
+	}
+	function setRegistrationEnd($end) {
+		$this->registrationend = $end;
+	}
+	function isRegistrationOnly() {
+		return $this->registrationonly;
+	}
+	function setRegistrationOnly($flag) {
+		$this->registrationonly = $flag;
+	}
+	function setRegistrationNotes($txt) {
+		$this->registrationnote = $txt;
+	}
+	function getRegistrationNotes() {
+		return $this->registrationnote;
+	}
+	function setPublishStandings($val) {
+		$this->publishstandings = $val;
+	}
+	function getPublishStandings() {
+		return $this->publishstandings;
+	}
+	function setSetupFinal($bool) {
+		$this->setupfinal = $bool;
+	}
+	function isSetupFinal() {
+		return $this->setupfinal;
+	}
+	
+}
+?>

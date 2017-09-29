@@ -1,0 +1,418 @@
+<?php
+/**
+ * @version 		$Id: html.php 468 2013-01-19 11:29:37Z cs1559 $
+ * @package 		JLeague
+ * @subpackage 		Helpers
+ * @copyright 		(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license			GNU/GPL, see LICENSE.php
+ */
+
+defined( '_JEXEC' ) or die( 'Restricted access' );
+
+if(class_exists('fsSelectList') != true)
+{
+	require_once(JLEAGUE_LIBRARIES_PATH . DS. 'html' . DS . 'select.php');
+}
+
+
+class JLHtml {
+
+	function getDivisionClassList($name, $default_value=null) {
+		$obj = new fsSelectList($name, $default_value);
+		$obj->addOption("A","American");
+		$obj->addOption("N","National");
+		return $obj->toHtml();
+	}
+	
+	function getInputElement($name,$value,$size=30,$length=30,$class=null) {
+		if (!strlen($size) > 0) {
+			$size = 30;
+		}
+		if (!strlen($length) > 0) {
+			$length = 30;
+		}
+		if ($class != null) {
+			return "<input type='text' name='".$name."' value='".$value."' size='".$size."' maxlength='".$length."' class='" . $class . "'/>";
+		} else {
+			return "<input type='text' name='".$name."' value='".$value."' size='".$size."' maxlength='".$length."'/>";
+		}
+	}
+		
+	/**
+	 * This function will generate a list of ALL users
+	 *
+	 * @param string $element_name
+	 * @param string $default_value
+	 * @param string $event
+	 * @return string
+	 */
+	function getUserSelectList($element_name, $default_value, $event = "") {
+	 	$db			=& JLApp::getDBO();
+// 		$query = "select id as value, concat(name,' ( ',username,' )')  as text from #__users order by username";
+ 		$query = "select id as value, concat(username,' - ',name)  as text from #__users order by username"; 		
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		// Create an empty list option
+		$userlist[] =JHTML::_('select.option', '', '-- Select User --       ' );
+		// merge this list with the list of values retrieved from the db.
+		$result = array_merge( $userlist, $rows );
+		$sellist =JHTML::_('select.genericlist' , $result, $element_name, 'class="inputbox" '. $event,'value', 'text', $default_value);
+		return $sellist;
+  }	
+  
+  /**
+   * This function will generate a select list of the avialable AGE GROUPS
+   *
+   * @param string $element_name
+   * @param string $default_value
+   * @param string $event
+   * @return string
+   */
+	function getAgeGroupSelectList($element_name, $default_value, $event = '') {
+		$default_value = str_replace('U','',$default_value);
+		$options = array (
+			JHTML::_('select.option', '', JLText::getText('-- Select Age --')),
+			JHTML::_('select.option', '7', JLText::getText('7U')),
+			JHTML::_('select.option', '8', JLText::getText('8U')),
+			JHTML::_('select.option', '9', JLText::getText('9U')),
+			JHTML::_('select.option', '10', JLText::getText('10U')),
+			JHTML::_('select.option', '11', JLText::getText('11U')),
+			JHTML::_('select.option', '12', JLText::getText('12U')),
+			JHTML::_('select.option', '13', JLText::getText('13U')),
+			JHTML::_('select.option', '14', JLText::getText('14U'))
+		);
+		return JHTML::_('select.genericlist' , $options, $element_name , ' class="input" '. $event, 'value', 'text', $default_value  ); 		
+	}
+	
+	function getRegistrationAgeGroupSelectList($element_name, $default_value, $event = '') {
+		$default_value = str_replace('U','',$default_value);
+		$options = array (
+			JHTML::_('select.option', '', JLText::getText('-- Select Age --')),
+			JHTML::_('select.option', '10', JLText::getText('9U/10U')),
+			JHTML::_('select.option', '12', JLText::getText('11U/12U')),
+			JHTML::_('select.option', '14', JLText::getText('13U/14U'))
+		);
+		return JHTML::_('select.genericlist' , $options, $element_name , ' class="input" '. $event, 'value', 'text', $default_value  ); 		
+	}
+		
+	/**
+	 * This will generate a select list for specific team classifications
+	 *
+	 * @param string $element_name
+	 * @param string $default_value
+	 * @param string $event
+	 * @return string
+	 */
+	function getClassification($element_name, $default_value, $event = '') {
+		$options = array (
+			JHTML::_('select.option', '', JLText::getText('')),
+			JHTML::_('select.option', 'Open', JLText::getText('Open')),
+			JHTML::_('select.option', 'A', JLText::getText('A')),
+			JHTML::_('select.option', 'AA', JLText::getText('AA')),
+			JHTML::_('select.option', 'AAA', JLText::getText('AAA')),
+			JHTML::_('select.option', 'Major', JLText::getText('Major')),
+			JHTML::_('select.option', 'All-Star', JLText::getText('All-Star'))
+		);
+		return JHTML::_('select.genericlist' , $options, $element_name , ' class="input" '. $event, 'value', 'text', $default_value  ); 		
+	}
+	
+		
+	/**
+	 * This will generate a select list that presents a YES/NO option.
+	 *
+	 * @param string $element_name
+	 * @param string $default_value
+	 */
+	function getYesNoSelectList($element_name, $default_value, $event='') {
+		echo JLHtml::getPublishedSelectList($element_name, $default_value, $event);
+	}
+	/**
+	 * This function will produce a select list that indicates whether an item is published.  The
+	 * value returned from the select list will be a PHP boolean (1 = Yes, 0 = No)
+	 *
+	 * @param unknown_type $element_name
+	 * @param unknown_type $default_value
+	 * @return unknown
+	 */
+	function getPublishedSelectList($element_name, $default_value, $event = '') {
+		$options = array (
+			JHTML::_('select.option', '0', JLText::getText('No')),
+			JHTML::_('select.option', '1', JLText::getText('Yes'))
+		);
+		return JHTML::_('select.genericlist' , $options, $element_name , ' class="input" ' . $event, 'value', 'text', $default_value  ); 		
+	}
+	
+	/**
+	 * This function will generate a select list of the available seasons defined within the
+	 * system.
+	 *
+	 * @param string $element_name
+	 * @param string $default_value
+	 * @param boolean $getall
+	 * @param string $event
+	 * @return string
+	 */
+   function getSeasonSelectList($element_name, $default_value, $getall = false, $event = '') {
+	 	$db			=& JLApp::getDBO();
+	 	if ($getall) {
+	 		$query = "select id as value, title as text from #__jleague_seasons order by title desc";
+	 	} else {
+	 		$query = "select id as value, title as text from #__jleague_seasons where published = 1 order by title desc";
+	 	}
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		// Create an empty list option
+		$categorylist[] =JHTML::_('select.option', '', '-- Select Season --       ' );
+		// merge this list with the list of values retrieved from the db.
+		$result = array_merge( $categorylist, $rows );
+		$sellist =JHTML::_('select.genericlist' , $result, $element_name, 'class="inputbox" '. $event,'value', 'text', $default_value);
+		return $sellist;
+  }	
+  
+  /**
+   * This function will generate a select list for the seasons that are currently open for 
+   * registration. 
+   *
+   * @param string $element_name
+   * @param string $default_value
+   * @param booelan $getall
+   * @param string $event
+   * @return string
+   */
+  function getRegistrationOpenSeasonList($element_name, $default_value, $getall = false, $event = '') {
+	 	$db			=& JLApp::getDBO();
+	 	$query = "select id as value, title as text from #__jleague_seasons where published = 1 and registrationopen = 1";
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		$list[] =JHTML::_('select.option', '', '-- Select Season --       ' );
+		$result = array_merge( $list, $rows );
+		$sellist =JHTML::_('select.genericlist' , $result, $element_name, 'class="inputbox" '. $event,'value', 'text', $default_value);
+		return $sellist;
+  }	
+  
+  /**
+   * This function will generate a select list for available leagues.
+   *
+   * @param string $element_name
+   * @param string $default_value
+   * @param string $getall
+   * @param string $event
+   * @return string
+   */
+   function getLeagueSelectList($element_name, $default_value, $getall = false, $event = '') {
+	 	$db			=& JLApp::getDBO();
+	 	$query = "select id as value, name as text from #__jleague_leagues where published = 1";
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		// Create an empty list option
+		$categorylist[] =JHTML::_('select.option', '', '-- Select League --       ' );
+		// merge this list with the list of values retrieved from the db.
+		$result = array_merge( $categorylist, $rows );
+		$sellist =JHTML::_('select.genericlist' , $result, $element_name, 'class="inputbox" ' .$event,'value', 'text', $default_value);
+		return $sellist;
+  }	  
+  /**
+   * This function will generaate a select list of all published divisions for a given season. 
+   *
+   * @param string $element_name
+   * @param string $default_value
+   * @param int $season
+   * @param boolean $showheading
+   * @param string $event
+   * @return string
+   */
+   function getDivisionSelectList($element_name, $default_value, $season = 0, $showheading=false, $event = '') {
+	 	$db			=& JLApp::getDBO();
+	 	$query = "select id as value, name as text from #__jleague_division where published = 1 and season = " . $season . " order by sort_order";
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		// Create an empty list option
+		if ($showheading) {
+			$categorylist[] =JHTML::_('select.option', '', '-- Select Division --       ' );
+		} else {
+			$categorylist = array();
+		}
+		// merge this list with the list of values retrieved from the db.
+		$result = array_merge( $categorylist, $rows );
+		$sellist =JHTML::_('select.genericlist' , $result, $element_name, 'class="inputbox" '.$event,'value', 'text', $default_value);
+		return $sellist;
+  }
+  
+  /**
+   * This function will generate a list of defined league contacts.
+   *
+   * @param string $element_name
+   * @param string $default_value
+   * @param boolean $getall
+   * @param string $event
+   * @return string
+   */
+   function getLeagueContactSelectList($element_name, $default_value, $getall = false, $event = '') {
+	 	$db			=& JLApp::getDBO();
+	 	$query = "select id as value, name as text from #__jleague_contacts";
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		// Create an empty list option
+		$categorylist[] =JHTML::_('select.option', '', '-- Select Contact --       ' );
+		// merge this list with the list of values retrieved from the db.
+		$result = array_merge( $categorylist, $rows );
+		$sellist =JHTML::_('select.genericlist' , $result, $element_name, 'class="inputbox" ' .$event,'value', 'text', $default_value);
+		return $sellist;
+  }	  
+
+  /**
+   * This function will generate a list of ROLES a team contact may be assigned to.
+   *
+   * @param string $element_name
+   * @param string $default_value
+   * @param string $event
+   * @return string
+   */
+	function getTeamContactRolesList($element_name, $default_value, $event = '') {
+		$options = array (
+			JHTML::_('select.option', 'Head Coach', JLText::getText('JL_HEADCOACH')),
+			JHTML::_('select.option', 'Asst Coach', JLText::getText('JL_ASSTCOACH')),
+			JHTML::_('select.option', 'Manager', JLText::getText('JL_MANAGER')),
+			JHTML::_('select.option', 'Other', JLText::getText('JL_OTHER')),			
+		);
+		return JHTML::_('select.genericlist' , $options, $element_name , ' class="input" '. $event, 'value', 'text', $default_value  ); 		
+	}
+
+	/**
+	 * This function will generate a select list of all users who may be owner of a team profile.
+	 *
+	 * @param string $element_name
+	 * @param string $default_value
+	 * @param string $event
+	 * @return string
+	 */
+	function getTeamOwnerSelectList($element_name, $default_value, $event = '') {
+		require_once(JLEAGUE_SERVICES_PATH . DS. 'securityservice.class.php');
+		$svc = JLSecurityService::getInstance();
+		$rows = $svc->getAvailableProfileOwners();
+		$ownerlist[] =JHTML::_('select.option', '', '-- Select Owner --       ' );
+		foreach ($rows as $row) {
+			$ownerlist[] = JHTML::_('select.option', $row->id, JLText::getText($row->name) . "(" . $row->username . ")");
+		}
+		return JHTML::_('select.genericlist' , $ownerlist, $element_name , ' class="input" '. $event, 'value', 'text', $default_value  );
+	}
+	
+	function getTeamQuickLinks($element_name, $default_value, $event = '') {
+		
+		$config = & JLApplication::getConfig();
+		//$config->getProperty('current_season');
+		/*
+	 	$db			=& JLApp::getDBO();
+	 	$query = "select id as value, name as text from #__jleague_leagues where published = 1";
+	 	
+	 	$query = "SELECT t.id as value, concat(t.name, ' (', d2.agegroup,'U)') as text "
+			. " FROM `jos_jleague_divmap` d, jos_jleague_teams t, jos_jleague_division d2 "
+			. " WHERE d.team_id = t.id "
+			. " AND d.season = " . $config->getProperty('current_season')
+			. " AND d.division_id = d2.id "
+			. " AND d.published =1 "
+			. " ORDER BY t.name, d2.sort_order, d2.agegroup";
+
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		// Create an empty list option
+		$teamlist[] =JHTML::_('select.option', '', '-- Select Team Page --    ' );
+		// merge this list with the list of values retrieved from the db.
+		$result = array_merge( $teamlist, $rows );
+		$event = 'onchange="window.location	= this.value;"';
+		$sellist =JHTML::_('select.genericlist' , $result, $element_name, 'class="inputbox" ' .$event,'value', 'text', $default_value);
+		return $sellist;	
+		*/
+		
+		require_once(JLEAGUE_SERVICES_PATH . DS. 'teamservice.class.php');
+		$svc = &JLTeamService::getInstance();
+		$rows = $svc->getActiveTeams();
+		$ownerlist[] =JHTML::_('select.option', '', '-- Select Team Page --    ' );
+		if (sizeof($rows) == 0) {
+			$ownerlist[] =JHTML::_('select.option', '', 'NO ACTIVE SEASON/TEAMS' );
+		}
+		foreach ($rows as $row) {
+			$div = $row->getDivision();
+			$config = & JLConfig::getInstance();
+			$url = JRoute::_('index.php?option=com_jleague&controller=teams&task=viewTeamProfile&Itemid=999999999&teamid='.$row->getSlug());
+			$ownerlist[] = JHTML::_('select.option', $url, JLText::getText($row->getName()) . " (" . $div->getAgeGroup(). ")");
+		}
+		$event = 'onchange="window.location	= this.value;"';
+		return JHTML::_('select.genericlist' , $ownerlist, $element_name , ' class="input" '. $event, 'value', 'text', $default_value  );
+		
+	}
+	
+	function getSeasonStatus($element_name, $default_value, $event = '') {
+		$options = array (
+			JHTML::_('select.option', 'C', JLText::getText('Completed')),
+			JHTML::_('select.option', 'A', JLText::getText('Active')),
+			JHTML::_('select.option', 'P', JLText::getText('Pending'))
+		);
+		return JHTML::_('select.genericlist' , $options, $element_name , ' class="input" '. $event, 'value', 'text', $default_value  ); 		
+	}
+	
+	function getVenueSelectList($element_name, $default_value, $event = '') {
+		require_once(JLEAGUE_SERVICES_PATH . DS. 'venueservice.class.php');
+		$svc = &JLVenueService::getInstance();
+		$rows = $svc->getVenues();
+		$slist[] =JHTML::_('select.option', '', '-- Select Venue --    ' );
+		if (sizeof($rows) == 0) {
+			$slist[] =JHTML::_('select.option', '', 'NO VENUES FOUND' );
+		}
+		foreach ($rows as $venue) {
+			$slist[] = JHTML::_('select.option', $venue->getId(), JLText::getText($venue->getName()) . " (" . $venue->getCity(). ")");
+		}
+		$event = '';
+		return JHTML::_('select.genericlist' , $slist, $element_name , ' class="input" '. $event, 'value', 'text', $default_value  );
+	}
+	
+	function getTeamProfileMenu($element_name, $default_value, $teamid, $slug = null) {
+		
+		$config = JLApplication::getConfig();
+		$ownerlist[] =JHTML::_('select.option', '', '-- Select Option --    ' );
+		$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=' . $slug), 'View Team Profile' );
+		$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=teams&task=editTeamProfile&teamid=' . $slug), 'Edit Profile' );
+		$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=teams&task=uploadLogo&teamid=' . $slug), 'Upload Logo' );
+		$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=teams&task=getteamcontactlist'), 'Create Contact List' );
+		$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=teams&task=manageContacts&teamid=' . $slug), 'Manage Contacts' );
+		$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=teams&task=updateFieldInfo&teamid=' . $slug), 'Field/Venues' );
+		
+		//$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=teams&task=editgames&teamid=' . $teamid), 'Manage Games' );
+
+		if ($config->getProperty('schedules_enabled')) { 
+			$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=teams&task=manageschedule&teamid=' . $slug), 'Schedule / Game Scores' );				
+		}		
+		if ($config->getProperty('rosters_enabled')) {
+			$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=teams&task=manageRoster&teamid=' . $slug), 'Manage Roster' );
+		}
+
+		require_once(JLEAGUE_SERVICES_PATH . DS . 'registrationservice.class.php');
+		$rsvc = &JLRegistrationService::getInstance();
+		if ($rsvc->isRegistrationOpen()) {
+			// Get current season open for registration
+			$ownerlist[] =JHTML::_('select.option', JRoute::_('index.php?option=com_jleague&controller=registrations&task=register&teamid=' . $teamid), 'Register for Next Season' );
+		}		
+		
+		
+		$event = 'onchange="window.location	= this.value;"';
+		return JHTML::_('select.genericlist' , $ownerlist, $element_name , ' class="input" '. $event, 'value', 'text', $default_value  );
+	}	
+
+	function getDashboardViews($element_name, $default_value) {
+		
+		$config = JLApplication::getConfig();
+//		$ownerlist[] =JHTML::_('select.option', '', '-- Select Option --    ' );
+		$viewlist[] =JHTML::_('select.option', "summary", 'Season Summary' );
+		$viewlist[] =JHTML::_('select.option', "unpaidteam", 'Unpaid Teams' );
+		$viewlist[] =JHTML::_('select.option', "leaguesetup", 'League Setup' );
+		$viewlist[] =JHTML::_('select.option', "getSiteConfig", 'View Site Configurations' );
+		//$viewlist[] =JHTML::_('select.option', "newteams", 'New Teams' );
+		//$viewlist[] =JHTML::_('select.option', "notregistered", 'Teams Not Registered' );
+		//$viewlist[] =JHTML::_('select.option', "rosterreport", 'Roster Report' );
+		//$viewlist[] =JHTML::_('select.option', "gamecompletion", 'Game Completion Report' );
+		return JHTML::_('select.genericlist' , $viewlist, $element_name , ' class="input" ', 'value', 'text', $default_value  );
+	}
+	
+}
+
+?>

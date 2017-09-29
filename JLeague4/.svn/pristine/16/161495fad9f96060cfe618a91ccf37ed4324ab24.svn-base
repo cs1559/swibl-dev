@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @version		$Id: gameobserver.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	JLeague
+ * @subpackage	Objects
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license		GNU/GPL, see LICENSE.php
+ */
+
+defined( '_JEXEC' ) or die( 'Restricted access' );
+
+/**
+ * The JLObserverIF is an interface class for any Observer object.
+ */
+
+class JLGameObserver extends JLBaseObserver  {
+	
+	public function __construct() {
+		
+	}
+	
+	/**
+	 * This function is executed AFTER someone has posted a game score.  It first validates that the object
+	 * passed as the $args variable is an instance of JLGame.
+	 * 
+	 * NOTE:  Currently the signature of the function enforces this and this could be a problem due to 
+	 * wrong code and could trigger a FATAL error at run-time. 
+	 *
+	 * @param JLGame $args
+	 */
+	static public function afterPostScore(JLGame $args) {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		if (!$args instanceof JLGame  ) {
+			return;
+		}
+		if ($args->isLeagueGame()) {
+
+			$teamsvc = & JLTeamService::getInstance();			
+			$hometeam = $teamsvc->getRow($args->getHometeamId());
+			$awayteam = $teamsvc->getRow($args->getAwayteamId());
+			
+			$homeemails = $teamsvc->getTeamEmailAddresses($hometeam->getId());
+			$awayemails = $teamsvc->getTeamEmailAddresses($awayteam->getId());
+			$emails = array_merge($homeemails, $awayemails);	
+
+			//$config = &JLConfig::getInstance();
+			
+			$fromemail = $config->getPropertyValue('email_from_addr');
+			$fromname = $config->getPropertyValue('email_from_name');
+			$emailtmpl = new fsTemplate("gamescorenotification", APP_TEMPLATES_PATH);
+			$emailtmpl->setObject('game',$args);
+			$emailmsg = $emailtmpl->getContent();
+
+			//echo $emailmsg;
+			if ($config->getPropertyValue("game_notifications_enabled")) {
+				JLUtil::sendMail($fromemail,$fromname,$emails, "SWIBL - Game Score Posted", $emailmsg, true,null,"chris@swibl-baseball.org");
+			}
+			
+		}
+	}
+	
+	static public function onSaveGame(JLGame $args) {
+		//echo "onSaveGame executed";
+		return null;
+	}
+	
+}
+
+?>

@@ -1,0 +1,28 @@
+<?php
+?>
+
+<div id="teamprofile-standings" class="profile-box profile-box-dark">
+
+	<h5>Division Standings</h5>
+	<table class="swibl-table-max">
+			<thead>
+				<tr>
+					<th>Team Name</th>
+					<th>Record</th>
+					<th>Points</th>
+				</tr>
+			</thead>
+<?php 
+	foreach($standings as $obj)
+	{
+?>
+		<tr>
+			<td><?php echo $obj->getTeamName();?></td>
+			<td><?php echo $obj->getRecord();?></td>
+			<td><?php echo $obj->getPoints();?></td>
+		</tr>	
+<?php 
+	}
+?>	
+	</table>
+</div>

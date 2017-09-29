@@ -1,0 +1,21 @@
+<?php
+
+$url = "index.php?option=com_jleague&controller=teams&task=uploadLogo&teamid=333";
+$date = "2014/01/01 03:00:23:00";
+$dt = substr($date,0,10);
+
+           list($year, $month, $day) = preg_split('/\/|-/', $dt);
+           $date = $month . "/" . $day . "/" . $year;
+echo $date;
+
+
+exit;
+
+$arr = explode("?",$url);
+
+
+
+
+
+
+echo $url;

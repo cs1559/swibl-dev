@@ -1,0 +1,423 @@
+<?php
+/**
+ * @version 		$Id: gamesdao.class.php 448 2012-12-16 12:17:06Z cs1559 $
+ * @package 		JLeague
+ * @subpackage 		Data Access Objects
+ * @copyright 		(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license			GNU/GPL, see LICENSE.php
+ */
+
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die( 'Restricted access' );
+
+require_once(JLEAGUE_CLASSES_PATH . DS. 'dao' . DS. 'basedao.class.php');
+require_once(JLEAGUE_CLASSES_PATH . DS. 'objects' . DS. 'division.class.php');
+
+class JLGamesDAO extends JLBaseDAO{
+	
+	var $tablename = '#__jleague_scores';
+	/*
+	var $selectquery = "SELECT s.*,l.id as leagueid,l.name as leaguename, d.id as divisionid, d.name as divisionname, seasons.id as seasonid, seasons.title as seasontitle FROM `#__jleague_scores` as s, 
+			 `#__jleague_division` d, `#__jleague_leagues` l, `#__jleague_seasons` seasons 
+			 where s.division_id = d.id 
+			 	and d.league_id = l.id
+				and s.season = seasons.id";   	
+	*/
+	
+	var $selectquery = "select * from ( SELECT g.* , t1.name hometeam, t2.name awayteam
+						FROM #__jleague_scores g, #__jleague_teams t1, #__jleague_teams t2
+						WHERE hometeam_id = t1.id AND awayteam_id = t2.id
+						UNION
+						SELECT g.*, t1.name hometeam, g.awayteam_name awayteam 
+						from #__jleague_scores g, #__jleague_teams t1 
+						WHERE awayteam_id=0 and hometeam_id = t1.id
+						UNION
+							SELECT g.*, g.hometeam_name hometeam, t1.name awayteam
+							from #__jleague_scores g, #__jleague_teams t1 
+							WHERE hometeam_id=0  and awayteam_id = t1.id ) as gamelist";
+
+	var $completedgamesquery = "select * from ( SELECT g.* , t1.name hometeam, t2.name awayteam
+						FROM #__jleague_scores g, #__jleague_teams t1, #__jleague_teams t2
+						WHERE hometeam_id = t1.id AND awayteam_id = t2.id and g.gamestatus = 'C'
+						UNION
+						SELECT g.*, t1.name hometeam, g.awayteam_name awayteam 
+						from #__jleague_scores g, #__jleague_teams t1 
+						WHERE awayteam_id=0 and hometeam_id = t1.id and g.gamestatus = 'C'
+						UNION
+							SELECT g.*, g.hometeam_name hometeam, t1.name awayteam
+							from #__jleague_scores g, #__jleague_teams t1 
+							WHERE hometeam_id=0  and awayteam_id = t1.id and gamestatus = 'C') as gamelist";
+	
+	
+
+	protected function __construct() {
+		parent::__construct();
+	}
+	
+	function getInstance() {
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new JLGamesDAO();
+		}
+		return $instance;
+	}
+
+	/**
+	 * This function will allow a client to locate an individual game based on the game id.
+	 *
+	 * @param int $id
+	 * @return JLGame
+	 */
+	function findById($id) {
+		$iid = (int) $id;
+		$query = $this->selectquery . " where id = " . $iid;
+		return parent::_getRow($query);
+	}
+		
+	/**
+	 * 
+	 * This function will insert a row into the GAME table.
+	 *
+	 * @param JLGame
+	 * @return boolean
+	 */
+   	function insert(JLGame $obj) {
+   		$user = JLApplication::getUser();
+    	require_once(JLEAGUE_CLASSES_PATH . DS . 'helpers'. DS . 'util.php');
+    	$newGameDate = JLUtil::dateConvert($obj->getGameDate(),1);
+		$query = 'INSERT INTO ' .$this->getNameQuote( $this->tablename  ) . ' (id, division_id, season, game_date, hometeam_id, awayteam_id, '
+			. 'hometeam_score,awayteam_score,forfeit,conference_game,hometeam_name,awayteam_name,hometeam_in_league,awayteam_in_league,'
+			. 'properties,location,highlights,gametime,gamestatus, shortgame, enteredby, dateupdated)'	
+			. ' VALUES (0,'
+			. '"' . $obj->getDivisionId(). '",' 
+			. '"' . $obj->getSeason() . '",'
+			. ' date("' . $newGameDate. '"), '
+			. '"' . $obj->getHometeamId() . '",'
+			. '"' . $obj->getAwayteamId() . '",'			
+			. '"' . $obj->getHometeamScore() . '",'
+			. '"' . $obj->getAwayteamScore() . '",'
+			. '"' . $obj->getForfeit() . '",'
+			. '"' . $obj->getConferenceGame() . '",'
+			. '"' . $obj->getHometeam() . '",'
+			. '"' . $obj->getAwayteam() . '",'
+			. '"' . $obj->getHomeLeagueFlag() . '",'
+			. '"' . $obj->getAwayLeagueFlag() . '",'
+			. '"' . $obj->getFormattedProperties() . '",'
+			. '"' . $obj->getLocation() . '",'
+			. '"' . $obj->getHighlights() . '",'
+			. '"' . $obj->getGameTime() . '",'
+			. '"' . $obj->getGameStatus() . '",'
+			. '"' . $obj->getShortgame() . '",'														
+			. '"' . $user->username . '",'
+			. 'NOW()'
+			.  ')';
+		return $this->_insertRow($query);			
+    }
+    
+    /**
+     * This function will delete a row from the game table.
+     *
+     * @param JLGame $league
+     * @return boolean
+     */
+    function update(JLGame $obj) {
+    	   	
+    	$user = JLApplication::getUser();
+    	require_once(JLEAGUE_CLASSES_PATH . DS . 'helpers'. DS . 'util.php');
+    	$newGameDate = JLUtil::dateConvert($obj->getGameDate(),1);
+  		$query = 'update ' .$this->getNameQuote( $this->tablename  ) . ' set '
+			. ' division_id = "' . $obj->getDivisionId(). '", '
+			. ' season = "' . $obj->getSeason(). '", '
+			. ' game_date = date("' . $newGameDate. '"), '
+			. ' hometeam_id = "' . $obj->getHometeamId(). '", '	
+			. ' awayteam_id = "' . $obj->getAwayteamId(). '", '					
+			. ' hometeam_score = "' . $obj->getHometeamScore(). '", '
+			. ' awayteam_score = "' . $obj->getAwayteamScore(). '", '
+			. ' forfeit = "' . $obj->getForfeit(). '", '
+			. ' conference_game = "' . $obj->getConferenceGame(). '", '
+			. ' hometeam_name = "' . $obj->getHometeam(). '", '
+			. ' awayteam_name = "' . $obj->getAwayteam(). '", '
+			. ' hometeam_in_league = "' . $obj->getHomeLeagueFlag(). '", '																					
+			. ' awayteam_in_league = "' . $obj->getAwayLeagueFlag(). '", '
+			. ' properties = "' . $obj->getFormattedProperties(). '", '
+			. ' location = "' . $obj->getLocation(). '", '
+			. ' highlights = "' . $obj->getHighlights(). '", '
+			. ' gametime = "' . $obj->getGameTime(). '", '																	
+			. ' gamestatus = "' . $obj->getGameStatus(). '", '
+			. ' shortgame = "' . $obj->getShortgame(). '", '					
+			. ' updatedby = "' . $user->username . '", '
+			. ' dateupdated = NOW() '
+			. ' where id = ' . $obj->getId();
+
+		return $this->_updateRow($query);
+    }
+
+    /**
+     * This function will return an array of Game objects based on the start/stop arguments
+     * passed into the function.  
+     *
+     * @param int $start
+     * @param int $stop
+     * @param int $orderby
+     * @param int $filter
+     * @return array
+     */
+	function getRecords($start, $stop, $orderby = '', $filter = array()) {
+		$where = '';
+		$cond = $this->createFilterWhereClase($filter);
+		if ($cond != null) {
+			$where = ' where ' . $cond;
+		}
+		$setlimit = false;
+		if (((int) $start) > 0) {
+			$setlimit = true;
+		}
+		if (((int) $stop) > 0) {
+			$setlimit = true;
+		}
+
+		if (sizeof($filter)>0) {
+			$query = 'SELECT * from (' . $this->selectquery . ') as tmp ' . $where . ' ' . $orderby;
+			if ($setlimit) { 
+				$query .= ' LIMIT ' . $start . ',' . $stop;
+			}
+			return parent::_getRows($query);						
+		} else {
+			$query = 'SELECT * from (' . $this->selectquery . ') as tmp '  . $orderby;
+			if ($setlimit) { 
+				$query .= ' LIMIT ' . $start . ',' . $stop;
+			}
+			return parent::_getRows($query);
+		}
+ 	} 	    
+    
+ 	/**
+ 	 * This function will return an array of games for a specific team and season.  It also allows
+ 	 * the client to add a filter to filter the rows returned based on the game status.
+ 	 *
+ 	 * @param int $teamid
+ 	 * @param int $seasonid
+ 	 * @param string $statusfilter
+ 	 * @param string $sortorder
+ 	 * @return array
+ 	 */
+ 	function getTeamGames($teamid=null, $seasonid= null, $statusfilter=null, $sortorder = "desc") {
+ 		
+ 		$filter = null;
+ 		if ($statusfilter == null) {
+ 			// 05-30-2011 added suspended/delayed
+ 			$filter = " and g.gamestatus in ('C','X','R','D') ";
+ 		} 
+		if ($statusfilter == "all") {
+			$filter = '';
+ 		} else {
+ 			if ($filter == null)
+	 			$filter = 'and g.gamestatus in (' . $statusfilter . ')';
+ 		}
+   		$query = " select * from (SELECT g.*, t1.name hometeam, t2.name awayteam "
+				. " from #__jleague_scores g, #__jleague_teams t1, #__jleague_teams t2 " 
+				. " WHERE season = " . $seasonid 
+				. " and (hometeam_id = " . $teamid . " or awayteam_id = " . $teamid . ")"
+	  			. " and hometeam_id = t1.id and awayteam_id = t2.id " . $filter
+	 			. " UNION "
+	 			. " SELECT g.*, t1.name hometeam, g.awayteam_name "
+	 			. " from #__jleague_scores g, #__jleague_teams t1 "
+				. " WHERE season = " . $seasonid . " " . $filter
+				. " and (hometeam_id = " . $teamid . " and awayteam_id = 0)"
+	  			. " and hometeam_id = t1.id "				
+				. " UNION "
+				. " SELECT g.*, hometeam_name hometeam, t1.name awayteam "
+				. " from #__jleague_scores g, #__jleague_teams t1 "
+	 			. " WHERE season = " . $seasonid . " " . $filter
+				. " and awayteam_id = t1.id "
+				. " and hometeam_id = 0 and awayteam_id = " .$teamid . ") as gamelist "
+				. " order by game_date " . $sortorder;	
+ 		return parent::_getRows($query);
+ 	}
+
+	
+ 	/**
+ 	 * This function will return the size of the table.  However, it can also include a filter
+ 	 * to filtet specific rows.  This function would typically be used in the backend to present
+ 	 * only a selected group of data in administration lists.
+ 	 *
+ 	 * @param unknown_type $filter
+ 	 * @return unknown
+ 	 */
+	function getTableSize($filter=null) {
+		$where = '';
+		$cond = $this->createFilterWhereClase($filter);
+		if ($cond != null) {
+			$where = ' where t.' . $cond;
+		}
+		if (sizeof($filter)>0) {		
+			$query = 'SELECT t.* from ' . $this->getNameQuote($this->tablename) . ' as t '
+				. $where . '';
+		} else {
+			return parent::getTableSize($where);
+		}
+	 	$db			=& JLApp::getDBO();
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		return sizeof($rows); 
+  } 	
+
+  /**
+   * This function will return a teams most recent game object
+   *
+   * @param int $teamid
+   * @return JLGame
+   */
+  function getTeamsMostRecentGame($teamid) {
+  	$query = "SELECT * FROM #__jleague_scores "
+  		. " where (hometeam_id = " . $teamid . " or awayteam_id = " . $teamid . ") "
+		. " and gamestatus = 'C'"
+		. " order by season desc, game_date desc "
+		. " limit 0,1 ";
+	return parent::_getRow($query);
+  }
+
+  /**
+   * This function will return a teams next upcoming game.
+   *
+   * @param int $teamid
+   * @return JLGame
+   */
+  function getTeamsUpcomingGames($teamid,$count) {
+  	$query = "SELECT * FROM #__jleague_scores "
+  		. " where (hometeam_id = " . $teamid . " or awayteam_id = " . $teamid . ") "
+		. " and gamestatus = 'S'"
+		. " and game_date >= curdate() "
+		. " order by season desc, game_date "
+		. " limit 0, " . $count;
+	return parent::_getRows($query);
+  }
+    
+	
+	/**
+	 * This function will return an array of objects for ALL rows within the underlying
+	 * table.
+	 *
+	 * @return array
+	 */
+  	function getRows() {
+		return self::_getRows($this->selectquery);
+	}	
+  
+	protected function createFilterWhereClase($filter) {
+		if (sizeof($filter)>0) {
+			$value = implode(" and ",$filter);
+			return $value;
+		}
+		return '';
+	}
+	
+	/**
+	 * This will map the the database row to the League Object
+	 *
+	 * @param unknown_type $row
+	 * @return unknown
+	 */	
+	protected function loadObject($row) {
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS . 'game.class.php');
+		require_once(JLEAGUE_CLASSES_PATH . DS .'helpers'. DS . 'util.php');
+		$obj = new JLGame();
+		$obj->setId($row->id);
+		if (isset($row->awayteam))
+			$obj->setAwayteamId($row->awayteam);
+		else
+			$obj->setAwayteamId($row->awayteam_name);
+		$obj->setDivisionId($row->division_id);
+		$obj->setGameDate(JLUtil::dateconvert($row->game_date,2));
+		$obj->setGameTime($row->gametime);	
+		//$game->setGameDate($row->game_date);	
+		$obj->setSeason($row->season);
+		$obj->setHometeamId($row->hometeam_id);
+		$obj->setAwayteamId($row->awayteam_id);
+		
+		if (isset($row->hometeam))
+			$obj->setHometeam($row->hometeam);
+		else
+			$obj->setHometeam($row->hometeam_name);
+		if (isset($row->awayteam))	
+			$obj->setAwayteam($row->awayteam);
+		else
+			$obj->setAwayteam($row->awayteam_name);
+			
+		/*
+		if ($row->hometeam_id == 0)
+			$obj->setHometeam($row->hometeam_name);
+		else {
+			if (isset($row->hometeam))
+				$obj->setHometeam($row->hometeam);
+			else
+				$obj->setHometeam($row->hometeam_name);
+		}
+		if ($row->awayteam_id == 0)
+			$obj->setAwayteam($row->awayteam_name);
+		else {
+			if (isset($row->awayteam))	
+				$obj->setAwayteam($row->awayteam);
+			else
+				$obj->setAwayteam($row->awayteam_name);
+		}
+		*/
+		
+		$obj->setHometeamScore($row->hometeam_score);
+		$obj->setAwayteamScore($row->awayteam_score);
+		/*
+		$obj->setHometeamPoints($row->hometeam_points);
+		$obj->setAwayteamPoints($row->awayteam_points);
+		*/
+		$obj->setForfeit($row->forfeit);
+		$obj->setConferenceGame($row->conference_game);
+	    $obj->setHomeLeagueFlag($row->hometeam_in_league);
+		$obj->setAwayLeagueFlag($row->awayteam_in_league);
+		$obj->setLocation($row->location);			
+		$obj->setGameStatus($row->gamestatus);
+		$obj->setShortgame($row->shortgame);
+		$obj->setHighlights($row->highlights);
+		
+		$obj->parseDatabaseObjectProperties($row->properties);
+		
+// 		$proparray = split("\n",$row->properties);
+// 		for ($y=0; $y<(sizeof($proparray)); $y++) {
+// 			$prop = split("=",$proparray[$y]);
+// 			if (key_exists(1,$prop)) {
+// 				$obj->addProperty($prop[0],$prop[1]);
+// 			}
+// 		}		
+
+		$ddao = &JLFactory::getDivisionDao();
+		if (isset($row->division_id)) {
+			if ($row->division_id > 0) {
+				$div = $ddao->findById($row->division_id);
+				$obj->setDivision($div);
+			}
+		}
+		
+		return $obj;
+	}
+
+	/*
+	    function getTotalScheduledGames($id) {
+    	$iid = (int) $id;
+    	$query = 'SELECT count(*) as total_games FROM #__jleague_scores WHERE conference_game = "Y" and season = ' . $iid;
+    	$rows = $this->_execute($query);
+    	if (is_array($rows)) {
+    		return $rows[0]->total_games;
+    	}
+    	return 0;
+    }
+    
+    function getTotalGamesPlayed($id) {
+    	$iid = (int) $id;
+    	$query = 'SELECT count(*) as total_games FROM #__jleague_scores WHERE conference_game = "Y" and gamestatus = "C" and season = ' . $iid;
+    	$rows = $this->_execute($query);
+    	if (is_array($rows)) {
+    		return $rows[0]->total_games;
+    	}
+    	return 0;
+    }
+    */
+}

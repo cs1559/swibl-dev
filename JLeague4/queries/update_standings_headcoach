@@ -1,0 +1,5 @@
+update joom_jleague_standings a
+left join joom_jleague_teams b on
+    a.team_id = b.id
+set
+    a.headcoach = b.coachname

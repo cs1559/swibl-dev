@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @version		$Id: observable.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	JLeague
+ * @subpackage	Objects
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license		GNU/GPL, see LICENSE.php
+ */
+
+defined( '_JEXEC' ) or die( 'Restricted access' );
+
+/**
+ * The JLObservable is an object that extends the base object that enables the 
+ * object to attach observers to the class.
+ */
+
+class JLObservable {
+
+	var $observers = null;
+
+	protected function __construct() {
+		$this->observers = array();
+	}
+	
+	
+	function trigger($event, & $args = null)
+	{
+		//echo "triggering from JLObservable";
+		// Iterate through the _observers array
+		foreach ($this->observers as $observer) {
+			$observer->notify($event, $args);
+		}
+	}
+
+	/**
+	 * Attach an observer object
+	 *
+	 * @access public
+	 * @param object $observer An observer object to attach
+	 * @return void
+	 * @since 1.5
+	 */
+	function attach( JLObserverIF &$observer)
+	{
+		// Make sure we haven't already attached this object as an observer
+		if (is_object($observer))
+		{
+			$class = get_class($observer);
+			foreach ($this->observers as $check) {
+				if (is_a($check, $class)) {
+					return;
+				}
+			}
+			$this->observers[] =& $observer;
+		} else {
+			$this->observers[] =& $observer;
+		}
+	}
+
+	/**
+	 * Detach an observer object
+	 *
+	 * @access public
+	 * @param object $observer An observer object to detach
+	 * @return boolean True if the observer object was detached
+	 * @since 1.5
+	 */
+	function detach( JLObserverIF $observer)
+	{
+		// Initialize variables
+		$retval = false;
+
+		$key = array_search($observer, $this->observers);
+
+		if ( $key !== false )
+		{
+			unset($this->observers[$key]);
+			$retval = true;
+		}
+		return $retval;
+	}
+	
+}
+
+ ?>

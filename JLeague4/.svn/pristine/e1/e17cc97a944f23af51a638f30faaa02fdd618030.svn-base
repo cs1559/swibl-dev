@@ -1,0 +1,238 @@
+<?php
+/**
+ * @version		$Id: baseview.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	FST Framework
+ * @subpackage	Core
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license		GNU/GPL
+ */
+// Disallow direct access to this file
+defined('_FSTLIB') or die('Restricted access');
+
+include_once('exception.php');
+include_once('object.php');
+
+/**
+ * The fsView is the foundation view that all views extend from.
+ *
+ */
+class fsView extends fsObject {
+	
+	var $title = null;
+	var $viewObject = null;
+	protected $templates = array();
+	var $folder = null;
+	var $objects = array();
+	var $stylesheets = array();
+	var $applscripts = null;
+	var $scripts = array();
+	var $includecommonlibs = true;
+	
+	var $_templatePath = null;
+	
+	/**
+	 * JLBaseView constructor function.  This initializes all of the needed arrays and
+	 * sets an instance of the components configuration settings as an instance variable.
+	 * The baseview will support multiple templates within one view. 
+	 *
+	 */
+	public function __construct($tmplPath = null, array $extraParms = null) {
+		$this->_templatePath = $tmplPath;
+		
+// 		$this->objects = array();
+// 		$this->stylesheets = array();
+// 		$this->scripts = array();
+// 		$this->templates = array();				
+	}
+	
+	function setFolder($folder) {
+		$this->folder = $folder;
+	}
+	function getFolder() {
+		return $this->folder;
+	}
+
+	/**
+	 * This function sets an object within the view.  These objects then become accessible within the
+	 * view and all internal templates.
+	 *
+	 * @param String $key
+	 * @param Object $obj
+	 */
+	function setObject($key,$obj) {
+		$this->objects[$key]=$obj;
+	}
+	/**
+	 * Returns an object that is contained within the view.
+	 *
+	 * @param String $key
+	 * @return Object
+	 */
+	function getObject($key) {
+		return $this->objects[$key];
+	}
+	/**
+	 * This function sets an attribute that can be accessible within a template.  This is used
+	 * for NON-OBJECTS.
+	 *
+	 * @param String $key
+	 * @param String $val
+	 */
+	function setAttribute($key,$val) {
+		$this->$key = $val;
+	}
+
+	/**
+	 * The display function is an abstract function that all subclasses must implement.
+	 * @deprecated
+	 */
+	function display() {
+		$this->render();
+	}
+	
+	/**
+	 * This function will enable clients to add stylesheets to the view.  The parameter should be 
+	 * passed as a URL string. 
+	 *
+	 * @param String $sheet
+	 */
+	function addStylesheet($sheet) {
+		$this->stylesheets[] = $sheet;
+	}
+	
+	/**
+	 * This function will enable clients to add javascript libraries to the view.  The parameter 
+	 * should be passed as a URL string. 
+	 *
+	 * @param String $script
+	 */	
+	function addScript($script) {
+		$this->scripts[] = $script;
+	}
+	
+	function addApplicationScript($script) {
+		$this->applscripts[] = $script;
+	}
+	
+	/**
+	 * This is a protected function that will generate the necessary LINK HTML elements that are 
+	 * included as part of the page header.
+	 *
+	 */
+	protected function generateStylesheetLinks() {
+		/*
+		if ($this->includecommonlibs) {
+			$mainframe	=& JFactory::getApplication();
+			if (count($this->stylesheets)>0) {
+			 	foreach ($this->stylesheets as $entry) {
+			 		// In J2.5 - addCustomHeadTag is not part of the $mainframe.  have to access it via the document. 
+					$mainframe->addCustomHeadTag("<link type=\"text/css\" href=\"" . $entry . "\" rel=\"stylesheet\"/>");	 		
+		 		}
+			}
+		}
+		*/
+	}
+	
+	/**
+	 * This is a protected function that will generate the necessary SCRIPT elements that are 
+	 * generated when rendering the page.
+	 *
+	 */
+	protected function generateJavascriptLinks() {
+		/*
+		if ($this->includecommonlibs) {
+			// $mainframe	=& JFactory::getApplication();
+			if (count($this->applscripts)>0) {
+			 	foreach ($this->applscripts as $entry) { 
+			 		FSTApplication::addScript($entry);
+		 		}
+			}
+			
+			if (count($this->scripts)>0) {
+			 	foreach ($this->scripts as $entry) { 
+			 		FSTApplication::addScript($entry);
+		 		}
+			}
+		}
+		*/
+	}
+	
+	function suppressCommonLibraries() {
+		$this->includecommonlibs = false; 
+	}
+	
+	/**
+	 * Sets the title which will be rendered as part of the TITLE element of the page.  The title
+	 * will appear in the browser window.
+	 * 
+	 * @param String $title
+	 */
+	function setTitle($title) {
+		$this->title = $title;
+	}
+	/**
+	 * Returns the current value of the views Title.
+	 *
+	 * @return String
+	 */
+	function getTitle() {
+		return $this->title;
+	}
+	
+	/**
+	 * This function will add a template object to the views array of templates.   This function
+	 * will in turn invoke a private function that injects the view into each of the template.  Setting the 
+	 * templates view container enables View functions/methods to be available within the template file
+	 * when its parsed.  In addition, the location/folder of the template is being set in the template 
+	 * object.  this is required in the parse function when the template is "included".
+	 *
+	 * @param fsTemplate $tmpl
+	 * @throws Exception - Template file not found
+	 */
+	function addTemplate(fsTemplate $tmpl) {
+		$fn = $this->_templatePath . $tmpl->getName() . '.php';
+		if (!file_exists($fn)) {
+			throw new fsException("Template File Not Found [" . $fn . "]");
+		}
+		$tmpl->setFolder($this->_templatePath);
+		
+    	$this->loadView($tmpl,$this);
+		$this->templates[] = $tmpl;
+	}	 
+	
+	/**
+	 * This function injects the current view into any nested templates that may exist within
+	 * the core template associated with the view.
+	 *
+	 * @param fsTemplate $tmpl
+	 * @param fsView $view
+	 */
+	private function loadView(fsTemplate $tmpl, $view) {
+		$tmpl->setContainer($view);
+	    foreach ($tmpl->getNestedTemplates() as $template) {
+    		$this->loadView($template,$view);
+    	}		
+	}
+	
+	function getYesNo($input) {
+		if ($input) {
+			return "Yes";
+		}
+		return "No";
+	}
+	/**
+	 * The render function will parse all of the templates that have been added to the view
+	 */
+	function render(){
+		if (!empty($this->templates)) {
+			foreach ($this->templates as $template) {
+				if (is_object($template)) {
+					$template->parse();
+				}
+			}
+		} else {
+			echo "No Templates Defined for view";
+		}
+	}
+}
+?>

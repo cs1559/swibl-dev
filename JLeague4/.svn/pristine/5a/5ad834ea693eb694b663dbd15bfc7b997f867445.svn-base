@@ -1,0 +1,50 @@
+<project name="JLeague" basedir=".">
+    <description>
+        Basic Ant/Build file to copy files from Eclipse project to XAMPP HTDOCS directory
+    </description>
+  <!-- set global properties for this build -->
+  <property name="root" location="c://dev//workspaces//swibl//JLeague4"/>
+  <property name="buildroot" location="c://dev//builds//jleague4"/>	
+  <property name="frontendpath" location="c://dev//workspaces//swibl//JLeague4//frontend"/>
+  <property name="backendpath" location="c://dev//workspaces//swibl//JLeague4//backend"/>
+  <property name="languagepath" location="c://dev//workspaces//swibl//JLeague4//language"/>
+  <property name="distroroot" location="c://dev//builds//jleague-final"/>
+
+	<target name="buildFrontEnd" >
+		  <delete file="${buildroot}/frontend/frontend.zip"/>	
+		  <zip destfile="${buildroot}/frontend/frontend.zip">
+		  	<zipfileset dir="${frontendpath}"/>
+		  </zip>  		  		  		  		
+	</target>
+
+	<target name="buildLanguage" >
+		  <delete file="${buildroot}/language/language.zip"/>	
+		  <zip destfile="${backendpath}/language/language.zip">
+		  	<zipfileset dir="${languagepath}"/>
+		  </zip>  		  		  		  		
+	</target>
+	
+	<target name="buildBackEnd" depends="buildLanguage">
+		  <delete file="${buildroot}/backend/backend.zip"/>
+		  <zip destfile="${buildroot}/backend/backend.zip" excludes="backend.zip">
+		    <zipfileset dir="${backendpath}"/>
+		  </zip>
+	</target>
+
+	<target name="buildDistribution" depends="buildFrontEnd,buildBackEnd,buildLanguage">
+		<input message="Please enter Version:" addproperty="version" defaultvalue="undefined"/>
+		<delete file="${buildroot}/jleague-${version}.zip"/>	
+		<copy file="${root}/jleague.xml" todir="${buildroot}"/>
+		<copy file="${root}/install.php" todir="${buildroot}"/>
+		<copy file="${root}/installhelper.class.php" todir="${buildroot}"/>				
+		<copy file="${root}/install.php" todir="${buildroot}/backend"/>
+		<copy file="${root}/installhelper.class.php" todir="${buildroot}/backend"/>
+		<!-- <copy file="${buildroot}/language.zip" todir="${buildroot}"/> -->		
+		<zip destfile="${distroroot}/jleague-${version}.zip" >
+		    <zipfileset dir="${buildroot}"/>
+		</zip>  		  		  		  		
+	</target>
+	
+
+
+</project>

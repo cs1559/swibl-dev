@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<author>Firestorm Technologies, LLC</author>
+	<authorEmail>cs1559@firestorm-technologies.com</authorEmail>
+	<copyright>Copyright 2008-2009 Firestorm Technologies, LLC</copyright>
+	<authorUrl>http://www.firestorm-technologies.com</authorUrl>
+	<creationDate>11-20/2009</creationDate>
+
+	<menu>
+		<options var="action">
+			<option value="frontpage" name="Frontpage" msg="Display the league front page" />
+			<option value="viewTeams" name="View Teams"	msg="List all teams in the current season" />
+			<option value="displayStandings" name="Display Standings" msg="Display the League Standings Page" />
+			<option value="viewBulletinBoard" name="View Bulletin Board" msg="Displays the Teams bulletin board" />
+		</options>
+	</menu>
+	<state switch="action">
+		<frontpage>
+			<name>Display Front Page</name>
+			<description>This menu option will display the league front page
+			</description>
+		</frontpage>
+
+		<viewTeams>
+			<name>View Teams</name>
+			<description>This menu option will display a list of all current
+				teams
+			</description>
+		</viewTeams>
+
+		<displayStandings>
+			<name>Display Standings</name>
+			<description>This menu option will display the leagues current
+				standings
+			</description>
+		</displayStandings>
+
+		<viewBulletinBoard>
+			<name>View Bulletin Board</name>
+			<description>This menu option will display the Team Bulletin Board</description>
+		</viewBulletinBoard>
+		
+	</state>
+</metadata>

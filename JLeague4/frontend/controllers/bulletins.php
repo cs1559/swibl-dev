@@ -1,0 +1,79 @@
+	<?php
+	/**
+	 * @version		$Id: ajax.php 234 2011-01-16 12:40:21Z Chris Strieter $
+	 * @package 	JLeague
+	 * @subpackage	Controllers
+	 * @copyright 	(C) 2008,2009 Chris Strieter 
+	 * 				Firestorm Technologies, LLC
+	 * 				http://www.firestorm-technologies.com
+	 * @license 	http://www.gnu.org/copyleft/lgpl.html GNU/LGPL
+	 * 
+	 */
+	
+	// Disallow direct access to this file
+	defined('_JEXEC') or die('Restricted access');
+	
+	/**
+	 * This is the controller that manages the bulletins functionality.
+	 */
+	class mBulletins  extends mBaseController {
+	
+		function __construct() {
+			parent::__construct();
+		}
+		
+		function viewBulletinBoard() {
+			$app = &mFactory::getApp();
+			$config = $app->getConfig();
+			$doc = $app->getDocument();
+			$doc->setTitle("SWIBL - League Bulletin Board");
+			
+			$bsvc = &JLBulletinsService::getInstance();
+			
+			$bulletins = $bsvc->getLeagueBulletins();
+			
+			$view = new fsView(APP_TEMPLATES_PATH);
+			$tmpl = new fsTemplate("bulletinboard");
+			$tmpl->setObject("bulletins",$bulletins);
+			$tmpl->setObject("config", $config);
+			$view->addTemplate($tmpl);
+			$view->render();
+			
+			//echo "<h1>Bulletin Board is currently unavailable</h1>";
+	
+		}
+
+		function viewCategory() {
+			$app = &mFactory::getApp();
+			$config = $app->getConfig();
+			
+			$req = &fsRequest::getInstance();
+			
+			$catid = $req->getValue("catid");
+			if ($catid == null) {
+				echo "Bulletin Category not provided";
+			}
+			
+			$doc = $app->getDocument();
+			$doc->setTitle("SWIBL - League Bulletin Board");
+				
+			$bsvc = &JLBulletinsService::getInstance();
+				
+			$bulletins = $bsvc->getBulletinsByCategory($catid);
+			
+			switch ($catid) {
+				case "4":
+					$templatename = "bulletinboard-tournaments";
+					break;
+				default:
+					$templatename = "bulletinboard-generic";
+			}
+			
+			$view = new fsView(APP_TEMPLATES_PATH);
+			$tmpl = new fsTemplate($templatename);
+			$tmpl->setObject("bulletins",$bulletins);
+			$tmpl->setObject("config", $config);
+			$view->addTemplate($tmpl);
+			$view->render();
+		}
+	}

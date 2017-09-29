@@ -1,0 +1,173 @@
+/*  --------------- TEAM PROFILE ------------------ */
+#teamprofile-header {
+}
+#teamprofile-standings-title {
+	text-align: center;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+#teamprofile-standings table {
+	width: 100%;
+}
+
+#teamprofile-logo {
+	float: left;
+	border: 1px solid #000000;
+}
+
+#teamprofile-info {
+	padding-left: 170px;
+
+}
+
+#teamprofile-abbr-logo {
+	float: left;
+	border: 1px solid #000000;
+}
+
+#teamprofile-abbr-info {
+	/* padding-left: 100px; */
+
+}
+/* color: #2276C2; */
+#teamprofile-info-teamname {
+	width: 100%;
+	color: #0000A0;
+	font-size: 200%;
+	font-weight: bold;
+	text-decoration: underline;
+	margin-bottom: 10px;
+}
+#teamprofile-info-about-col1 {
+	width: 50%;
+	float: left;
+}
+#teamprofile-info-about-col2 {
+	width: 50%;
+	float: right;
+}
+#teamprofile-column1 {
+	width: 75%;
+	float: left;
+}
+#teamprofile-column2 {
+	width: 24%;
+	float: right;
+}
+/* color: #2276C2; */
+.teamprofile-sectionheader {
+	margin-bottom: 10px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 14px;
+	color: red;
+	line-height:26px;
+}
+.teamprofile-sectionheader-left {
+	background:transparent url(../templates/images/submenu.gif) no-repeat scroll 0 0;
+	height:26px;
+	margin:0 0 10px;
+}
+
+.teamprofile-sectionheader-right {
+	background:transparent url(../templates/images/submenu.gif) no-repeat scroll 100% -26px;
+	height:26px;	
+}
+
+.teamprofile-edit-table {
+	width: 100%;
+}
+
+.teamprofile-input {
+	width: 135px;
+	text-align: right;
+	font-weight: bold;
+	padding-right:10px;
+}
+
+
+/*
+#tabs-wrapper {
+	height: 30.5px;
+	padding-top: 10px;
+	background-color: #f6f6f6;
+	border-bottom: 1px solid #e6e6e6;
+}
+*/
+	
+ul.submenu li a {
+border-right:1px solid #CCCCCC;
+color:#0B55C4;
+font-size:11px;
+height:12px;
+padding:0 15px;
+text-decoration:none;
+}
+
+div.teamprofile-submenu-left div.teamprofile-submenu-right ul.submenu li {
+background:transparent none repeat scroll 0 0;
+float:left;
+font-weight:800;
+line-height:26px;
+list-style-type:none;
+margin:0;
+padding:0;
+}
+
+div.teamprofile-submenu-right {
+background:transparent url(../templates/images/submenu.gif) no-repeat scroll 100% -26px;
+height:26px;
+}
+
+div.teamprofile-submenu-left {
+background:transparent url(../templates/images/submenu.gif) no-repeat scroll 0 0;
+height:26px;
+margin:0 0 10px;
+}
+
+#roster-table {
+	border:1px solid #D3D3D3;
+	border-collapse:collapse;
+	font-size:11px;
+	width:100%;
+}
+
+#game-notification-signup {
+    right: 0px;
+    position: absolute;
+    top: 40px;
+    color: #ffffff;
+}
+
+#teamprofile-functions {
+	/*left: 820px;
+    position: absolute;
+    top: 250px;*/
+    color: #0000A0;
+    width: 280px;
+    /* padding: 5px; */
+}
+
+div.teamprofile-functions-right {
+background:transparent url(../templates/images/submenu.gif) no-repeat scroll 100% -26px;
+height:26px;
+padding-right: 10px; 
+}
+
+div.teamprofile-functions-left {
+background:transparent url(../templates/images/submenu.gif) no-repeat scroll 0 0;
+/* height:26px; */
+/* margin:0 0 10px; */
+padding-left: 10px; 
+}
+
+select#profilemenu.input {
+	font-size: 11px;
+	height: 22px;
+	margin-top: 3px;
+}
+
+.team-current-contacts-table {
+	width: 75%;
+}

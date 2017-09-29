@@ -1,0 +1,271 @@
+<?php
+/**
+ * @version 		$Id: simplerosterdao.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 		JLeague
+ * @subpackage 		Data Access Objects
+ * @copyright 		(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license			GNU/GPL, see LICENSE.php
+ */
+
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die( 'Restricted access' );
+
+
+class JLSimpleRosterDAO extends  fsBaseDAO {
+	
+	var $tablename = '#__jleague_simple_roster';
+	
+	protected function __construct() {
+		parent::__construct();
+	}
+	
+	function getInstance() {
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new JLSimpleRosterDAO();
+		}
+		$db = mFactory::getDBO();
+		$instance->setDatabase($db);
+		return $instance;
+	}		
+	/**
+	 * This function will create a new roster record in the database..
+	 *
+	 * @param JLRoster
+	 * @return boolean
+	 * @deprecated 
+	 */
+	function createRoster(JLRoster $roster) {
+		return null;		
+	}
+	
+	/**
+	 * this function will allow a client to add a Player Object to a roster for the specified team and season (based on 
+	 * their associated ID's.
+	 *
+	 * @param JLPlayer $player
+	 * @param int $teamid
+	 * @param int $seasonid
+	 */	
+    function addPlayerToRoster(JLPlayer $player,$teamid,$seasonid) {
+		$query = 'INSERT INTO ' .$this->getNameQuote( $this->tablename ) . ' (id,season,teamid,firstname, lastname) '
+			. ' VALUES (0,'
+			. '"' . $seasonid . '",'
+			. '"' . $teamid . '",'
+			. '"' . $player->getFirstName() . '",' 
+			. '"' . $player->getLastName() . '"'
+			.  ')';
+		if (!$this->_insertRow($query)) {
+			throw new Exception("Error adding player to roster");
+		} 
+	}
+
+	function insert(JLPlayer $player) {
+		$query = 'INSERT INTO ' .$this->getNameQuote( $this->tablename ) . ' (id,season,teamid,firstname, lastname) '
+				. ' VALUES (0,'
+				. '"' . $player->getPropertyValue("seasonid") . '",'
+				. '"' . $player->getPropertyValue("teamid") . '",'
+				. '"' . $player->getFirstName() . '",'
+				. '"' . $player->getLastName() . '"'
+				.  ')';
+		if (!$this->_insertRow($query)) {
+			throw new Exception("Error adding player to roster");
+		}
+	}
+	
+	
+	function update(JLPlayer $player) {
+		$query = 'update ' .$this->getNameQuote( $this->tablename  ) . ' set '
+		. ' firstname = "' . $player->getFirstName(). '", '
+		. ' lastname = "' . $player->getLastName() . '", '
+		. ' season = "' . $player->getPropertyValue("seasonid") . '", '
+		. ' teamid = "' . $player->getPropertyValue("teamid") . '" '				
+		. ' WHERE ID = ' . $player->getId() ;
+		return $this->_updateRow($query);
+	}
+	
+	
+    /**
+     * This function returns the total # of players defined on rosters for a given season.
+     *
+     * @param int $seasonid
+     * @return int Total # of players
+     */
+    function getTotalPlayersForSeason($seasonid) {
+    	$iid = (int) $seasonid;
+    	$query = 'SELECT count(*) as total_players FROM #__jleague_simple_roster WHERE season = ' . $iid;
+    	$rows = $this->_execute($query);
+    	if (is_array($rows)) {
+    		return $rows[0]->total_players;
+    	}
+    	return 0;
+    }        	
+   
+    /**
+     * This function returns the total # of rosters defined.
+     *
+     * @param int $seasonid
+     * @return int Total # of teams with rosters
+     */
+    function getTotalRostersForSeason($seasonid) {
+    	$iid = (int) $seasonid;
+    	$query = 'SELECT distinct teamid FROM #__jleague_simple_roster WHERE season = ' . $iid;
+    	$rows = $this->_execute($query);
+    	if (is_array($rows)) {
+    		return count($rows);
+    	}
+    	return 0;
+    }        
+    
+    /**
+     *  This function returns an array of data elements from a query that identifies teams with invalid or missing rosters
+     *  @returns array
+     */
+    function getInvalidRostersForSeason($seasonid) {
+    	$iid = (int) $seasonid;
+    	$query = "
+	    	select ts.id, ts.name, d.agegroup, d.name, playercount from ( 
+	    	SELECT t.id, t.name, playercount
+	    	FROM #__jleague_teams t
+	    	LEFT JOIN (
+	    	SELECT teamid, count( *  ) as playercount
+	    	FROM #__jleague_simple_roster
+	    	where season = " . $iid . "
+	    	GROUP BY teamid
+	    	) pc on (t.id = pc.teamid)
+	    	) as ts, #__jleague_divmap dm, #__jleague_division d
+	    	where ts.id = dm.team_id
+	    	and dm.season = "  . $iid . "
+	    	and dm.published = 1
+	    	and dm.division_id = d.id
+	    	and (playercount < 9 or playercount is null)
+	    	order by ts.name, d.agegroup";
+    	$rows = $this->_execute($query);
+    	return $rows;
+    }
+    
+    /**
+     * This function will return the TEAMID associated with a player
+     * 
+     * @param unknown $playerid
+     * @return number
+     */
+    function findTeamIdByPlayer($playerid, $season=null) {
+    	$iid = (int) $playerid;
+    	$query = 'SELECTteamid FROM #__jleague_simple_roster WHERE id = ' . $iid;
+    	$rows = $this->_execute($query);
+    	if (is_array($rows)) {
+    		return $rows[0]->teamid;
+    	}
+    	return 0;
+    }
+        
+    
+    
+    /**
+     * This function will delete a player from a teams roster based on the rosterid and the player id.
+     *
+     * @param int $rosterid
+     * @param int $playerid
+     */
+    function removePlayerFromRoster($playerid) {
+		$query = 'DELETE FROM ' .$this->getNameQuote( "#__jleague_simple_roster"  ) 
+			. ' WHERE id = ' . $playerid;
+		if (!$this->_deleteRow($query)) {
+			throw new Exception("Error removing player from roster");
+		} 
+    }
+         
+    /**
+     * This is a private function that retrieves the root portion of the roster object.  This will include
+     * the team id and the season id.
+     *
+     * @param int $teamid
+     * @param int $season
+     * @return array
+     */
+//    private function getRosterRoot($teamid, $season) {
+//	    $query = 'SELECT * from #__jleague_roster '
+//	    	. '  where teamid = ' . $teamid . ' and season = ' . $season;
+//    	$rows = self::_execute($query);
+//    	return $rows;
+//    }
+    
+    /**
+     * This function will return a list of players assigned to the specific roster.
+     *
+     * @param int $rosterid
+     * @return array
+     */
+//    private function getRosterPlayers($rosterid) {
+//    	$query = 'SELECT p.* from #__jleague_players as p, #__jleague_rosterplayers as rp '
+//	    	. '  where rp.playerid = p.id and rp.rosterid = ' . $rosterid ;
+//    	$rows = self::_execute($query);
+//    	return $rows;
+//    }
+    
+    /**
+     * This function will retrieve a team roster for a particular season.
+     *
+     * @param int $teamid
+     * @param int $season
+     * @return array
+     */
+    function getTeamRoster($teamid, $season) {
+    	$query = 'SELECT * from #__jleague_simple_roster'
+	    	. '  where teamid = ' . $teamid . ' and season = ' . $season . ' order by lastname, firstname';
+
+    	$roster = new JLRoster();
+    	$roster->setId("r" . $teamid . "-" . $season);
+    	$roster->setSeason($season);
+    	$roster->setTeamId($teamid);
+    	
+    	$rows = self::_execute($query);	
+
+    	if ($rows != null) {
+	    	foreach ($rows as $row) {
+	    		$pobj = $this->loadPlayerObject($row);
+	    		$roster->addPlayer($pobj);
+	    	}
+    	}
+    	return $roster;
+    }
+    
+    function getPlayer($playerid) {
+    	$query = 'SELECT * from #__jleague_simple_roster where id = ' . $playerid;
+	   	 
+    	try {
+    		$row = self::_execute($query);
+    		$player = $this->loadPlayerObject($row[0]);
+    		return $player;
+    	} catch (Exception $e) {
+    		throw $e;
+    	}	
+    } 
+    
+    /**
+     * This is a DUMMY function because the BASEDAO class will be looking for it. 
+     * @param string $row
+     * @return NULL
+     */
+    function loadObject($row = null) {
+    	return null;
+    }
+    
+	/**
+	 * This function will populate a Player object.
+	 *
+	 * @param array $row
+	 * @return JLPlayer
+	 */	
+	function loadPlayerObject($row) {
+		$obj = new JLPlayer();
+		$obj->setId($row->id);
+		$obj->setFirstName($row->firstname);
+		$obj->setLastName($row->lastname);
+		$obj->addProperty("teamid", $row->teamid);
+		$obj->addProperty("seasonid", $row->season);
+		return $obj;
+	}
+
+}

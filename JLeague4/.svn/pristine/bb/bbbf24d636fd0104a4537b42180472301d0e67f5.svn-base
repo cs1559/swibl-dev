@@ -1,0 +1,167 @@
+<?php
+
+/**
+ * @version			$Id: address.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 		SWIBL Mobile
+ * @subpackage		Conrollers
+ * @copyright 		(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license			GNU/GPL
+ */
+
+class mApp extends fsApplication  {
+	var $_db = null;
+	var $_config = null;
+	var $_document = null;
+	var $_leagueid = null;
+	var $_server = null;
+	var $_debug = array();
+	var $_user = null;
+	var $_loggedin = false;
+
+	static function getInstance() {
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new self();
+			$instance->init();
+		}
+		return $instance;
+	}
+	
+	/**
+	 * This function initializes the app by setting configuration settings and the 
+	 * database connection.
+	 */
+	function init() {
+
+		$this->_config = &mConfig::getInstance();
+		$this->_db = &mFactory::getDBO();
+
+		$this->setDocument();
+				
+		if (_APPDEBUG) {
+			$this->writeDebug("Initializing application - running on " . $_SERVER['SERVER_NAME']);
+		}
+
+		try {
+			$lsvc = &JLLeagueService::getInstance();
+			$league = $lsvc->getActiveLeague();
+			$this->_config->setLeague($league);
+		} catch (Exception $e) {
+			echo "NO LEAGUE FOUND";
+		}
+		
+		try {
+			$ssvc = &JLSecurityService::getUser();
+		} catch (Exception $e) {
+			echo "NO USER FOUND";
+		}
+	}
+	
+	function setDocument() {
+		$this->_document = new fsHtmlDocument();
+		$this->_document->setAuthor("Chris Strieter");
+		$this->_document->addStylesheet("assets/css/bootstrap.min.css");
+		$this->_document->addStylesheet("assets/css/swibl.css");
+		//$this->_document->addStylesheet("assets/css/bootstrap-responsive.css");
+		$this->_document->addJavascript("http://code.jquery.com/jquery.js");
+		$this->_document->addJavascript("assets/js/jleague.js");
+		$this->_document->addJavascript("assets/js/bootstrap.min.js");
+		$this->_document->addJavaScript("assets/js/respond.min.js");
+		$this->_document->addJavaScript("assets/js/html5shiv.js");
+		$this->_document->setLayout(new fsDefaultLayout());
+	}
+	/**
+	 * Returns the configuration object
+	 * @return mConfig
+	 */
+	function getConfig() {
+		return $this->_config;
+	}
+	/**
+	 * Returns the database object.
+	 * @return fsDatabase
+	 */
+	function getDatabase() {
+		return $this->_db;
+	}
+	/**
+	 * 
+	 * @return fsHtmlDocument
+	 */
+	function getDocument() {
+		return $this->_document;
+	}
+	
+	/**
+	 * This is a helper function for writing a debug message
+	 * @param string $msg
+	 * @param string $html
+	 */
+	function writeDebug($msg, $level=1, $html = true) {
+		if ($html) {
+			$suffix = "<br/>";
+		}
+		if ($level <= _APPDEBUG_LEVEL) {
+			//$doc = $this->_document;
+			$this->addDebugMessage($msg . $suffix);
+		}
+	}
+	
+	function writeLog($msg, $level=1) {
+		return;
+	}
+// 	function resetDebugMessages() {
+// 		$doc = $this->_document;
+// 		$doc->resetDebugMessages();
+// 	}
+	function setServer($svr) {
+		$this->_server = $svr;
+	}
+	function getServer($svr) {
+		return $this->_server;
+	}
+
+	public function addDebugMessage($msg) {
+		date_default_timezone_set("America/Chicago");
+	
+		$t = microtime(true);
+		$micro = sprintf("%06d",($t - floor($t)) * 1000000);
+		$d = new DateTime( date('Y-m-d H:i:s.'.$micro,$t) );
+	
+		$newmsg = "[DEBUG][" . $d->format("Y-m-d H:i:s.u") . "] " . $msg;
+		$this->_debug[] = $newmsg;
+	}
+	public function resetDebugMessages() {
+		unset($this->_debug);
+		$this->_debug = array();
+	}
+	public function getDebugMessages() {
+		return $this->_debug;
+	}
+	
+	public function getUser() {
+		return $this->_user;
+	}
+	public function setUser($usr) {
+		$this->_user = $usr;
+	}
+	public function isLoggedIn() {
+		if ($this->_user->id == 0) {
+			return false;
+		}
+		if ($this->_user->id > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	function redirect($url, $message = null, $type="message") {
+		header('Location: ' . $url);
+	}
+	
+	function getSitePath() {
+		return "app::getBasePath";
+	}
+}
+
+?>

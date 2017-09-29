@@ -1,0 +1,15 @@
+
+insert into joom_users (id,name,username,email,password,block,sendEmail,registerDate,lastvisitDate,activation,params) 
+select id, name, username, email, password, block, sendEmail, registerDate, lastvisitDate,activation,params
+from jos_users where id > 63 and id <> 575;
+
+insert into joom_user_usergroup_map
+select id, "2" 
+from jos_users where id > 63 and id <> 575;
+
+
+
+/*   Add users to the Coaches Group */
+insert into joom_user_usergroup_map
+select distinct ownerid, 10 
+from joom_jleague_teams

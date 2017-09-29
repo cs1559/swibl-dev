@@ -1,0 +1,228 @@
+/* Add your own custom css to this file. You may wish to use css !important calls to override css from the template css files.
+----------------------------------------------------------- */
+
+address {
+color: #d2d2d2;
+}
+
+.upcoming-games {
+	height: 250px;
+}
+
+.swibl-ul {
+    padding-left: 10px !important;
+}
+.swibl-ul > ul {
+    padding-left: 10px !important;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: #FFFFFF !important;
+    color: #FFFFFF !important;
+}
+
+.camera_wrap {
+   width: 625px !important;
+   border: 1px solid #C5C5C5
+  /* padding-left: 20px !important; */
+   /* padding-right: 20px !important; */
+}
+}
+.camera_command_wrap {
+   /* display: none; */
+}
+
+.select-quicklink {
+	width: 100% !important; 
+	margin-top: 10px !important;
+}
+
+/* +++++++++++++++++++ TEAM PROFILE ++++++++++++++++++++++++ */
+.teamprofile-heading > h1 {
+	margin-bottom: 0px !important;
+	margin-top: 0px !important;
+	font-family: Fjalla One !important;
+}
+
+
+.t3-mainnav .t3-navbar-collapse .navbar-nav .dropdown > a .caret {
+	right: 0px !important;
+}	
+.tcvn-banner-bottom {
+display: none;
+}
+.form-group {
+margin-bottom: 5px !important;
+}
+.home {
+/* margin: 15px; */
+}
+
+.swibl-media-object {
+	width: 64px;
+	height: 64px;
+}
+
+
+
+.t3-footer {
+    background: none repeat scroll 0 0 #383838;
+    border-top: 1px solid #EEEEEE;
+    color: #555555;
+}
+.t3-footnav .t3-module {
+    color: #555555;
+    background: none repeat scroll 0 0 #383838;
+}
+.t3-footnav {
+    padding: 20px 0px !important;
+}
+.t3-copyright {
+    border-top: 1px solid #EEEEEE;
+    font-size: 14px;
+    padding: 20px 0 20px;
+    background-color: #272727 !important;
+    text-align: center;
+}
+
+
+.swibl-content-wrapper {
+max-width: 970px; 
+margin: auto;
+background-color: #ffffff;
+}
+
+.modal-dialog {
+position: static !important;
+}
+
+#s5_social_wrap1 {
+	margin-top: -100px;
+}
+#s5_header_wrap {
+/*    background-image: url("http://swibl-baseball.org/j3/images/headers/banner.gif")!important; */
+background-color: #ffffff;
+}
+#s5_breadcrumb_fonts_wrap {
+padding-top: 0px;
+padding-bottom: 5px;
+}
+
+/* box-shadow: 0 0 8px */
+#s5_header_area_inner2, .module_round_box, .module_round_box-dark, #s5_component_wrap, #s5_footer_area_inner2 {
+  box-shadow: 0 0 0px #BDBDBD !important;
+}
+#s5_header_area_inner {
+	padding-top: 10px;
+}
+#s5_center_area_inner {
+   padding-top: 10px;
+}
+#s5_header_area_inner2 {
+	margin-bottom: 0px !important;
+	border: none !important;
+}
+#s5_component_wrap {
+border: none !important;
+padding-left: 3px !important;
+padding-right: 3px !important;
+}
+}
+.s5_wrap {
+	background-color: #ffffff !important;
+}
+
+.module_round_box-dark {
+/*  background-color: #5E5E5C; */
+  background-color: #2D2E2F;
+}
+
+
+.custom-dark > h2 {
+  color: #ffffff;
+}
+
+.custom-dark > h4 {
+  color: #aaaaaa;
+}
+
+body {
+    font-size: 14px !important;
+    background-image: url("http://www.swibl-baseball.org/j3/images/background-blue.jpg") !important; 
+    background-repeat: no-repeat !important;
+/*    background-color: #2d2e2f !important; */
+    background-color: #000000 !important;  */
+}
+.nspArt h4.nspHeader {
+   color: #000000;
+}
+
+h4.nspHeader {
+	padding-bottom: 5px !important;
+}
+
+.nspArt p.nspText a {
+    color: #000000;
+}
+.nspText {
+	font-family: Tahoma, "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+}
+
+#s5_shape5_logo {
+display: none;
+}
+#s5_linked_in {
+display: none;
+}
+#s5_google {
+display: none;
+}
+
+/* border: 1px solid #000000; */
+a.readon {
+border-radius: 4px; 
+-moz-border-radius: 4px; 
+-webkit-border-radius: 4px; 
+color: #ffffff;
+background-color: #001F5C;
+padding-left: 5px;
+padding-right: 5px;
+margin-top: 10px;
+}
+
+div.nspTopInterface { position: absolute; bottom: 0; }
+.nspArts { position: relative}
+
+.alert-info {
+color: #ffffff;
+background-color: #001F5C;
+}
+
+.footerc a {
+display: none;
+}
+
+h4.alert-message {
+	margin-bottom: 5px;
+}
+.alert {
+	padding-bottom: 5px !important;
+	padding-top: 5px !important;
+	margin-bottom: 10px !important;
+	background-image: none !important;
+}
+
+.module-title {
+/*    border-bottom: 1px solid #EAEAEA;  */
+}
+.module-swibl-dark .module-title > h2 {
+	color: #ffffff;
+}
+.module-swibl-dark .module-title {
+margin-bottom: 0px !important;
+}
+
+.mod-swibl-bulletins {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+}

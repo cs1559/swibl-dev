@@ -1,0 +1,165 @@
+<?php
+/**
+ * @version		$Id: season.class.php 441 2012-10-20 22:16:19Z cs1559 $
+ * @package 	JLeague
+ * @subpackage	Objects
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license		GNU/GPL, see LICENSE.php
+ */
+
+
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die( 'Restricted access' );
+
+class JLRouteMap extends fsBaseObject  {
+
+	public static $_routes = array(
+			'/j3/league/displayStandings' => array( // Default controller
+					'controller' => 'standings',
+					'method' => 'viewStandings',
+					'number' => '',
+					'param' => ''
+			),
+			'/j3/league/viewTeams' => array(
+					'controller' => 'teams',
+					'method' => 'viewTeams',
+					'number' => '',
+					'param' => ''
+			),
+			'/j3/league/viewTeamProfile' => array(
+					'controller' => 'teams',
+					'method' => 'viewTeamProfile',
+					'number' => '',
+					'param' => ''
+			),
+			'/j3/league/viewBulletinBoard' => array(
+					'controller' => 'bulletins',
+					'method' => 'viewBulletinBoard',
+					'number' => '',
+					'param' => ''
+			),
+			'/j3/league/viewTournaments' => array(
+					'controller' => 'bulletins',
+					'method' => 'viewCategory',
+					'number' => '',
+					'param' => array("catid" => 4)
+			),
+			'/j3/league/profile/view/:id' => array(
+					'controller' => 'teams',
+					'method' => 'viewTeamProfile',
+					'number' => '',
+					'param' => ''
+			),
+			'error404' => array(
+					'controller' => 'errors',
+					'method' => 'error404'
+			)
+	);
+	
+	private $_routes2 = array(
+					array ('path' => '/j3/league/displayStandings' ,
+					'controller' => 'standings',
+					'method' => 'viewStandings',
+					'number' => '',
+					'param' => ''
+			),
+					array ('path' => '/j3/league/viewTeams' ,
+					'controller' => 'teams',
+					'method' => 'viewTeams',
+					'number' => '',
+					'param' => ''
+			),
+					array ('path' => '/j3/league/viewTeamProfile' ,
+					'controller' => 'teams',
+					'method' => 'viewTeamProfile',
+					'number' => '',
+					'param' => ''
+			),
+					array ('path' => '/j3/league/viewBulletinBoard' ,
+					'controller' => 'bulletins',
+					'method' => 'viewBulletinBoard',
+					'number' => '',
+					'param' => ''
+			),
+					array ('path' => '/j3/league/viewTournaments' ,
+					'controller' => 'bulletins',
+					'method' => 'viewCategory',
+					'number' => '',
+					'param' => array("catid" => 4)
+			)
+	);	
+	
+	function __construct() {
+    	parent::__construct();
+    }
+    
+    public function getRoutes() {
+    	return $this->_routes2;
+    }
+
+    /**
+     * This function maps a URI path to a specific route
+     * @param unknown $path
+     * @throws Exception
+     * @return JLRoute
+     */
+    public function findRoute($path) {
+    	/*
+    	if (!array_key_exists($path, $this->_routes)) {
+    		throw new Exception("No route found");
+    	}
+    	*/
+    	$entry = $this->array_multi_search($this->_routes2, $path);
+    	if (sizeof($entry) > 1) {
+    		throw new Exception("Cannot determine route.  More than ONE path found in map");
+    	}
+//     	$entry = $this->_routes[$path];
+    	$route = new JLRoute($entry[0]);
+    	return $route;
+    }
+	
+	public function findRouteByUrl(fsURI $url, $key = "task") {
+		$parmKey = $url->getQueryParameter($key);
+		$route = null;
+		try {
+			$entry = $this->array_multi_search($this->_routes2, $parmKey);
+			if (sizeof($entry) > 1) {
+				throw new Exception("Cannot determine route.  More than ONE path found in map");
+			}
+			//     	$entry = $this->_routes[$path];
+			$route = new JLRoute($entry[0]);
+			$route->setUri($url);
+				
+		} catch (Exception $e) {
+			throw $e;
+		}
+		return $route;
+	}
+	
+	/*******************************
+	 *   array_multi_search
+	*
+	*   @array  array to be searched
+	*   @input  search string
+	*
+	*   @return array(s) that match
+	******************************/
+	function array_multi_search($array, $input){
+		$iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($array));
+		$outputArray = null;
+		foreach($iterator as $id => $sub){
+			$subArray = $iterator->getSubIterator();
+			if(@strstr(strtolower($sub), strtolower($input))){
+				$subArray = iterator_to_array($subArray);
+				$outputArray[] = array_merge($subArray, array('Matched' => $id));
+			}
+		}
+		if (is_null($outputArray)) {
+			throw new Exception("Route could not be found in map");
+			return;
+		}
+		return $outputArray;
+	}
+	
+}
+?>

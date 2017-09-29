@@ -1,0 +1,192 @@
+/* ===================================== */
+/* (c) 2014 SWIBL                        */
+/* ===================================== */
+
+
+
+/* ++++++++++++++++  TEAM PROFILE STYLINGS  ++++++++++++++++ */
+
+#teaminfo-profile-table {
+	width: 95% !important;
+}
+.teamprofile-info-col1 {
+	text-align: left;
+}
+.teamprofile-info-col2 {
+	text-align: left;
+}
+#teamprofile-record-table{
+	width: 100% !important;
+}
+.teamprofile-heading {
+	font-weight: bold !important;
+	font-size: 26px !important;
+}
+.teamprofile-function-button {
+	padding-right: 10px;
+}
+.teamprofile-action-buttons {
+	margin-top: 3px;
+	margin-bottom: 3px;
+}
+
+/* ++++++++++++++++  OTHER  ++++++++++++++++ */
+#standings-filter {
+width: 100%;
+}
+#standings-filter-season {
+width: 50%;
+}
+ 
+
+/* ++++++++++++++++  OTHER  ++++++++++++++++ */
+
+.quicklink-select {
+	width: 100%;
+}
+
+.vcenter {
+	vertical-align: middle;
+}
+.standings-accordion {
+	width: 95%;
+}
+
+.centerjust {
+	text-align: center;
+}
+.swibl-box {
+	background-color: white;
+	/* padding: 10px; */
+	margin: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+/*	border-style:solid; */
+/*	border-width:2px; */	
+}
+.fs-content-wrapper {
+	background-color: #FFFFFF;
+	margin-top: 9px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+-webkit-border-bottom-right-radius: 10px;
+-webkit-border-bottom-left-radius: 10px;
+-moz-border-radius-bottomright: 10px;
+-moz-border-radius-bottomleft: 10px;
+border-bottom-right-radius: 10px;
+border-bottom-left-radius: 10px;
+}
+.swibl-logo-intext {
+	margin: 10px;
+	float: left;
+	height: 150px;
+	width: 150px;
+}
+.swibl-media-object {
+	width: 64px;
+	height: 64px;
+}
+.swibl-profile-geninfo {
+	margin: 10px;
+}
+.swibl-panel-heading > h4 {
+	margin-top: 0px;
+	padding-top: 0px;
+}
+.swibl-panel-heading {
+	font-size: 14px;
+	height: 38px;
+}
+
+#profile-card-logo {
+	margin-bottom: 10px;	
+}
+
+#teamprofile_menu {
+	margin-top: 10px;
+	/* max-width: 75px; */
+}
+
+table.gridtable {
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+	text-align: center;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+
+.profile-box {
+	padding: 10px;
+	background-color: #A9A9BF;
+	margin: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+.swibl-table-max {
+	width: 100%;
+}
+
+.button-form {
+	margin-top: 15px;
+}
+.swibl-pad-l-20 {
+	padding-left: 20px;
+}
+.swibl-pad-r-20 {
+	padding-right: 20px;
+}
+
+#debug_messages {
+	margin-top: 20px;
+	border: 1px solid #000000;
+	background-color: #dedede;
+	padding: 10px;
+}
+
+table.games-table tr {
+	margin-top: 3px !important;
+	margin-bottom: 3px !important;
+}
+.game-table-row {
+	margin-bottom: 5px;
+}
+.games-table-cell {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+.games-table-cell-center {
+	padding-left: 3px;
+	padding-right: 3px;
+	text-align: center;
+}
+
+/* ++++++++++++++++  GAME EDIT STYLINGS  ++++++++++++++++ */
+.inputOn {
+	display: inline;
+}
+
+.inputOff {
+	display: none;
+}
+
+#scheduled-game-form > table, tr td {
+    border: medium none !important;
+}

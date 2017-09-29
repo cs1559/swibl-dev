@@ -1,0 +1,39 @@
+<?php
+?>
+
+<h1>League Admin Dashboard</h1>
+
+<div class="row">
+
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="swibl-panel-heading panel-heading ">
+			 	<h4 class="panel-title">General Information</h4>
+			</div>
+			<div class="panel-body" style="width: 100%">
+				<table class="table table-condensed">
+					<tr>
+						<td>Season:</td>
+						<td><?php echo $season->getDescription(); ?>
+					</tr>
+					<tr>
+						<td>Status:</td>
+						<td><?php echo $season->getStatus(); ?>
+					</tr>					
+					<tr>
+						<td>Total Divisions:</td>
+						<td><?php echo $season->getTotalDivisions(); ?>
+					</tr>
+					<tr>
+						<td>Total Teams:</td>
+						<td><?php echo $season->getTotalTeams(); ?>
+					</tr>		
+					<tr>
+						<td>Total Games Scheduled:</td>
+						<td><?php echo $season->getTotalScheduledGames(); ?>
+					</tr>	
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

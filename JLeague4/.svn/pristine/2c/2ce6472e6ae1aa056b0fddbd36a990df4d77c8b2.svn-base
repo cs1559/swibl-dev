@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<author>Firestorm Technologies, LLC</author>
+	<authorEmail>cs1559@firestorm-technologies.com</authorEmail>
+	<copyright>Copyright 2008-2009 Firestorm Technologies, LLC</copyright>
+	<authorUrl>http://www.firestorm-technologies.com</authorUrl>
+	<creationDate>11-20/2009</creationDate>
+
+	<menu>
+		<options var="task">
+			<option value="displayFrontPage" name="Frontpage" msg="Display the league front page" />
+		</options>
+		<options var="task">
+			<option value="viewStandingsx" name="League Standings" msg="List the current seasons standings" />
+		</options>
+	</menu>
+	<state switch="task">
+		<displayFrontPage>
+			<name>Display Front Page</name>
+			<description>This menu option will display the league front page</description>
+		</displayFrontPage>	
+	
+		<viewStandings>
+			<name>Standings</name>
+			<description>This menu option will display the current seasons standings</description>
+		</viewStandings>	
+	</state>
+			
+</metadata>

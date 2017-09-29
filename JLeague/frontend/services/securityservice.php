@@ -1,0 +1,517 @@
+	<?php
+	/**
+	 * @version		$Id: securityservice.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+	 * @package 	JLeague
+	 * @subpackage	Services
+	 * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC - All Rights Reserved
+	 * @license		GNU/GPL, see LICENSE.php
+	 */
+	
+	
+	// require_once(JLEAGUE_SERVICES_PATH .DS . 'baseservice.class.php');
+	
+	class JLSecurityService  extends mBaseService  {
+		
+		public static $registered = "Registered";
+		public static $admin = "Administrator";
+		public static $superadmin = "Super Administrator";
+		
+		protected function __construct() {
+			parent::__construct();
+		}
+		function getDao() {
+			return null;
+		}
+		
+		/**
+		 * This function will return an instance of this service object.
+		 *
+		 * @return JLSecurityService
+		 */	
+		static function getInstance() {
+			static $instance;
+			if (!is_object( $instance )) {
+				$instance = new JLSecurityService();
+			}
+			return $instance;
+		}		
+	
+		/**
+		 * This function will return a value indicating whether or not the user is logged in.
+		 *
+		 * @return boolean
+		 */
+		function isLoggedIn() {
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+					
+			if ($user->id > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		/**
+		 * This function will return an array of usernames, ids who are eligible for "owning"
+		 * a team profile.
+		 *
+		 * @return array
+		 */
+		function getAvailableProfileOwners() {
+		 	$app = &mFactory::getApp();
+		 	$db = $app->getDatabase();
+		 	$query = "select id,name,username from #__users where block = 0 order by name";
+		 	$config = $app->getConfig();
+			//$query = "SELECT u.id as userid, u.*,fv.* FROM `jos_community_fields_values` fv, jos_users u WHERE u.id = fv.user_id and field_id = " . $config->getProperty('community_profiletype_fieldid') . " and value in ('Coach','Admin')";	 	
+			$db->setQuery($query);
+			$rows = $db->loadObjectList();
+			return $rows;
+		}
+		
+		/**
+		 * Determines if the user is a registered user.
+		 *
+		 * @return boolean
+		 */
+		function isRegisteredUser(){
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+					
+			return (($user->id != 0) && ($user->block !=1));
+		}
+		
+		function getUser($id = null) {
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+					
+			return $user;
+		}
+		/**
+		 * Returns whether or not a user is an "admin" 
+		 *
+		 * @return boolean
+		 */
+		public function isAdmin() {
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+					
+			if ($user->id == 0) {
+				return false;
+			}
+			$grps = $user->groups;
+			if (in_array(8,$grps)) {
+				return true;
+			}
+			if ( $user->usertype == 'Super Administrator' || $user->usertype == 'Administrator' ) {
+				return true;
+			}
+			return false;
+		}
+		
+		/**
+		 * Function determines if a user is an "owner" of a team profile
+		 *
+		 * @param JLTeam $team
+		 * @return boolean
+		 */
+		function isOwner($team) {
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+					
+			if (!self::isRegisteredUser()) {
+				return false;
+			}
+			if (self::isAdmin()) {
+				return true;
+			}
+			if ($user->id == $team->getOwnerId()) {
+				return true;
+			}
+			return false;
+		}
+		
+		/**
+		 * This function will determine if the someone accessing a sponsors page can edit the content.
+		 * 
+		 * @param JLSponsor $sponsor
+		 * @return boolean
+		 */
+		function canEditSponsorPage(JLSponsor $sponsor) {
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+			
+			if (!self::isRegisteredUser()) {
+				return false;
+			}
+				
+			if (self::isAdmin()) {
+				return true;
+			}
+			return false;
+		}
+		
+		/**
+		 * This funciton will return a boolean indicating whether or not the currently logged in 
+		 * user has authorization to edit a specific team profile.
+		 *
+		 * @param JLTeam $team
+		 * @return boolean
+		 */
+		function canEditTeamProfile(JLTeam $team) {
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+
+			if (!self::isRegisteredUser()) {
+				return false;
+			}		
+			
+			if (self::isAdmin()) {
+				return true;
+			}
+			if (self::isOwner($team)) {
+				return true;
+			}
+			$svc = JLTeamService::getInstance();
+			$contacts = $svc->getTeamContacts($team->getId());
+			foreach ($contacts as $contact) {
+				if ($user->id == $contact->getUserid()) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		function canEditTeamProfileByTeamId($id) {
+			if ($this->isAdmin()) return true;
+			if ($id == null) {
+				return false;
+			}
+			$teamid = (int) $id;
+			$svc = &JLTeamService::getInstance();
+			$team = $svc->getRow($teamid);
+			return self::canEditTeamProfile($team);
+		}
+	
+			/**
+		 * This funciton will return a boolean indicating whether or not the currently logged in 
+		 * user has authorization to edit a specific team profile.
+		 *
+		 * @param JLTeam $team
+		 * @return boolean
+		 */
+		function canRegisterTeam(JLTeam $team) {
+			
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+
+			if (self::isAdmin()) {
+				return true;
+			}
+			if (!self::isRegisteredUser()) {
+				return false;
+			}			
+			if (self::isOwner($team)) {
+				return true;
+			}
+			$svc = JLTeamService::getInstance();
+			$contacts = $svc->getTeamContacts($team->getId());
+			foreach ($contacts as $contact) {
+				if ($user->id == $contact->getUserid()) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		
+		function canViewRoster(JLTeam $team, $season=null) {
+			if (self::canEditTeamProfile($team)) {
+				return true;
+			}
+			if (self::isUserAssociatedWithTeam($season)) {
+				return true;
+			}
+			return false;		
+		}
+		
+		/**
+		 * This function determines whether or not a somone can perform a specific task.  This function
+		 * is essentially a "driver" function.  Based on the task, it will call an internal function within
+		 * this class.
+		 *
+		 * @param unknown_type $context
+		 * @return boolean
+		 */
+		function isAuthorizedTask($context = null) {
+			$method = "_" . $_REQUEST["task"];
+			if (method_exists('JLSecurityService',$method)) {
+				$cmd = '$val = JLSecurityService::'.$method . '($context);';
+				eval( $cmd );
+				return $val;
+			}
+			return false;
+		}
+	
+		private function _closeSeason($context) {
+			if (!self::isAdmin()) {
+				return false;
+			}
+			return true;
+		}
+		
+		/**
+		 * This a private function that will be called by the isAuthorizedTask to determine
+		 * if a specific user can edit a team profile.
+		 *
+		 * @param unknown_type $context
+		 * @return boolean
+		 */
+		private static function _editTeamProfile($context) {
+			if (!$context instanceof JLTeam) {
+				return false;
+			}
+			return self::canEditTeamProfile($context);
+		}
+	
+		/**
+		 * This a private function that will be called by the isAuthorizedTask to determine
+		 * if a specific user can edit a team profile.
+		 *
+		 * @param unknown_type $context
+		 * @return boolean
+		 */
+		private static function _manageBulletins($context) {
+			if (!$context instanceof JLTeam) {
+				return false;
+			}
+			return self::canEditTeamProfile($context);
+		}
+				
+		/**
+		 * This is an authorization rule to validate user can manage team contacts
+		 *
+		 * @param JLTeam $context
+		 * @return boolean
+		 */
+		private static function _manageContacts($context) {
+			if (!$context instanceof JLTeam) {
+				return false;
+			}
+			return self::canEditTeamProfile($context);
+		}	
+	
+		/**
+		 * This is an authorization rule to validate user can manage team contacts
+		 *
+		 * @param JLTeam $context
+		 * @return boolean
+		 */
+		private static function _uploadLogo($context) {
+			if (!$context instanceof JLTeam) {
+				return false;
+			}
+			return self::canEditTeamProfile($context);
+		}
+				
+		/**
+		 * This is an authorization rule to validate user can manage team roster
+		 *
+		 * @param JLTeam $context
+		 * @return boolean
+		 */
+		private static function _manageRoster($context) {
+			if (!$context instanceof JLTeam) {
+				return false;
+			}
+			return self::canEditTeamProfile($context);
+		}	
+	
+		/**
+		 * This is an authorization rule to validate user can submit a score
+		 *
+		 * @param JLTeam $context
+		 * @return boolean
+		 */
+		private static function _manageschedule($context) {
+			if (!$context instanceof JLTeam) {
+				return false;
+			}
+			return self::canEditTeamProfile($context);
+		}	
+		
+		/**
+		 * This is an authorization rule to validate user can manage team venues
+		 *
+		 * @param JLTeam $context
+		 * @return boolean
+		 */
+		private static function _updateFieldInfo($context) {
+			if (!$context instanceof JLTeam) {
+				return false;
+			}
+			return self::canEditTeamProfile($context);
+		}		
+		
+		private static function _ajaxGetForm($context) {
+			return self::_register($context);
+		}
+		private static function _register($context) {
+			if (!$context instanceof JLTeam) {
+				return false;
+			}
+			return self::canRegisterTeam($context);
+		}
+		
+		private static function _ajaxAddPlayerToRoster($context) {
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+					
+			if (!self::isRegisteredUser()) {
+				return false;
+			}
+			if (self::isAdmin()) {
+				return true;
+			}		
+			return true;
+		}
+	
+		private static function _ajaxRemovePlayerFromRoster($context) {
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+					
+			if (!self::isRegisteredUser()) {
+				return false;
+			}
+			if (self::isAdmin()) {
+				return true;
+			}		
+			return true;
+		}	
+		
+		/**
+		 * This function handles authorization of the getTeamContactList function.  The 
+		 * context passed MUST be a SEASON object.
+		 *
+		 * @param JLSeason $context
+		 * @return boolean
+		 */
+		private static function _getteamcontactlist(JLSeason $context) {
+			if (self::isAdmin()) {
+				return true;
+			}
+			if ($context == null) {
+				return false;
+			}
+			if (self::isUserAssociatedWithTeam($context->getId())) {
+				return true;
+			}
+			return false;	
+		}
+		
+		/**
+		 * This is a helper function for security functions when the only data being passed in context is the 
+		 * team id.
+		 *
+		 * @param unknown_type $id
+		 */
+		private function getTeamById($id) {
+			require_once(JLEAGUE_SERVICES_PATH . DS . 'teamservice.class.php');
+			$svc = & JLTeamService::getInstance();
+			$team = $svc->getRow($teamid);
+			return $team;		
+		}
+	
+		/**
+		 * This is a helper function for security functions when the only data being passed in context is the 
+		 * team id.
+		 *
+		 * @param unknown_type $id
+		 */
+		private function getRosterId($id) {
+			//require_once(JLEAGUE_SERVICES_PATH . DS . 'rosterservice.class.php');
+			$svc = & JLRoster::getInstance();
+			$roster = $svc->getRow($id);
+			return $roster;		
+		}
+		
+		public function isUserAssociatedWithTeam( $seasonid = null) {
+			if (self::isAdmin()) {
+				return true;
+			}
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+			
+			if ($seasonid == null) {
+				$seasonsvc = & JLSeasonService::getInstance();
+				$season = $seasonsvc->getMostRecentSeason();
+				$seasonid = $season->getId();
+			}
+			/**
+			 * If the user IS NOT logged in, then they cannot be associated with a team.
+			 */
+			if ($user->id == 0) {
+				return false;
+			}
+			
+		 	$db			=&mFactory::getDBO();
+			$query = "SELECT d.team_id, d.season FROM #__jleague_teams t, #__jleague_divmap d " 
+				. " WHERE t.ownerid = " . $user->id . " and t.id = d.team_id and d.season = " . $seasonid;	 	
+	
+			$db->setQuery($query);
+			$rows = $db->loadObjectList();
+			if (sizeof($rows)>0) {
+				return true;
+			}
+			
+		 	
+			$query = "SELECT d.team_id, d.season, c.* FROM #__jleague_teamcontacts c, #__jleague_teams t, #__jleague_divmap d " 
+				. " WHERE c.teamid = t.id and (c.userid=" . $user->id . " or t.ownerid = " . $user->id . " ) and t.id = d.team_id and d.season = " . $seasonid;	 	
+			$db->setQuery($query);
+			$rows = $db->loadObjectList();
+			if (sizeof($rows)>0) {
+				return true;
+			}
+			return false;
+	
+		}
+		
+		
+		public function isUserAssociatedWithTeamById( $teamid) {
+			$app = &mFactory::getApp();
+			$user = $app->getUser();
+					
+			/**
+			 * If the user IS NOT logged in, then they cannot be associated with a team.
+			 */
+			if ($user->id == 0) {
+				return false;
+			}
+	
+			if (self::isAdmin()) {
+				return true;
+			}
+			
+		 	$db			=$app->getDatabase();
+			$query = "SELECT t.id FROM #__jleague_teams t " 
+				. " WHERE t.ownerid = " . $user->id . " and t.id = " . $teamid;	 	
+	
+			$db->setQuery($query);
+			$rows = $db->loadObjectList();
+			if (sizeof($rows)>0) {
+				return true;
+			}
+			
+		 	$query = "SELECT c.* FROM #__jleague_teamcontacts c WHERE c.teamid = " . $teamid . " and c.userid = " . $user->id;	
+	//		$query = "SELECT d.team_id, d.season, c.* FROM #__jleague_teamcontacts c, #__jleague_teams t, #__jleague_divmap d " 
+	//			. " WHERE c.teamid = t.id and (c.userid=" . $user->id . " or t.ownerid = " . $user->id . " ) and t.id = d.team_id and t.id = " . $teamid;	 	
+			$db->setQuery($query);
+			$rows = $db->loadObjectList();
+			if (sizeof($rows)>0) {
+				return true;
+			}
+			return false;
+	
+		}	
+	}
+	
+	?>

@@ -1,0 +1,25 @@
+SELECT s.id as 'game_id', game_date, d.agegroup as 'agegroup', t1.name as 'home_team', hometeam_score, t2.name as 'away_team', awayteam_score
+FROM `jos_jleague_scores` s, jos_jleague_teams t1, jos_jleague_teams t2, jos_jleague_division d
+where s.season = 6
+	and gamestatus = 'C'
+	and conference_game = 'Y'
+	and hometeam_id = t1.id
+	and awayteam_id = t2.id
+	and s.division_id = d.id
+	and (hometeam_id = 236 or awayteam_id = 236)
+order by sort_order, game_date
+
+
+
+
+SELECT s.id as 'game_id', game_date, d.agegroup as 'agegroup', t1.name as 'home_team', hometeam_score, t2.name as 'away_team', awayteam_score
+FROM `jos_jleague_scores` s, jos_jleague_teams t1, jos_jleague_teams t2, jos_jleague_division d
+where s.season = 8
+	and gamestatus = 'C'
+	and conference_game = 'Y'
+	and hometeam_id = t1.id
+	and awayteam_id = t2.id
+	and s.division_id = d.id
+        and month(game_date) = 4
+order by sort_order, agegroup, game_date
+

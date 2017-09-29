@@ -1,0 +1,655 @@
+<?php
+/**
+ * @version		$Id: teamservice.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	JLeague
+ * @subpackage	Services
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC - All Rights Reserved
+ * @license		GNU/GPL, see LICENSE.php
+ */
+
+
+// require_once(JLEAGUE_CLASSES_PATH . DS . 'helpers' . DS . 'factory.php');
+// require_once(JLEAGUE_SERVICES_PATH . DS . 'baseservice.class.php');
+
+class JLTeamService  extends mBaseService  {
+	
+	
+	protected function __construct() {
+		parent::__construct();
+	}
+	
+	/**
+	 * This function will return an instance of this service object.
+	 *
+	 * @return JLTeamService
+	 */			
+	function getInstance() {
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new JLTeamService();
+		}
+		return $instance;
+	}		
+		
+	protected function getDao() {
+		$dao = &JLTeamDAO::getInstance();
+		return $dao;
+	}
+	
+	/**
+	 * This function has not been implemented.
+	 *
+	 */
+	public function register() {
+		return false;
+	}
+	
+	/**
+	 * This function will return all of the teams games, both league/non-league for a given
+	 * season.  This function will also allow you to filter the games based on a given status 
+	 *
+	 * @param int $teamid
+	 * @param int $season
+	 * @return array
+	 */ 
+	public function getTeamGames($teamid, $season,$status=null) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}		
+		if (!is_numeric($season)) {
+			throw new  Exception("Season Id is not numeric");
+		}			
+		$dao = &JLGamesDAO::getInstance();
+		$rows = $dao->getTeamGames($teamid, $season, $status);
+		return $rows;
+	}
+
+	/**
+	 * This function will return all of the teams games, both league/non-league for a given
+	 * season.  This function does not allow the games to be filtered based on status. 
+	 *
+	 * @param int $teamid
+	 * @param int $season
+	 * @return array
+	 */ 
+	public function getAllTeamGames($teamid, $season, $sortorder = 'asc') {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}		
+		if (!is_numeric($season)) {
+			throw new  Exception("Season Id is not numeric");
+		}			
+		$dao = &JLGamesDAO::getInstance();
+		$rows = $dao->getTeamGames($teamid, $season, 'all', $sortorder);
+		return $rows;
+	}
+
+	/**
+	 * This function will return a teams most recent game
+	 *
+	 * @param int $teamid
+	 * @return JLGame
+	 */
+	public function getTeamsMostRecentGame($teamid) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}				
+		$dao = &JLGamesDAO::getInstance();
+		return $dao->getTeamsMostRecentGame($teamid);
+	}
+
+	/**
+	 * This function will return a teams upcoming game
+	 *
+	 * @param int $teamid
+	 * @return JLGame
+	 */
+	public function getTeamsUpcomingGames($teamid, $count=3) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}				
+		$dao = &JLGamesDAO::getInstance();
+		return $dao->getTeamsUpcomingGames($teamid);
+	}
+		
+	/**
+	 * This function will return a teams schedule for a given season.  This assumes
+	 * that the games have already been entered prior to beginning of the season.  If the teams
+	 * do not enter the games, then the schedule will be empty.
+	 *
+	 * @param int $teamid
+	 * @param int $season
+	 * @return array
+	 */
+	public function getTeamSchedule($teamid, $season) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}		
+		if (!is_numeric($season)) {
+			throw new  Exception("Season Id is not numeric");
+		}			
+		$dao = &JLGamesDAO::getInstance();
+		$rows = $dao->getTeamGames($teamid, $season, 'all', 'asc');
+		return $rows;		
+	}
+
+	public function getUpcomingGames($teamid, $count=3) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}		
+		$dao = &JLGamesDAO::getInstance();
+		$rows = $dao->getTeamsUpcomingGames($teamid, $count);
+		return $rows;		
+	}	
+	
+	/**
+	 * This function will return an array of record item objects for a specific team.
+	 *
+	 * @param int $teamid
+	 * @param boolean $conferenceonly
+	 * @return array
+	 */
+	public function getRecordHistory($teamid,$conferenceonly = false) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}			
+		$dao = $this->getDao();
+		return $dao->getRecordHistory($teamid, $conferenceonly);
+	}
+	
+	public function getRecordForActiveSeason($teamid, $conferenceonly=true) {
+// 		require_once(JLEAGUE_SERVICES_PATH . DS . 'seasonservice.class.php');
+		$seasonsvc = &JLSeasonService::getInstance();
+		$dao = $this->getDao();
+		try {
+			$season = $seasonsvc->getActiveSeason();
+			$record = $dao->getRecordForSeason($teamid, $season->id);
+		} catch (Exception $e) {
+			/*
+			 * @TODO  Add logic here that if no data is found and they have registered,
+			 * create a new record object with a 0-0-0 record vs. returning only null.
+			 */
+			//$season = $seasonsvc->getMostRecentSeason();
+			//$record = $dao->getRecordForSeason($teamid, $season->id);			
+			throw $e;
+		}
+		return $record;
+		
+	}
+	public function getRecordForSeason($teamid, $season, $conferenceonly = true) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}
+		if (!is_numeric($season)) {
+			throw new  Exception("Season Id is not numeric");
+		}			
+		$dao = $this->getDao();
+		try {
+			 $record = $dao->getRecordForSeason($teamid, $season, $conferenceonly);
+			 return $record;
+		} catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	/**
+	 * Returns the total # of years the team has been in the league
+	 *
+	 * @param unknown_type $teamid
+	 * @return unknown
+	 */
+	public function getYearsInLeague($teamid) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}	
+		$dao = $this->getDao();
+		return $dao->getYearsInLeague($teamid);
+	}
+	
+	/**
+	 * This function will return a list of JLTeam objects that are currently defined within 
+	 * the leagues current season.
+	 *
+	 * If there is no active season, then return the teams from the most recent season.
+	 * 
+	 */
+	public function getActiveTeams() {
+		$seasonsvc = &JLSeasonService::getInstance();
+		try {
+			$season = $seasonsvc->getActiveSeason();
+		} catch (Exception $e) {
+			$season = $seasonsvc->getMostRecentSeason();
+		}
+
+		$dao = $this->getDao();
+		$config = &mConfig::getInstance();
+		
+		$filter_season = $config->getProperty('current_season');
+		$rows = $dao->getTeamsInSeason($filter_season,1);
+		return $rows;
+		
+
+		//return $dao->getTeamsInSeason($config->getProperty('current_season'),1);
+	}
+	
+	/**
+	 * This funciton will return an array of JLTeamCOntact objects for a specific team.
+	 *
+	 * @param int $teamid
+	 * @return array
+	 */
+	public function getTeamContacts($teamid) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}			
+		$dao = $this->getDao();
+		return $dao->getTeamContacts($teamid);
+	}
+	
+	public function getTeamContact($id) {
+		if (!is_numeric($id)) {
+			throw new  Exception("Contact Id is not numeric");
+		}			
+		$dao = $this->getDao();
+		$contact = $dao->getTeamContact($id);
+		return $contact;
+	}
+	
+	public function addTeamContact(JLTeamContact $obj) {
+		$dao = $this->getDao();
+		return $dao->addTeamContact($obj);
+	}
+
+	/*
+	public function removeTeamContact($int) {
+		$dao = $this->getDao();
+		return $dao->removeTeamContact($int);
+	}
+	*/	
+	
+	/**
+	 * This function will return an array of email addresses associated with the particular
+	 * team.  This will include the head coach email address assocaited with the team profile
+	 * along with any team contact emails that were defined.
+	 *
+	 * @param int $teamid
+	 * @return array
+	 */
+	public function getTeamEmailAddresses($teamid) {
+		$dao = &JLTeamDAO::getInstance();
+		return $dao->getTeamEmailAddresses($teamid);
+	}
+	
+	/**
+	 * This function will increment the "hits" counter for a specific team profile.
+	 *
+	 * @param JLTeam $team
+	 * @return unknown
+	 */
+	public function hit(JLTeam $team) {
+		$dao = $this->getDao();
+		return $dao->hit($team); 
+	}
+
+	/**
+	 * This function will return the team roster for a specific season.
+	 *
+	 * @param int $teamid
+	 * @return array
+	 */
+	public function getTeamRoster($teamid, $season = null) {
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}
+		if ($season != null) {
+			if (!is_numeric($season)) {
+				throw new  Exception("Season Id is not numeric");
+			}			
+		}
+		require_once(JLEAGUE_SERVICES_PATH . DS . 'seasonservice.class.php');
+		require_once(JLEAGUE_SERVICES_PATH . DS . 'rosterservice.class.php');
+		
+		$ssvc = &JLSeasonService::getInstance();
+		if ($season == null) {
+			//$seasonobj = $ssvc->getActiveSeason();
+			$seasonobj = $ssvc->getMostRecentSeason();
+			$season = $seasonobj->getId();
+		}
+		$rsvc = &JLRosterService::getInstance();
+		return $rsvc->createRoster($teamid,$season);
+	}
+
+	/**
+	 * This function will return the id of a team the user is associated with.  If the
+	 * user is associated with more than one, it will return only the first id.
+	 *
+	 * @return id
+	 */
+	public function getTeamIdAssociatedToUser() {
+		$dao = $this->getDao();
+		$user = JLApplication::getUser();
+		$teamidarr = $dao->getTeamIdsForUser($user->id);
+		if (sizeof($teamidarr) > 0) {
+			$obj = $teamidarr[0];
+			return $obj->teamid;			
+		} else {
+			return 0;
+		}
+	}
+	
+	public function getTeamsInSeason($season, $orderby=0,$registeredonly = true) {
+		$dao = $this->getDao();
+		return $dao->getTeamsInSeason($season, $orderby,$registeredonly);
+	}
+	
+	public function getTeamVenues($id) {
+		$dao = $this->getDao();
+		return $dao->getTeamVenues($id);
+	}
+	
+	public function addTeamVenue($teamid, $venueid) {
+		$dao = $this->getDao();
+		return $dao->addTeamVenue($teamid, $venueid);
+	}
+	
+	/**
+	 * This function will delete a team venue based on the teamid and the venueid.
+	 *
+	 * @param int $teamid
+	 * @param int $venueid
+	 * @return boolean
+	 */
+	public function removeTeamVenue($teamid, $venueid) {
+		$dao = $this->getDao();
+		return $dao->removeTeamVenue($teamid, $venueid);
+	}
+	
+	/**
+	 * This function is used to save/persist Team information
+	 *
+	 * @param JLTeam $obj
+	 * @return boolean
+	 */
+	function save(JLTeam &$obj) {
+	    $newteam = true;
+        if ($obj->getId() > 0) {
+			$t2 = $this->getRow($obj->getId());
+			$newteam = false;
+		}
+		if (!parent::save($obj)) {
+			throw new  Exception("Team information was not saved");
+		}
+
+		if (!$newteam && ($obj->getOwnerId() <> $t2->getOwnerId())) {
+			$dispatcher = &JLApplication::getEventDispatcher();
+			$arr = array('afterTeam' => $obj, 'beforeTeam' => $t2);
+			$dispatcher->trigger('onChangeOwner',$arr);
+		}
+		return true;
+	}
+		
+	/**
+	 * This function will return an array of teams within specific divisions.  The 
+	 * expected input is an array of division objects.  Do not pass only the id's
+	 *
+	 * @param array $divisions
+	 * @return array
+	 */
+    public function getTeamsInDivisions(array $divisions) {
+		$dao = $this->getDao();
+		return $dao->getTeamsInDivisions($divisions);
+    }
+	
+    public function getTeamView($teamid) {
+
+		if (!is_numeric($teamid)) {
+			throw new  Exception("Team Id is not numeric");
+		}
+
+		/* If the user is associated with the team, then we'll pull up the most current data */
+		$ssvc = &JLSecurityService::getInstance();
+		$found = $ssvc->isUserAssociatedWithTeamById($teamid);
+
+		if ($found) {
+			$teamview = $this->buildTeamView($teamid);
+			return $teamview;
+		}
+		
+        $cache = & JLCache::getInstance();
+        try {
+			$teamview = $cache->get("teamview",$teamid);
+			$team = $teamview->getTeam();
+			self::hit($team);
+			if (_APPDEBUG) {
+				$app = &mFactory::getApp();
+				$app->writeDebug("Retrieving profile for team id " . $team->getId() . " from cache");
+			}			
+		} catch (Exception $e) {
+			if (_APPDEBUG) {
+				$app = &mFactory::getApp();
+				$app->writeDebug("Building Team View");
+			}
+			$teamview = $this->buildTeamView($teamid);
+			/*
+			$team = self::getRow($teamid);
+			if (!is_object($team)) {
+				throw new  Exception(JLText::getText('JL_TEAM_NOT_FOUND'));
+			}
+			$config = & JLApplication::getConfig();
+			$seasonid = $config->getPropertyValue('current_season');
+			$gamehistory = self::getTeamGames($teamid,$team->getSeason()->getId());
+			$schedule = self::getTeamSchedule($teamid,$team->getSeason()->getId());
+			$yearsinleague = self::getYearsInLeague($teamid);
+			$recordhistory = self::getRecordHistory($teamid,true);
+			
+			$venues = self::getTeamVenues($teamid);
+			
+			// update hit counter
+				self::hit($team);
+			
+			try {
+				$rsvc = & JLSimpleRosterService::getInstance();
+				$roster = $rsvc->getRoster($team->getId());
+			} catch (Exception $e) {
+				$rosterhtml->setObject('rostertablehtml','Roster Unavailable');
+			}
+			$teamview = new JLTeamView();
+			$teamview->setTeam($team);
+			$teamview->setRecordHistory($recordhistory);
+			$teamview->setVenues($venues);
+			$teamview->setRoster($roster);
+			$teamview->setGameHistory($gamehistory);
+			$teamview->setTeamContacts($contacts);
+			$teamview->setYearsInLeague($yearsinleague);
+			$teamview->setSchedule($schedule);
+			*/
+			
+		   	$cache->store("teamview",$teamid,$teamview);
+		}
+		return $teamview;
+
+		
+// ===============================================================================================
+    }
+    
+    /**
+     * This function is responsible for building a team view that can be stored within the cache.
+     *
+     * @param int $teamid
+     * @return JLTeamView
+     */
+    private function buildTeamView($teamid) {
+			$team = self::getRow($teamid);
+			if (!is_object($team)) {
+				throw new  Exception("Team Not Found");
+			}
+			$app = &mFactory::getApp();
+			$config = $app->getConfig();
+			
+			$seasonid = $config->getPropertyValue('current_season');
+			$gamehistory = self::getTeamGames($teamid,$team->getSeason()->getId());
+			$schedule = self::getTeamSchedule($teamid,$team->getSeason()->getId());
+			try {
+				$activerecord = self::getRecordForActiveSeason($teamid);
+				$xarray[] = $activerecord;
+			} catch (Exception $e) {
+				$activerecord = null;
+				$xarray = array();
+			}
+			$yearsinleague = self::getYearsInLeague($teamid);
+			$_recordhistory = self::getRecordHistory($teamid,true);
+			
+			$recordhistory = array_merge($xarray,$_recordhistory);
+			//$recordhistory = $_recordhistory;
+			$contacts = self::getTeamContacts($team->getId());
+			$upcominggames = self::getUpcomingGames($teamid);
+			try {
+				$mostrecentgame = self::getTeamsMostRecentGame($teamid);
+			} catch (Exception $e) {
+				$mostrecentgame = null;
+			}
+			
+			$venues = self::getTeamVenues($teamid);
+			
+			self::hit($team);
+
+			$teamview = new JLTeamView();
+			$teamview->setTeam($team);
+			$teamview->setRecordHistory($recordhistory);
+			$teamview->setVenues($venues);
+			
+			if ($config->getPropertyValue("rosters_enabled")) {
+				try {
+					$rsvc = & JLSimpleRosterService::getInstance();
+					$roster = $rsvc->getRoster($team->getId());
+				} catch (Exception $e) {
+					$rosterhtml->setObject('rostertablehtml','Roster Unavailable');
+				}
+			} else {
+				$teamview->setRoster($roster);
+			}		
+
+			$teamview->setGameHistory($gamehistory);
+			$teamview->setTeamContacts($contacts);
+			$teamview->setYearsInLeague($yearsinleague);
+			$teamview->setSchedule($schedule);
+			$teamview->setActiveRecord($activerecord);
+			$teamview->setMostRecentGame($mostrecentgame);
+			$teamview->setUpcomingGames($upcominggames);
+
+			return $teamview;
+    }
+    
+    
+    function calculateRPI($teamid,$season) {
+    	$team = self::getRow($teamid);
+    	$dao = $this->getDao();
+    	$rec = $dao->getRecordForSeason($teamid, $season);
+    	$winpct = $rec->getWins() / ($rec->getWins() + $rec->getLosses());
+    	// echo $winpct;
+    	$oppenents_winpct = $dao->getOpponentsWinningPercentage($teamid, $season);
+    	//echo "<hr/>";
+    	//echo $oppenents_winpct;
+    	//echo "<hr/>";
+    	$opponentids = $dao->getOpponentTeamIdsForSeason($teamid, $season);
+    	$total_oawpct = 0;
+    	$cnt = 0;
+    	foreach ($opponentids as $obj) {
+    		$oawpct = $dao->getOpponentsWinningPercentage($obj->team_id, $season);
+    		$total_oawpct += $oawpct;
+			// echo "TeamID = " . $obj->team_id . " Avg WinPct = " . $oawpct . "<br/>";
+		}    	
+		//echo "<hr/>";
+		$ooavg = $total_oawpct / sizeof($opponentids);
+		//echo "Opponent's opponents average = " . $total_oawpct / sizeof($opponentids);
+		$rpi = ($winpct * .25) + ($oppenents_winpct * .50) + ($ooavg * .25);
+		//echo "RPI = " . $rpt;
+		return $rpi;
+    }
+    
+    /**
+     * This function will validate a teams schedule for a given season.  It will return TRUE if everything is okay.  If there
+     * is an error, then it will throw an exception that includes the current game count and the required number of games.
+     *  
+     * @param unknown $teamid
+     * @param unknown $season
+     * @return boolean
+     */
+    function validateTeamSchedule($teamid, $season) {
+    	$dao = &JLTeamDAO::getInstance();
+    	$games = $dao->getNumberOfLeagueGames($teamid, $season);
+    	$gamecount = $games->gamecount;
+    	$required_games = $games->required_games;
+    	if ($gamecount > $required_games) {
+    		throw new Exception("Schedule has more league games scheduled [" . $gamecount . "] than is required [" . $required_games . "]");
+    	}
+    	return true;
+    }
+    
+    function calculateTeamStats($season) {
+    	//die('calculatingTeam Stats');
+    	    	
+    	$dao = $this->getDao();
+   		$svc = & JLTeamService::getInstance();
+		$teams = $svc->getTeamsInSeason($season);
+		foreach ($teams as $team) {
+			$rpi = $svc->calculateRPI($team->getId(), $season);
+			$wins_avgrundiff = $dao->getAverageWinRunDifferential($team->getId(), $season);
+			$loss_avgrundiff = $dao->getAverageLossRunDifferential($team->getId(),$season);
+			$record = $svc->getRecordForSeason($team->getId(), $season);
+			//echo "TEAM = " . $team->getName(). " Division Name = " . $record->getDivisionName() . "<br/>";
+			//echo "Team: " . $team->getName() . "(".$team->getId().") " . $team->getDivision()->getAgeGroup() . " RPI = " . $rpi . "<br/>";
+			$query = "insert into jos_jleague_team_stats (id,teamid, teamname, season, division_name," 
+				. "wins,losses,ties, runs_scored, runs_allowed, w_avgrundiff, l_avgrundiff, rpi) values (0,"
+				. '"' . $team->getId() . '",'
+				. '"' . $team->getName() . '",'  
+				. '"' . $season . '",'
+				. '"' . $record->getDivisionName() . '",'
+				. '"' . $record->getWins() . '",'
+				. '"' . $record->getLosses() . '",'
+				. '"' . $record->getTies() . '",'
+				. '"' . $record->getRunsScored() . '",'
+				. '"' . $record->getRunsAllowed() . '",'
+				. '"' . $wins_avgrundiff . '",'
+				. '"' . $loss_avgrundiff . '",'
+				. '"' . $rpi . '")';	
+	    	$db->setQuery($query);
+	    	$db->query(); 
+		}
+		echo "Calculations complete ...";    	
+    }
+    
+    /**
+     * This function will save a Team Contact.
+     * 
+     * @param JLTeamContact $contact
+     * @return boolean
+     */
+    function saveTeamContact(JLTeamContact $contact) {
+		$dao = &JLTeamContactsDAO::getInstance();
+		try {
+			if ($contact->getId()>0) {
+				return $dao->update($contact);
+			} else {
+				$rc = $dao->insert($contact);
+				$newid = $dao->getInsertId();
+				if (method_exists($contact,'setid')) {
+					$contact->setId($newid);
+				}
+			}
+		} catch (Exception $e) {
+			throw $e;
+		}
+    }
+    
+    function removeTeamContact($contactid) {
+    	$dao = &JLTeamContactsDAO::getInstance();
+    	try {
+			$dao->delete($contactid);
+    	} catch (Exception $e) {
+    		throw $e;
+    	}
+    }
+}
+
+?>

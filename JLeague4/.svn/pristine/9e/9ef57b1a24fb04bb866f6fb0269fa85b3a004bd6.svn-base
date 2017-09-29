@@ -1,0 +1,96 @@
+<p>Below are the various mailing lists that you can subscribe to. Please provide us your name, email address and phone number and check the desired lists you wish to subscribe too. Our email lists are managed via i-Contact. You will be able to UNSUBSCRIBE at anytime. <br /><br /> <strong>NOTE:</strong> If you subscribe, please make sure that you check your SPAM folder periodically as our emails may be tagged as SPAM. Emails are delivered using <a href="http://www.icontact.com">iContact</a> . <br /><br /><br /></p>
+
+
+<style>
+.link,
+.link a,
+.signupframe
+{
+	color: #010080;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	}
+	.link,
+	.link a {
+		text-decoration: none;
+		}
+	.signupframe {
+		border: 1px solid #000000;
+		background: #ffffff;
+		}
+.signupframe .required {
+	font-size: 10px;
+	}
+</style>
+<form method="post" action="https://app.icontact.com/icp/signup.php" name="icpsignup" id="icpsignup1370" accept-charset="UTF-8" onsubmit="return verifyRequired1370();" >
+<input type="hidden" name="redirect" value="http://swibl-baseball.org/">
+<input type="hidden" name="errorredirect" value="http://www.icontact.com/www/signup/error.html">
+
+<div id="SignUp">
+
+<div class="form-group"><label class="col-sm-2 control-label" for="fields_email">Email:</label>
+<div class="controls"><input id="fields_email" class="input-lg" name="fields_email" required="" type="text" /></div>
+</div>
+
+<div class="form-group"><label class="col-sm-2 control-label" for="fields_fname">First Name:</label>
+<div class="controls"><input id="fields_fname" class="input-md" name="fields_fname" required="" type="text" /></div>
+</div>
+
+
+<div class="form-group"><label class="col-sm-2 control-label" for="fields_lname">Last Name:</label>
+<div class="controls"><input id="fields_lname" class="input-md" name="fields_fname" required="" type="text" /></div>
+</div>
+
+<div class="form-group"><label class="col-sm-2 control-label" for="fields_phone">Phone:</label>
+<div class="controls"><input id="fields_phone" class="input-sm" name="fields_phone" required="" type="text" /></div>
+</div>
+
+    <input type="hidden" name="listid" value="5233">
+    <input type="hidden" name="specialid:5233" value="2LPB">
+
+    <input type="hidden" name="clientid" value="1251382">
+    <input type="hidden" name="formid" value="1370">
+    <input type="hidden" name="reallistid" value="1">
+    <input type="hidden" name="doubleopt" value="0">
+
+<div class="form-group">
+<div class="controls col-sm-offset-2"><button class="btn btn-primary" type="submit">Submit</button></div>
+</div>
+
+</div>
+</form>
+<script type="text/javascript">
+
+var icpForm1370 = document.getElementById('icpsignup1370');
+
+if (document.location.protocol === "https:")
+
+	icpForm1370.action = "https://app.icontact.com/icp/signup.php";
+function verifyRequired1370() {
+  if (icpForm1370["fields_email"].value == "") {
+    icpForm1370["fields_email"].focus();
+    alert("The Email field is required.");
+    return false;
+  }
+  if (icpForm1370["fields_fname"].value == "") {
+    icpForm1370["fields_fname"].focus();
+    alert("The First Name field is required.");
+    return false;
+  }
+  if (icpForm1370["fields_lname"].value == "") {
+    icpForm1370["fields_lname"].focus();
+    alert("The Last Name field is required.");
+    return false;
+  }
+  if (icpForm1370["fields_phone"].value == "") {
+    icpForm1370["fields_phone"].focus();
+    alert("The Phone field is required.");
+    return false;
+  }
+
+
+return true;
+}
+</script>
+<span class="link"><a href="http://www.icontact.com">iContact - Email Marketing</a> You Can Trust</span>
+

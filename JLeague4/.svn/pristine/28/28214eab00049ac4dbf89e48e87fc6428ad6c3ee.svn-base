@@ -1,0 +1,17 @@
+
+	select name, email,1,1 from jos_jleague_divmap
+	where season=9
+
+	select name, email,1,1 from jos_ccnewsletter_subscribers
+	where enabled = 1
+	
+
+select id from jos_users
+where trim(email) in (select trim(email) from jos_jleague_divmap where season = 9)
+
+
+insert into jos_jnews_listssubscriber
+	selec
+jos_jnews_lists - Mailing LIsts (#18 - 2012 Coaches Email List)
+
+Full texts 	list_id 	subscriber_id 	subdate 	unsubdate 	unsubscribe 	params

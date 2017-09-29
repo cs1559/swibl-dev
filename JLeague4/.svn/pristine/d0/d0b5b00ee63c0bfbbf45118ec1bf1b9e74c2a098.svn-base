@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<author>Firestorm Technologies, LLC</author>
+	<authorEmail>cs1559@firestorm-technologies.com</authorEmail>
+	<copyright>Copyright 2008-2009 Firestorm Technologies, LLC</copyright>
+	<authorUrl>http://www.firestorm-technologies.com</authorUrl>
+	<creationDate>11-20/2009</creationDate>
+
+	<menu>
+		<options var="task">
+			<option value="displaystandings" name="League Standings" msg="List the current seasons standings" />
+			<option value="frontpage" name="Place JLeague content on frontpage" msg="This will render a scoreboard or upcoming games on the frontpage" />
+			<option value="listleaguecontacts" name="List the league contacts" msg="This option will list the league contacts by division for the current season" />
+			<option value="listteams" name="List the Active league teams" msg="This option will list active teams in the league" />
+			<option value="logoutlink" name="Custom logout" msg="Enables logout menu item as a link"/>			
+			<option value="listupcominggames" name="List Upcoming Games" msg="Lists the upcoming LEAGUE games"/>
+			<option value="setuserpreferences" name="Set User Preferences" msg="This will enable users to set custom preferences"/>
+			<option value="getteamcontactlist" name="Team Contact Lists" msg="Generate a contact list for a teams division"/>
+		</options>
+	</menu>
+	<state switch="task">
+		<displaystandings>
+			<name>Standings</name>
+			<description>This menu option will display the current seasons standings</description>
+		</displaystandings>	
+		<frontpagescoreboard>
+			<name>Frontpage</name>
+			<description>This will display scoreboard or upcoming games on the frontpage</description>
+		</frontpagescoreboard>
+		<listteams>
+			<name>League Teams</name>
+			<description>This menu option will display all of the teams in the league</description>
+		</listteams>		
+		<listleaguecontacts>
+			<name>League Contacts</name>
+			<description>This menu option will display the league contacts for the current divisions</description>
+		</listleaguecontacts>
+		<logoutlink>
+			<name>Logout Link</name>
+			<description>This menu will execute a Joomla Logout via a link</description>
+		</logoutlink>		
+		<listupcominggames>
+			<name>List Upcoming LEAGUE Games</name>
+			<description>This menu option will list upcoming league games.</description>
+		</listupcominggames>		
+		<setuserpreferences>
+			<name>Set User Preferences</name>
+			<description>This will enable users to set custom preferences</description>
+		</setuserpreferences>		
+		<getteamcontactlist>
+			<name>Team Contact Lists</name>
+			<description>This will generate a team contact list </description>
+		</getteamcontactlist>					
+	</state>	
+		
+</metadata>

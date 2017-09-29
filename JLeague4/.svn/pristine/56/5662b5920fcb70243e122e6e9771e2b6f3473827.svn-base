@@ -1,0 +1,54 @@
+<project name="JLeague" basedir=".">
+    <description>
+        Basic Ant/Build file to copy files from Eclipse project to XAMPP HTDOCS directory
+    </description>
+  <!-- set global properties for this build -->
+  <property name="root" location="d://workspaces//juno//JLeague4"/>
+  <property name="buildroot" location="d://builds//jleague4"/>	
+  <property name="frontendpath" location="d://workspaces//juno//JLeague4//frontend"/>
+  <property name="backendpath" location="d://workspaces//juno//JLeague4//backend"/>
+  <property name="languagepath" location="d://workspaces//juno//JLeague4//language"/>
+  <property name="distroroot" location="d://builds//jleague-final"/>
+
+	<target name="buildFrontEnd" >
+		  <delete file="${buildroot}/frontend/frontend.zip"/>	
+		  <zip destfile="${buildroot}/frontend/frontend.zip">
+		  	<zipfileset dir="${frontendpath}"/>
+		  </zip>  		  		  		  		
+	</target>
+
+	<target name="buildLanguage" >
+		  <delete file="${buildroot}/frontend/frontend.zip"/>	
+		  <zip destfile="${buildroot}/frontend/frontend.zip">
+		  	<zipfileset dir="${frontendpath}"/>
+		  </zip>  		  		  		  		
+	</target>
+	
+	<target name="buildBackEnd" >
+		  <delete file="${buildroot}/backend/backend.zip"/>
+		  <zip destfile="${buildroot}/backend/backend.zip" excludes="backend.zip">
+		    <zipfileset dir="${backendpath}"/>
+		  </zip>
+			  <delete file="${buildroot}/language/language.zip"/>
+				  <zip destfile="${buildroot}/language/language.zip" excludes="language.zip">
+	    		    <zipfileset dir="${languagepath}"/>
+			  </zip> 		
+	</target>
+
+	<target name="buildDistribution" depends="buildFrontEnd,buildBackEnd">
+		<input message="Please enter Version:" addproperty="version" defaultvalue="undefined"/>
+		<delete file="${buildroot}/jleague-${version}.zip"/>	
+		<copy todir="${buildroot}/language/">
+		    <fileset dir="${languagepath}"/>
+		</copy>
+		<copy file="${root}/jleague.xml" todir="${buildroot}"/>	
+		<copy file="${root}/install.php" todir="${buildroot}/backend"/>		
+		<copy file="${root}/installhelper.class.php" todir="${buildroot}/backend"/>		
+		<zip destfile="${distroroot}/jleague-${version}.zip" >
+		    <zipfileset dir="${buildroot}"/>
+		</zip>  		  		  		  		
+	</target>
+	
+
+
+</project>

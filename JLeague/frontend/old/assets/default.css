@@ -1,0 +1,103 @@
+/**
+ * Back end css stylesheet for Jom Social
+ **/
+.inputOn {
+	display: inline;
+}
+
+.inputOff {
+	display: none;
+}
+
+div#templates-list
+{
+	padding: 3px;
+	background: #F3F6E9 none repeat scroll 0 0;
+	border-bottom: 1px solid #D5D5D5;
+	border-top: 1px solid #D5D5D5;
+}
+
+div#template-files
+{
+	margin: 20px 0 0 0;
+	padding: 3px;
+	background:#F3F6E9 none repeat scroll 0 0;
+	border-bottom:1px solid #D5D5D5;
+	border-top:1px solid #D5D5D5;
+}
+
+textarea.template-editor
+{
+	width:95%;
+	font-family:monospace;
+	font-size:13px;
+	padding-top:11px;
+	line-height:16px;
+	height: 500px; 
+	padding-left:30px;
+	background: url(line-numbers.png) no-repeat;
+	background-attachment: scroll; 
+	margin-right:26px
+}
+
+div.info
+{
+	background: #C3D2E5;
+	color: #0055BB;
+	padding: 10px;
+	border-bottom: 3px solid #84A7DB;
+	border-top: 3px solid #84A7DB;
+	font-weight: 700;
+}
+
+.icon-48-jleague
+{
+	background-image: url( images/sports_icon_48x48.png );
+}
+.icon-48-leagues
+{
+	background-image: url( images/sports_icon_48x48.png );
+}
+.icon-48-teams
+{
+	background-image: url( images/sports_icon_48x48.png );
+}
+.icon-48-divisions
+{
+	background-image: url( images/sports_icon_48x48.png );
+}
+.icon-48-seasons
+{
+	background-image: url( images/sports_icon_48x48.png );
+}
+.icon-48-games
+{
+	background-image: url( images/sports_icon_48x48.png );
+}
+
+/** Custom title icons **/
+.icon-48-configuration
+{
+	background-image: url( icons/configuration.gif );
+}
+
+.icon-48-users
+{
+	background-image: url( icons/edit-user.gif );
+}
+
+
+.icon-48-profiles
+{
+	background-image: url( icons/profiles.gif );
+}
+
+.icon-48-templates
+{
+	background-image: url( icons/templates.gif );
+}
+
+
+.team-current-contacts-table {
+	width: 100%;
+}

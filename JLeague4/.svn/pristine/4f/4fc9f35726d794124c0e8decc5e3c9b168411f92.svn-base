@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.1" method="upgrade">
+    <name>com_jleague</name>
+    <creationDate>11.26.2013</creationDate>
+    <author>Chris Strieter, Firestorm Technologies</author>
+    <copyright>(C) 2007-2011 Firestorm-Technologies</copyright>
+    <authorEmail>cs1559@firestorm-technologies.com</authorEmail>
+    <authorUrl>http://www.firestorm-technologies.com</authorUrl>
+    <version>4.0</version>
+    <description><![CDATA[
+    <h1>JLeague</h1>
+    <strong>JLeague (For Joomla 3.1) has successfully been installed .... </strong>
+	<br/>
+	]]></description>
+
+ <scriptfile>install.php</scriptfile>  
+ 
+ <!-- Site Main File Copy Section -->
+ <!-- Note the folder attribute: This attribute describes the folder
+      to copy FROM in the package to install therefore files copied
+      in this section are copied from /site/ in the package -->
+ <files folder="frontend">
+ 		<filename>frontend.zip</filename>
+ </files>
+
+ <administration>
+  <!-- Administration Menu Section -->
+  			<menu>COM_JLEAGUE</menu>
+ 
+  <!-- Administration Main File Copy Section -->
+		  	<files folder="backend">
+		   		<filename>backend.zip</filename>
+		   		<file>install.php</file>
+		  		<file>installhelper.class.php</file>   
+		  	</files>
+ 
+  			<languages folder="language">
+				<language tag="en-GB">en-GB.com_jleague.ini</language>
+				<language tag="en-GB">en-GB.com_jleague.sys.ini</language>
+			</languages>
+ 
+  </administration>
+ 
+</extension>

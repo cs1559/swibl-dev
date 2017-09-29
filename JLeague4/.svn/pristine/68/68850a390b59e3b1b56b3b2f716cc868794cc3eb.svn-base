@@ -1,0 +1,293 @@
+<?php
+
+
+class mHtmlHelper {
+	
+	/**
+	 * 
+	 * @param unknown $element_name
+	 * @param unknown $default_value
+	 * @return string
+	 */
+	static function getTeamQuickLinks($element_name, $default_value) {
+
+		$app = &mFactory::getApp();
+		// Instantiate the cache
+		$cache = & JLCache::getInstance();
+		$cache_key = "getTeamQuickLinks";
+		
+		/*
+		$db			=& mFactory::getDBO();
+		// 		$query = "select id as value, concat(name,' ( ',username,' )')  as text from #__users order by username";
+		$query = "select t.name, d.agegroup
+from joom_jleague_teams t, joom_jleague_division d, joom_jleague_divmap dm
+where t.id = dm.team_id
+and dm.division_id = d.id
+and dm.published = 1
+and dm.season = 12
+order by t.name, d.agegroup";
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+			*/	
+		try {
+			$obj = $cache->get($cache_key, "system");
+			if (_APPDEBUG) {
+				$app->writeDebug("Team Quicklinks object retrieved from cache");
+			}
+		} catch (Exception $e) {
+				$obj = new fsSelectList($element_name, $default_value);
+				$svc = &JLTeamService::getInstance();
+				$rows = $svc->getActiveTeams();
+				
+				$obj->setHeader("------- Select Team Profile -------");
+				if (sizeof($rows) == 0) {
+					$obj->addOption('0','NO ACTIVE SEASON/TEAMS' );
+				}
+				foreach ($rows as $row) {
+					$div = $row->getDivision();
+		// 			$config = & JLConfig::getInstance();
+					$url = 'index.php?option=com_jleague&amp;controller=teams&amp;task=viewTeamProfile&amp;teamid='.$row->getId();
+					$obj->addOption($url,$row->getName() . " (" . $div->getAgeGroup() . ") ");
+				}
+				$obj->setAttribute("onchange", "window.location	= this.value;");
+				$obj->setAttribute("class", "select-quicklink");		
+				$cache->store($cache_key,"system",$obj,120);
+		}
+		return $obj->toHtml();
+	}
+	
+	/**
+	 * This function returns a select list of available SEASONS
+	 * @param unknown $element_name
+	 * @param unknown $default_value
+	 * @param string $className
+	 * @param string $changeEvent
+	 * @return mixed|string
+	 */
+	static function getSeasonSelectList($element_name, $default_value, $className="select-seasonlist",$changeEvent = null) {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$leagueid = $config->getLeagueId();
+		
+		// Instantiate the cache
+		$cache = & JLCache::getInstance();
+		$cache_key = "getSeasonSelectList_" . $element_name . "_" . $default_value;
+		try {
+			$obj = $cache->get($cache_key, "system");
+			if (_APPDEBUG) {
+				$app->writeDebug("getSeasonSelectList object retrieved from cache - " . $default_value);
+			}
+			return $obj;
+		} catch (Exception $e) {
+			$db = &mFactory::getDBO(); 
+			$sql = "select id, title from #__jleague_seasons order by title desc";
+			$obj = new fsDatabaseSelectList($db, $sql, "id", "title", $element_name, $default_value);
+			if ($changeEvent != null) {
+				$obj->setAttribute("onchange", $changeEvent);
+			}
+			$obj->setAttribute("class", $className);
+			$cache->store($cache_key,"system",$obj->toHtml(),120);
+		}
+		return $obj->toHtml();		
+	}
+	
+	
+	static function getTeamOwnerSelectList($element_name, $default_value, $className="select-ownerlist",$changeEvent = null) {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$svc = JLSecurityService::getInstance();
+		$rows = $svc->getAvailableProfileOwners();
+		
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->setHeader("------- Select Team Owner -------");
+		foreach ($rows as $row) {
+			$obj->addOption($row->id, $row->name . " (" . $row->username . ") ");
+			$obj->setAttribute("class", $classname);		
+		}
+		return $obj->toHtml();
+	}
+	
+
+	static function getClassification($element_name, $default_value, $id="select-classification", $classname="select-classification", $event = '') {
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->setId($id);
+		$obj->setHeader("---- Select Classification ----");
+		$obj->addOption("Open", "Open");
+		$obj->addOption("A", "A");
+		$obj->addOption("AA", "AA");
+		$obj->addOption("AAA", "AAA");
+		$obj->addOption("Major", "Major");
+		$obj->addOption("All-Star", "All-Star");
+		$obj->setAttribute("class", $classname);		
+		return $obj->toHtml();
+	}
+	
+	static function getGameStatus($element_name, $default_value, $classname="select-gamestatus", $event = '') {
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->setHeader("---- Select Status ----");
+		$obj->addOption("S", "Scheduled");
+		$obj->addOption("D", "Suspended");
+		$obj->addOption("C", "Complete");
+		$obj->addOption("R", "Rained Out");
+		$obj->addOption("X", "Cancelled");
+		$obj->setAttribute("class", $classname);
+		return $obj->toHtml();
+	}
+	
+	/**
+	 * This function will return a list of available "roles" that can be defined to a Team contact
+	 * 
+	 * @param unknown $element_name
+	 * @param string $classname
+	 * @param string $event
+	 * @return string
+	 */
+	static function getTeamContactRolesList($element_name, $default_value, $classname="select-contact-roles", $event = '') {
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->addOption("Head Coach", "Head Coach");
+		$obj->addOption("Coach", "Coach");
+		$obj->addOption("Manager","Manager");
+		$obj->addOption("Other","Other");
+		$obj->setAttribute("class", $classname);
+		return $obj->toHtml();
+	}
+	
+
+	/**
+	 * This function will return a list of available defined users within the website
+	 * @param unknown $element_name
+	 * @param unknown $default_value
+	 * @param string $classname
+	 * @param string $event
+	 * @return string
+	 */
+	static function getUserSelectList($element_name, $default_value, $classname="select-user", $event = "") {
+		$db			=& mFactory::getDBO();
+		// 		$query = "select id as value, concat(name,' ( ',username,' )')  as text from #__users order by username";
+		$query = "select id as value, concat(username,' - ',name)  as text from #__users order by username";
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->setHeader("------- Select User -------");
+		$obj->setAttribute("class", $classname);
+		foreach ($rows as $row) {
+			$obj->addOption($row->value, $row->text);
+		}
+		return $obj->toHtml();
+	}
+
+	
+	/**
+	 * This function will return a list of defined venues
+	 * 
+	 * @param unknown $element_name
+	 * @param unknown $default_value
+	 * @param string $classname
+	 * @param string $event
+	 */
+	static function getVenueSelectList($element_name, $default_value,  $classname="select-venue", $event = "") {
+
+		$svc = &JLVenueService::getInstance();
+		$rows = $svc->getVenues();
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->setHeader("------- Select Venue -------");
+		if (sizeof($rows) == 0) {
+			$obj->addOption('', 'NO VENUES DEFINED' );
+		}
+		foreach ($rows as $venue) {
+			$txt = $venue->getName() . " (" . $venue->getCity() . ")";
+			$obj->addOption($venue->getId(),$txt); 
+		}
+		$event = '';
+		return $obj->toHtml();
+	}
+	
+	
+	static function getVenueUnorderedList($element_name, $default_value, $classname="", $role="", $event="") {
+		$svc = &JLVenueService::getInstance();
+		$rows = $svc->getVenues();
+		$html = "<ul class=\"" . $classname . "\" role=\"" . $role . "\">";
+		foreach ($rows as $venue) {
+// 			$field = $venue->getName() . " - " . $venue->getCity();
+			$field = $venue->getName();
+			$html .= "<li onClick=\"javascript: setLocation('" . $field ."');\"><a href=\"#\">" . $field . "</a></li>";
+		}
+		$html .= "</ul>";
+		return $html;
+	}
+	
+	static function getYesNoSelectList($element_name, $default_value, $classname="select-yesno", $event="") {
+		echo fsHtmlHelper::getYesNoSelectList($element_name, $default_value, true);
+	}
+	
+	
+	/**
+	 * This function will return a list of available "announcement types" that can be defined to a Team contact
+	 *contact-roles
+	 * @param unknown $element_name
+	 * @param string $classname
+	 * @param string $event
+	 * @return string
+	 */
+	static function getBulletinTypeList($element_name, $default_value, $classname="select-bulletin-type", $event = '') {
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->addOption(JLBulletin::$BULLETIN_GENERAL, "General");
+		$obj->addOption(JLBulletin::$BULLETIN_TRYOUT, "Tryout");
+		$obj->addOption(JLBulletin::$BULLETIN_TOURNAMENT, "Tournament");
+		$obj->addOption(JLBulletin::$BULLETIN_TEAM, "Team");
+		$obj->setAttribute("class", $classname);
+		return $obj->toHtml();
+	}	
+	
+	/**
+	 * 
+	 */
+	static function getRegistrationOpenSeasonList($element_name, $default_value, $classname = "registrationOpenSelectList", $getall = false, $event = null) {
+		$db			=& mFactory::getDBO();
+		// 		$query = "select id as value, concat(name,' ( ',username,' )')  as text from #__users order by username";
+		$query = "select id as value, title as text from #__jleague_seasons where published = 1 and registrationopen = 1";
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->setHeader("------- Select Season  -------");
+		$obj->setAttribute("class", $classname);
+		if ($event != null) {
+			$obj->setAttribute("onchange", $event);
+		}
+		foreach ($rows as $row) {
+			$obj->addOption($row->value, $row->text);
+		}
+		return $obj->toHtml();		
+	}
+	
+	static function getAgeGroupSelectList($element_name, $default_value, $event = '') {
+		$default_value = str_replace('U','',$default_value);
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->setHeader("---- Select Age ----");
+		$obj->addOption("7", "7 and Under");
+		$obj->addOption("8", "8 and Under");
+		$obj->addOption("9", "9 and Under");
+		$obj->addOption("10", "10 and Under");
+		$obj->addOption("11", "11 and Under");
+		$obj->addOption("12", "12 and Under");
+		$obj->addOption("13", "13 and Under");
+		$obj->addOption("14", "14 and Under");
+// 		$obj->setAttribute("class", $classname);
+		if ($event != null) {
+			$obj->setAttribute("onchange", $event);
+		}
+		return $obj->toHtml();
+
+	}
+	
+	static function getDivisionClassList($name, $default_value=null) {
+		$obj = new fsSelectList($name, $default_value);
+		$obj->addOption("A","American");
+		$obj->addOption("N","National");
+		return $obj->toHtml();
+	}
+	
+	
+	
+	
+}

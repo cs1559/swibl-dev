@@ -1,0 +1,26 @@
+TODO LIST
+---------------------------------------------------------
+
+* Finish database caching
+* Add WARNING message when viewing a division if it has less than 2 teams
+* Finish the work around record history. Add to year-end process to update the record history
+	table.
+* Add message on team profiles (Games tab) that says "No games found".  this appears
+	at the time the profile opens
+* Add BULK publish on the backend for Team Registrations
+* Add function to check for duplicate team name within a division.
+* The ACTIVE flag on SEASON is not accessible.  The standings used this column versus the STATUS column
+* Add something to state during registration that travel is required due to geographic reach of the league; 
+	and that divisions are grouped primarily based on skill versus geographic location
+* The SLUG function needs to exclude special formatting if SEO is turned off
+* Menu Objects for team profile is not including the SLUG value.
+* On the DEFAULT front-end controller, need to set the standings redirect ITEM ID to a configurable option vs. hardcoded
+* Need code to validate start/end date for the campaigns.
+* Write Email validation script - Team contacts need to be cleaned up
+
+
+COMPLETED ITEMS:
+* Change SORT ORDER on the Team Quick list to be name and age group
+* Set the SORT ORDER for the Roster list to be based on LAST NAME
+* When the VENUE is set to ZERO in jos_league_team_venues, then no venues or returned on the frontend
+* When closing a season, change the season status to "CLOSED"  (COMPLETE)

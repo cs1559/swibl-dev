@@ -1,0 +1,32 @@
+# If the Joomla site is installed within a folder such as at
+# e.g. www.example.com/joomla/ the robots.txt file MUST be
+# moved to the site root at e.g. www.example.com/robots.txt
+# AND the joomla folder name MUST be prefixed to the disallowed
+# path, e.g. the Disallow rule for the /administrator/ folder
+# MUST be changed to read Disallow: /joomla/administrator/
+#
+# For more information about the robots.txt standard, see:
+# http://www.robotstxt.org/orig.html
+#
+# For syntax checking, see:
+# http://tool.motoricerca.info/robots-checker.phtml
+
+User-agent: *
+Disallow: /j3/administrator/
+Disallow: /j3/bin/
+Disallow: /j3/cache/
+Disallow: /j3/cli/
+Disallow: /j3/components/
+Disallow: /j3/images/
+Disallow: /j3/includes/
+Disallow: /j3/installation/
+Disallow: /j3/language/
+Disallow: /j3/layouts/
+Disallow: /j3/ibraries/
+Disallow: /j3/logs/
+Disallow: /j3/media/
+Disallow: /j3/modules/
+Disallow: /j3/plugins/
+Disallow: /j3/templates/
+Disallow: /j3/tmp/
+

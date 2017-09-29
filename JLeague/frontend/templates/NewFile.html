@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title></title>
+<meta name="author" content="Chris Strieter">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/swibl.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container fs-content-wrapper">
+
+
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php?controller=controller&task=getPage&page=home">SWIBL</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+              <li><a href="index.php?controller=controller&task=about">About</a></li>
+              <li><a href="index.php?controller=controller&task=getPage&page=news">News</a></li>
+              <li><a href="index.php?controller=controller&task=getPage&page=documents">Documents</a></li>
+              <li><a href="index.php?controller=standings&task=viewStandings">Standings</a></li>
+          </ul>
+		<form class="navbar-form navbar-right">
+			<div class="form-group">
+				<select id="quicklink" name="quicklink" onchange="window.location	= this.value;" class="quicklink-select">
+<option value="">------- Select Team Profile -------</option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=435">11U Illini Prospects (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=437">Alton Redbirds (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=355">Aviston Mustangs (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=336">Aviston Mustangs (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=308">Aviston Titans (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=337">Bartelso Diamond Dawgs (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=402">Bethalto Eagles (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=347">Bethalto Eagles (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=424">Bethalto Eagles (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=438">Bethalto Eagles (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=216">Bethalto Eagles (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=454">Bethalto Eagles (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=272">Bethalto Jr Eagles (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=445">Blaze (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=396">Bluff City Sox (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=344">Bluff City Sox (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=343">Bluff City Sox (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=321">Bluff City Sox (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=203">Bluff City Sox (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=238">Bluff City Sox Red (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=242">Bluff City Sox Red (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=335">Bluff City Sox White (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=352">Bond County Buccaneers (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=271">Bond County Buccaneers (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=378">Bond County Sting (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=239">Breese Heat (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=324">Breese Heat (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=412">Brighton Bombers (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=395">Brighton Bulldogs (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=455">Cal-Jersey Blue Jays (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=305">Calhoun Crush (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=425">Carlinville Cavies (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=397">Carlinville Mud Dogs (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=398">Central Illinois Swing (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=446">Chargers Baseball (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=228">Chargers Baseball (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=294">Clinton County Aces (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=358">Clinton County Colts (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=224">Clinton County Colts (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=413">Clinton County Elite (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=414">Clinton County Slam (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=373">Collinsville Extreme (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=379">Collinsville Extreme (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=447">Diamond Stars (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=399">Diamondbacks Gold (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=400">Diamondbacks Maroon (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=249">Edwardsville Bandits (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=367">Edwardsville Blue Jays (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=359">Edwardsville Cardinals (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=309">Edwardsville Crushers (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=220">Edwardsville Dirty Sox Tigers (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=385">Edwardsville Fury (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=215">Edwardsville Lifetouch Tigers (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=403">Edwardsville Orange Sox (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=364">Edwardsville Orange Sox (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=316">Edwardsville Revolution (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=371">Edwardsville Sluggers (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=292">Edwardsville Tigers (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=236">Edwardsville Tigers (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=243">Edwardsville Tigers (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=353">Edwardsville Tigers - Black (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=415">Edwardsville Tigers - Black (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=386">Edwardsville Tigers - Combat (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=416">Edwardsville Tigers - Orange (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=417">Edwardsville Tigers - White (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=426">Edwardsville Tigers Orange (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=427">Edwardsville Tigers- White (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=404">Edwardsville Tigers-Orange (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=349">Flying Tigers (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=218">GBA Bears (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=464">GBA Bears (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=202">Gillespie Miners (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=295">Gillespie Sting (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=448">Gillespie Sting 12U (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=405">Granite City Jr Warriors (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=418">Granite City Jr Warriors (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=311">Granite City Jr Warriors (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=341">Granite City Jr Warriors (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=348">Granite City Junior Warriors (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=428">Highland Cannons (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=246">Highland Dawgs (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=419">Highland Harvesters (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=429">Highland Heat (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=456">Highland Predators (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=274">Highland Rattlers (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=297">Highland Rebels (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=223">Highland Redhawks (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=420">Highland Vipers (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=430">Illini Prospects (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=381">Illinois Legends (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=457">Illinois Nationals (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=449">Jerseyville Crushers (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=431">Jerseyville Panthers (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=436">Jerseyville Panthers (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=315">Jerseyville Panthers (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=248">Jerseyville Vipers (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=369">Jr Gateway Grizzlies (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=406">Jr Oilers (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=450">Junior Panthers(this may change) (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=458">Litchfield Bullets (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=439">Maryville Redbirds (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=302">Maryville Redbirds (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=226">Maryville Redbirds (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=351">Maryville Redbirds - Black (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=211">Metro Cougars (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=323">Metro Maniacs (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=365">Metro Maniacs 11U (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=451">Mid State Gamers (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=354">Mid-State Gamers (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=319">Mid-State Gamers (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=459">Midwest Outlaws (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=393">Nashville Sting (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=407">Ofallon Blue Sox (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=227">OFallon Bombers (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=388">Ofallon Bulls (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=293">OFallon Bulls (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=235">OFallon Bulls (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=307">Ofallon Bulls (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=222">Ofallon Bulls (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=174">Ofallon Bulls (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=363">OFallon Bulls-Green (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=408">Ofallon Predators (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=440">Raptors (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=409">Rawlings Illini Prospects (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=234">Rawlings Illini Prospects (12U) (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=356">Rawlings Illini Prospects 9U (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=421">Rawlings Illini Recruits 9U (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=441">Reccos (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=389">Reccos (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=366">Red Birds (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=164">Riverbend Bulldogs (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=432">Roxana Rascals (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=244">Roxana Shells (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=460">South Central Bulldogs (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=452">Southern Illinios Bandits - Red (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=361">Southern Illinois Bandits - 10U (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=453">Southern Illinois Bandits - Black (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=422">Southern Illinois Diamondbacks (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=370">Southern Illinois Diamondbacks (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=362">Southern Illinois Roughnecks (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=375">Southern Illinois Roughnecks (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=225">Southern Illinois Roughnecks (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=442">Southern Illinois Roughnecks - Black (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=299">Southern Illinois Roughnecks - Red (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=433">Southern Illinois Storm (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=201">Southwestern Athletics (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=443">Steelers (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=461">Tomahawks Baseball (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=322">Trenton Blasters (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=229">Trenton Rampage (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=410">Trenton Tornadoes (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=383">Tri-County Steel (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=463">Troy Hurricanes (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=411">Troy Thunder (8U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=391">Troy Thunder (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=298">Troy Thunder (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=368">Troy Thunder (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=162">Troy Thunder (14U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=462">Troy Titans (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=401">U10 Jr Grizzlies (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=444">U11 Jr Grizzlies (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=423">Wood River Jr Oilers (9U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=434">Wood River Oilers (10U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=296">Wood River Oilers (11U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=310">Wood River Oilers (12U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=206">Wood River Oilers (13U) </option>
+<option value="index.php?controller=teams&task=viewTeamProfile&teamid=165">Worden Wolverines (14U) </option>
+</select>
+			</div>
+		</form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    
+    
+
+
+
+<div class="container">
+
+	<div id="standings-body">
+		
+		<h3>League Standings - Spring/Summer 2013</h3>
+		<span class="system_message"></span>
+		
+		<div class="panel-group standings-accordion" id="accordion">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-68">
+										8U - North									</a>
+								</h4>
+							</div>
+							<div id="collapse-68" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+									</table>
+								</div> <!--  panel body -->
+							</div>  <!--  accordion-colapseX -->
+										
+						<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-69">
+										8U - South									</a>
+								</h4>
+							</div>
+							<div id="collapse-69" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Diamondbacks Maroon</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Orange Sox</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers-Orange</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Nashville Sting</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Ofallon Blue Sox</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Ofallon Predators</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Trenton Tornadoes</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Troy Thunder</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-70">
+										9U - North									</a>
+								</h4>
+							</div>
+							<div id="collapse-70" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Bethalto Eagles</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Bluff City Sox</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Brighton Bombers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers - Orange</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers - White</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Granite City Jr Warriors</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Mid-State Gamers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Rawlings Illini Recruits 9U</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Wood River Jr Oilers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-71">
+										9U - South									</a>
+								</h4>
+							</div>
+							<div id="collapse-71" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Aviston Mustangs</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Bond County Buccaneers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Clinton County Elite</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Clinton County Slam</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers - Black</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Highland Harvesters</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Highland Vipers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Ofallon Bulls</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Diamondbacks</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Troy Thunder</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-72">
+										10U - American (North)									</a>
+								</h4>
+							</div>
+							<div id="collapse-72" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Bethalto Eagles</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Bluff City Sox</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Carlinville Cavies</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Cardinals</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Granite City Junior Warriors</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Jerseyville Panthers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Roxana Rascals</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>U10 Jr Grizzlies</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Wood River Oilers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-73">
+										10U - American (South)									</a>
+								</h4>
+							</div>
+							<div id="collapse-73" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Bond County Buccaneers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Clinton County Colts</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Fury</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers- White</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Highland Cannons</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Highland Heat</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Illini Prospects</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>OFallon Bulls-Green</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Red Birds</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Bandits - 10U</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-74">
+										10U - National									</a>
+								</h4>
+							</div>
+							<div id="collapse-74" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Clinton County Aces</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers Orange</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>OFallon Bulls</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Rawlings Illini Prospects 9U</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Roughnecks</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Storm</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-75">
+										11U - American (North)									</a>
+								</h4>
+							</div>
+							<div id="collapse-75" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Alton Redbirds</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Bethalto Eagles</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Bluff City Sox Red</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Brighton Bulldogs</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Gillespie Sting</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Jerseyville Panthers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Reccos</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Steelers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-76">
+										11U - American (South)									</a>
+								</h4>
+							</div>
+							<div id="collapse-76" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Bethalto Jr Eagles</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers - Combat</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Granite City Jr Warriors</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Highland Rebels</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Metro Maniacs 11U</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Raptors</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Roxana Shells</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Roughnecks - Black</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>U11 Jr Grizzlies</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-77">
+										11U - National									</a>
+								</h4>
+							</div>
+							<div id="collapse-77" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>11U Illini Prospects</td>
+					<td>1-0-0</td>
+					<td class="hidden-phone">1</td>
+					<td>2</td>
+					<td class="hidden-phone">10</td>
+					<td class="hidden-phone">5</td>
+					<td class="hidden-phone">5</td>					
+					<td class="hidden-phone">1.0000</td>
+				</tr>
+								<tr>
+					<td>Troy Thunder</td>
+					<td>0-1-0</td>
+					<td class="hidden-phone">1</td>
+					<td>0</td>
+					<td class="hidden-phone">5</td>
+					<td class="hidden-phone">10</td>
+					<td class="hidden-phone">-5</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Breese Heat</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Orange Sox</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Maryville Redbirds</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>OFallon Bulls</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Roughnecks - Red</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Wood River Oilers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-78">
+										12U - American (North)									</a>
+								</h4>
+							</div>
+							<div id="collapse-78" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Bluff City Sox White</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Calhoun Crush</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Blue Jays</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Sluggers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Gillespie Sting 12U</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Jerseyville Crushers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Mid State Gamers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinios Bandits - Red</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Roughnecks</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Wood River Oilers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-79">
+										12U - American (South)									</a>
+								</h4>
+							</div>
+							<div id="collapse-79" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Aviston Titans</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Blaze</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Diamond Stars</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Crushers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Granite City Jr Warriors</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Jr Gateway Grizzlies</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Junior Panthers(this may change)</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Maryville Redbirds - Black</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Bandits - Black</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Diamondbacks</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Troy Thunder</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-80">
+										12U - National									</a>
+								</h4>
+							</div>
+							<div id="collapse-80" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Bluff City Sox Red</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Chargers Baseball</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Collinsville Extreme</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Tigers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Highland Dawgs</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Highland Rattlers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Maryville Redbirds</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Ofallon Bulls</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Rawlings Illini Prospects (12U)</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Trenton Rampage</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-81">
+										13U - North									</a>
+								</h4>
+							</div>
+							<div id="collapse-81" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Bethalto Eagles</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Bluff City Sox</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Bond County Sting</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Cal-Jersey Blue Jays</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Lifetouch Tigers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Revolution</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Litchfield Bullets</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Midwest Outlaws</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Reccos</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Troy Titans</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-87">
+										13U - Central									</a>
+								</h4>
+							</div>
+							<div id="collapse-87" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Chargers Baseball</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Clinton County Colts</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Flying Tigers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Illinois Nationals</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Jerseyville Panthers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Maryville Redbirds</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Mid-State Gamers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>OFallon Bombers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Ofallon Bulls</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-82">
+										13U - South									</a>
+								</h4>
+							</div>
+							<div id="collapse-82" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Bethalto Eagles</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Dirty Sox Tigers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>GBA Bears</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Highland Predators</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Highland Redhawks</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Metro Cougars</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>South Central Bulldogs</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southern Illinois Roughnecks</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Tomahawks Baseball</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Wood River Oilers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-85">
+										14U - American									</a>
+								</h4>
+							</div>
+							<div id="collapse-85" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Collinsville Extreme</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>GBA Bears</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Gillespie Miners</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Jerseyville Vipers</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Riverbend Bulldogs</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Southwestern Athletics</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Trenton Blasters</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Tri-County Steel</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Troy Hurricanes</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+										</table>
+									</div> <!--  panel body -->
+								</div>  <!--  accordion-colapseX -->
+						
+											<div class="panel panel-default">
+							<div class="panel-heading">
+							 	<h4 class="panel-title">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-86">
+										14U - National									</a>
+								</h4>
+							</div>
+							<div id="collapse-86" class="panel-collapse collapse in">
+								<div class="panel-body">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Team Name</th>
+												<th>Record</th>
+												<th  class="hidden-phone">GP</th>	
+												<th>Points</th>
+												<th  class="hidden-phone">RS</th>	
+												<th  class="hidden-phone">RA</th>
+												<th  class="hidden-phone">Diff</th>
+												<th  class="hidden-phone">Win Pct</th>			
+											</tr>
+										</thead>
+								<tr>
+					<td>Aviston Mustangs</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Bartelso Diamond Dawgs</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Bluff City Sox</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Breese Heat</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Edwardsville Bandits</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Illinois Legends</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Metro Maniacs</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Ofallon Bulls</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Troy Thunder</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+								<tr>
+					<td>Worden Wolverines</td>
+					<td>0-0-0</td>
+					<td class="hidden-phone">0</td>
+					<td>0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>
+					<td class="hidden-phone">0</td>					
+					<td class="hidden-phone">0.0000</td>
+				</tr>
+					
+			</table>
+					</div>   <!--  panel body -->
+				</div>   <!--  panel collapse -->
+			</div> <!--  panel -->						
+		</div>  <!--  panel group -->
+	</div>  <!--  standings body -->
+	
+</div> <!--  container -->
+<div class="container">
+<div class="swibl-footer">
+<h5>(c) 2005-2013, Southwest Illinois Baseball League</h5>
+</div>
+</div>
+
+
+<div id='debug_messages'>
+[DEBUG] Initializing application<br/>
+[DEBUG] Running application request<br/>
+[DEBUG] Dispatching Request [QUERY: task=viewStandings;]<br/>
+[DEBUG] Inside viewStandings task - mStandings controller<br/>
+[DEBUG] Generating standings for League Id = 1 Season Id = 12<br/>
+[DEBUG] Team Quicklinks object retrieved from cache<br/>
+[DEBUG] End of Debug
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+create index scores_idx1
+on joom_jleague_scores (season, conference_game, gamestatus);
+
+create index scores_idx2
+on joom_jleague_scores (hometeam_id, season);
+
+create index scores_idx3
+on joom_jleague_scores (awayteam_id, season);
+
+create index scores_idx4
+on joom_jleague_scores (season, conference_game);
+
+create index division_season_idx
+on joom_jleague_division (season)
+
+create index divmap_season_idx
+on joom_jleague_divmap (season, division_id)
+
+create index divmap_season_idx2
+on joom_jleague_divmap (season, paid)
+
+create index divmap_season_idx3
+on joom_jleague_divmap (team_id)
+
+create index divmap_season_idx4
+on joom_jleague_divmap (team_id, season)
+
+
+create index season_idx2
+on joom_jleague_seasons (id)
+
+
+
+create index bulletins_teamid_idx
+on joom_jleague_bulletins (teamid);
+
+create index standings_idx1
+on joom_jleague_standings (league_id, season, division_id);
+
+create index standings_idx1
+on joom_jleague_temp_standings (league_id, season, division_id);
+
+create index simple_roster_idx1
+on joom_jleague_simple_roster (teamid, season);
+
+create index record_history_idx
+on joom_jleague_recordhistory (season, team_id);

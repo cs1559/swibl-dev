@@ -1,0 +1,17 @@
+<?php
+
+
+class mRouter {
+	
+	//$_routes
+	var $_routeMap = array(
+			"viewTeam" => array(
+					"controller"=>"teams",
+					"task"=>"viewTeamProfile")		
+		);
+	
+	static function translateUrl($url) {
+		return $url;
+	}
+	
+}

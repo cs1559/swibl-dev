@@ -1,0 +1,36 @@
+<?php
+
+
+class mRouter {
+	
+	var $_routes = array(
+			'displayStandings' => array( 
+					'controller' => 'standings',
+					'method' => 'viewStandings',
+					'number' => '',
+					'param' => ''
+			),
+			'viewTeams' => array(
+					'controller' => 'teams',
+					'method' => 'viewTeams',
+					'number' => '',
+					'param' => ''
+			),
+			'viewProfile' => array(
+					'controller' => 'teams',
+					'method' => 'viewTeamProfile',
+					'number' => '',
+					'param' => ''
+			),
+			'error404' => array(
+					'controller' => 'errors',
+					'method' => 'error404'
+			)
+	);				
+	
+	
+	static function translateUrl($url) {
+		return $url;
+	}
+	
+}

@@ -1,0 +1,103 @@
+<?php
+
+define('_FSTLIB',true);
+define('_JEXEC', true);
+
+include ('../frontend/lib/core/uri.php');
+include ('../frontend/lib/core/baseobject.php');
+include ('../frontend/lib/core/route.php');
+include ('../frontend/classes/objects/route.php');
+include ('../frontend/classes/objects/router.php');
+include ('../frontend/classes/objects/routemap.php');
+
+
+$url1 = fsURI::getInstance("http://swibl-baseball.org/j3/league/viewTournaments");
+
+$url2 = fsURI::getInstance("http://swibl-baseball.org/j3/index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=355:Bethalo-Eagles");
+$url3 = fsURI::getInstance("http://swibl-baseball.org/j3/index.php?option=com_jleague&task=displayStandings");
+
+$urlx = "http://swibl-baseball.org/j3/league/viewTeamProfile/355:Bethalo-Eagles";
+$urly = "http://swibl-baseball.org/j3/index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid=355:Bethalo-Eagles";
+
+//print_r($uri);
+
+
+// Test building URL
+$router = new mRouter();
+$route = $router->match($urlx);
+print_r($route);
+
+exit;
+
+
+echo "\n";
+$newUrl = $router->translateUrl($urlx);
+echo $newUrl;
+
+exit;
+
+
+//x`$url = mRouter::translateUrl($url3);
+echo $url;
+exit;
+
+
+try {
+	$route = $map->findRouteByUrl($url2);
+	print_r($route);
+} catch (Exception $e) {
+	$route = $url2;
+}
+
+// Identify the route components
+try {
+	$route = $map->findRoute($url1->getPath());
+} catch (Exception $e) {
+	echo $e->getMessage();
+}
+
+
+
+//print_r($uri->getFragments());
+
+exit;
+
+
+
+
+
+
+$url = "http://swibl-baseball.org/j3/index.php?option=com_jleague&controller=batch&task=generateStandings&tmpl=component&format=raw";
+
+	$ch = curl_init();
+	$timeout = 5;
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+	$data = curl_exec($ch);
+	curl_close($ch);
+
+	echo $data;
+	echo "Done ..";
+	die;
+
+
+$url = "index.php?option=com_jleague&controller=teams&task=uploadLogo&teamid=333";
+$date = "2014/01/01 03:00:23:00";
+$dt = substr($date,0,10);
+
+           list($year, $month, $day) = preg_split('/\/|-/', $dt);
+           $date = $month . "/" . $day . "/" . $year;
+echo $date;
+
+
+exit;
+
+$arr = explode("?",$url);
+
+
+
+
+
+
+echo $url;

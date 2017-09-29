@@ -1,0 +1,39 @@
+
+
+<table class="swibl-table-max table table-responsive">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Phone</th>
+					<th>Primary</th>
+					<th>Role</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php 		
+			if (count($contacts) > 0 ) {	
+				foreach ($contacts as $contact) {
+				?><tr>
+					<td><?php echo $contact->getName(); ?></td>
+					<td><?php echo $_view->displayPrivateField($contact->getEmail()); ?></td>
+					<td><?php echo $_view->displayPrivateField($contact->getPhone()); ?></td>
+					<td><?php 
+							if ($contact->isPrimary()) {
+								echo "Yes";
+							} else {
+								echo "No";
+							}
+					?></td>
+					<td><?php echo $contact->getRole(); ?></td>
+				  </tr>
+				<?php
+				}
+			} else {
+				?>
+				<tr><td colspan="6">No Contacts on file</td></tr>
+				<?php
+			}
+			?>			
+			</tbody>
+</table>

@@ -1,0 +1,134 @@
+<?php
+
+/**
+ * @version		$Id: baseview.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	FST Framework
+ * @subpackage	Core
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC
+ * @license		GNU/GPL
+ */
+// Disallow direct access to this file
+defined('_FSTLIB') or die('Restricted access');
+
+// include_once('exception.php');
+// include_once('uri.php');
+// include_once('property.php');
+
+/**
+ * The fsView is the foundation view that all views extend from.
+ *
+ */
+class fsRequest {
+	
+	protected $_method = null;
+	protected $_uri = null;
+	protected $_query = null;
+	protected $_base = null;
+	protected $_parms = array();
+	
+	function __construct() {
+		
+		$this->_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : null;
+		//$this->_query = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : null;
+		$this->_uri = fsURI::getInstance();
+		$this->_query = $this->_uri->getQuery();
+		$this->parseRequest();
+	}
+	
+	static function &getInstance() {
+// 		return new fsRequest();
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new fsRequest();
+		}
+		return $instance;
+	}
+	
+	function getUri() {
+		return $this->_uri->getAbsolute();
+	}
+	
+	function getBase() {
+		$base_url = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off' ? 'https' : 'http';
+		$base_url .= '://'. $_SERVER['HTTP_HOST'];
+		$base_url .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
+		
+		return $base_url;
+	}
+	
+	function getPath() {
+		return $this->_uri->getPath();
+	}
+
+	
+	private function parseQuery() {
+		$parms = preg_split("/[&]+/",$this->_query);
+		foreach ($parms as $parm) {
+			$namevalue = preg_split("/[=]+/",$parm);
+			$prop = new fsProperty($namevalue[0], $namevalue[1]);
+			$this->_parms[$namevalue[0]] = $prop;
+		}
+	}
+	
+	private function parseRequest() {
+		$this->parseQuery();
+		if ($this->getMethod()=="POST") {
+			foreach ($_POST as $key => $value) {
+				$prop = new fsProperty($key, $value);
+				$this->_parms[$key] = $prop;
+			}
+			return;
+		}
+		if ($this->getMethod()=="GET") {
+			foreach ($_GET as $key => $value) {
+				$prop = new fsProperty($key, $value);
+				$this->_parms[$key] = $prop;
+			}
+			return;
+		}
+	}
+	
+
+	public function toHtml() {
+		echo "METHOD: " . $this->_method . "<br/>";
+		echo "QUERY PARAMETERS: <br/>";
+		foreach ($this->_parms as $parm) {
+			echo " ++ NAME = " . $parm->getName() . " VALUE = " . $parm->getValue() . "<br/>";
+		}	 
+	}
+	public function getQueryParms() {
+		$ret = "";
+		foreach ($this->_parms as $parm) {
+			$ret .= $parm->getName() . "=" . $parm->getValue() . ";";
+		}
+		return $ret;
+	}
+	
+	public function getProperty($key) {
+		if (isset($this->_parms[$key])) {
+			$prop = $this->_parms[$key];
+			return $prop;
+		} else {
+			return null;
+		}
+	}
+	public function getValue($key) {
+		if (isset($this->_parms[$key])) {
+			$prop = $this->_parms[$key];
+			return $prop->getValue();
+		} else {
+			return null;
+		}
+	}
+	
+	public function addParameter($key, $value) {
+		$prop = new fsProperty($key, $value);
+		$this->_parms[$key] = $prop;
+	}
+	
+	public function getMethod() {
+		return $this->_method;
+	}
+
+}
+?>

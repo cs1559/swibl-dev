@@ -1,0 +1,23 @@
+#printroster-wrapper {
+	width: 400px;
+	margin-left: 10px;
+}
+
+#printroster-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.printroster-column-headers {
+	padding-top: 10px;
+	color: #000000;
+	background-color: #C0C0C0 ;
+	border: 1px solid #000000;
+	font-weight: bold;
+}
+#printroster-message {
+	margin-top: 10px;
+}
+#printroster-message ul {
+	margin-top: 0px;
+}

@@ -1,0 +1,144 @@
+<?php
+?>
+
+<div class="" >
+
+<form name="form-horizontal editprofile" method="post" action="index.php">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Edit Team Profile</legend>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="teamid">Team Id</label>
+  <div class="controls">
+    <input id="teamid" name="teamid" placeholder="<?php echo $team->getId(); ?>" class="input-small" type="text" value="<?php echo $team->getId(); ?>" readonly>
+    <p class="help-block">This the Team number.  NON-EDITABLE</p>
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="teamname">Team Name</label>
+  <div class="controls">
+    <input id="teamname" name="teamname" placeholder="" class="input-xlarge" required="" type="text" value="<?php echo $team->getName(); ?>">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="textinput">City</label>
+  <div class="controls">
+    <input id="city" name="city" placeholder="" class="input-medium" type="text" value="<?php echo $team->getCity(); ?>">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="state">State</label>
+  <div class="controls">
+    <input id="state" name="state" placeholder="" class="input-small" required="" type="text" value="<?php echo $team->getState(); ?>">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="website">Website</label>
+  <div class="controls">
+    <input id="website" name="website" placeholder="" class="input-xlarge" type="text" value="<?php echo $team->getWebsite(); ?>">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="Coach Name">Coach Name</label>
+  <div class="controls">
+    <input id="coachname" name="coachname" placeholder="" class="input-large" required="" type="text"  value="<?php echo $team->getCoachName(); ?>">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="coachemail">Coach Email</label>
+  <div class="controls">
+    <input id="coachemail" name="coachemail" placeholder="" class="input-xlarge" required="" type="text"  value="<?php echo $team->getCoachEmail(); ?>">
+    <p class="help-block">NOTE:  Please ony enter ONE email address</p>
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="coachphone">Coach Phone</label>
+  <div class="controls">
+    <input id="coachphone" name="coachphone" placeholder="" class="input-medium" required="" type="text"  value="<?php echo $team->getCoachPhone(); ?>">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="Profile Owner">Owner</label>
+  <div class="controls">
+		<?php echo mHtmlHelper::getTeamOwnerSelectList("owner", $team->getCoachPhone()); ?>
+  </div>
+</div>
+
+<?php  
+	foreach ($team->getCustomFields() as $fld) {
+		?>
+<div class="control-group">
+  <label class="control-label" for="<?php echo $fld->getName(); ?>"><?php echo $fld->getName(); ?></label>
+  <div class="controls">
+		  <?php 
+			if ($fld->isEditable()) {
+?>
+		    <input id="customfield<?php echo $fld->getId(); ?>" name="<?php echo $fld->getKeycode(); ?>" class="input-medium" type="text" value="<?php echo $fld->getValue(); ?>">
+<?php 
+			} elseif ($fld->getType() == 500) {
+				echo mHtmlHelper::getClassification($fld->getKeycode(), $fld->getValue());
+			} else  {
+?>		
+			<input id="customfield<?php echo $fld->getId(); ?>" name="<?php echo $fld->getKeycode(); ?>" class="input-medium" type="text" value="<?php echo $fld->getValue(); ?>"  readonly>
+<?php 
+		  }
+		  ?>
+	</div>
+</div>
+<?php
+
+	}
+ ?>	
+
+
+<!-- Button (Double) -->
+<div class="control-group">
+  <div class="controls">
+    <button id="saveButton" 
+    	name="saveButton" 
+    	class="btn btn-success"
+    	formmethod="post"
+    	formaction="<?php echo mRouter::translateUrl('index.php?option=com_jleague&controller=teams&task=doUpdate&teamid='. $team->getSlug()); ?>"
+    	value="Save">Save</button>
+    <button id="cancelButton" 
+    	name="cancelButton" 
+    	class="btn btn-danger"
+    	formmethod="post"
+    	formaction="<?php echo mRouter::translateUrl('index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid='. $team->getSlug()); ?>"
+    	value="Cancel">Cancel</button>
+  </div>
+</div>
+
+</fieldset>
+
+	<input type="hidden" name="teamid" value="<?php echo $team->getId();?>"/>
+	
+</form>
+
+
+</div>

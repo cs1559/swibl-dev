@@ -1,0 +1,115 @@
+<?php
+/**
+ * @version		$Id: players.php 102 2010-03-28 11:45:02Z Chris Strieter $
+ * @package 	JLeague
+ * @subpackage	Controllers
+ * @copyright 	(C) 2008,2009 Chris Strieter
+ * 				Firestorm Technologies, LLC
+ * 				http://www.firestorm-technologies.com
+ * @license 	http://www.gnu.org/copyleft/lgpl.html GNU/LGPL
+ *
+ */
+
+// Disallow direct access to this file
+defined('_JEXEC') or die('Restricted access');
+
+class mSponsors  extends fsController {
+
+	function __construct() {
+		parent::__construct();
+	}
+
+	/**
+	 * This function will display the registration form and enable the user to enter the appropriate
+	 * data to submit their registration.
+	 *
+	 */
+	public function click() {
+
+		$app = mApp::getInstance();
+		
+		if (isset($_REQUEST["cid"])) {
+			$campaignid = $_REQUEST["cid"];
+			$ssvc = & JLSponsorService::getInstance();
+			$url = $ssvc->clickThru($campaignid);
+			$app->redirect($url);
+			
+		} else {
+			echo "ERROR:  Invalid Campaign ID";
+			return;
+		}
+		
+	}	
+	
+	/**
+	 * This function will render the Sponsors profile page
+	 */
+	public function profile() {
+		$app = mFactory::getApp();
+		$config = $app->getConfig();
+			
+		$req = &fsRequest::getInstance();
+			
+		$id = $req->getValue("id");
+		if ($id == null) {
+			echo "Missing Sponsor ID";
+		}
+		
+		//@TODO:  Add Security Check
+			
+		$svc = &JLSponsorService::getInstance();
+		
+		try {
+			$sponsor = $svc->getRow($id);
+		} catch (Exception $e) {
+		}
+		
+
+		
+		
+		$doc = $app->getDocument();
+		$doc->setTitle("SWIBL - " . $sponsor->getName() . " Profile");
+		
+		$view = new mSponsorView(APP_TEMPLATES_PATH);
+		
+		//if ($ssvc->canEditSponsorProfile($sponsor)) {
+		$submenu = $view->getSponsorMenu("sponsorprofile_menu", "", "input-block-level center-block", $sponsor->getId());
+		//} else {
+		$submenu = null;
+		//}
+				
+		$tmpl = new fsTemplate("sponsor.profile");
+		$tmpl->setObject("sponsor",$sponsor);
+		$tmpl->setObject("config", $config);
+		$tmpl->setObject("submenu",$submenu);
+		$view->addTemplate($tmpl);
+		$view->render();
+	}
+	
+	/**
+	 *  This fucntion will display a list of sponsors
+	 */
+	public function display() {
+		$app = mFactory::getApp();
+		$config = $app->getConfig();
+			
+		$req = &fsRequest::getInstance();
+			
+		$svc = &JLSponsorService::getInstance();
+		
+		try {
+			$sponsors = $svc->getRows();
+		} catch (Exception $e) {
+		}
+		
+		$doc = $app->getDocument();
+		$doc->setTitle("SWIBL - League Sponsors");
+		
+		$view = new fsView(APP_TEMPLATES_PATH);
+		$tmpl = new fsTemplate("sponsor.list");
+		$tmpl->setObject("sponsors",$sponsors);
+		$tmpl->setObject("config", $config);
+		$view->addTemplate($tmpl);
+		$view->render();		
+	}
+}

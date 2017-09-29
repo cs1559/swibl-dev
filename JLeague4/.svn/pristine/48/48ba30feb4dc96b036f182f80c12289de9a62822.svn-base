@@ -1,0 +1,104 @@
+/* Add your own custom css to this file. You may wish to use css !important calls to override css from the template css files.
+----------------------------------------------------------- */
+
+#s5_social_wrap1 {
+	margin-top: -100px;
+}
+#s5_header_wrap {
+/*    background-image: url("http://swibl-baseball.org/j3/images/headers/banner.gif")!important; */
+background-color: #ffffff;
+}
+#s5_breadcrumb_fonts_wrap {
+padding-top: 0px;
+padding-bottom: 5px;
+}
+
+/* box-shadow: 0 0 8px */
+#s5_header_area_inner2, .module_round_box, .module_round_box-dark, #s5_component_wrap, #s5_footer_area_inner2 {
+  box-shadow: 0 0 0px #BDBDBD !important;
+}
+#s5_header_area_inner {
+	padding-top: 10px;
+}
+#s5_center_area_inner {
+   padding-top: 10px;
+}
+#s5_header_area_inner2 {
+	margin-bottom: 0px !important;
+	border: none !important;
+}
+#s5_component_wrap {
+border: none !important;
+padding-left: 3px !important;
+padding-right: 3px !important;
+}
+}
+.s5_wrap {
+	background-color: #ffffff !important;
+}
+
+.module_round_box-dark {
+/*  background-color: #5E5E5C; */
+  background-color: #2D2E2F;
+}
+
+
+.custom-dark > h2 {
+  color: #ffffff;
+}
+
+body {
+    font-size: 13px !important;
+    background-image: url("http://www.swibl-baseball.org/j15/templates/yoo_cloud/images/background-blue.jpg") !important;
+    background-repeat: no-repeat !important;
+/*    background-color: #2d2e2f !important; */
+    background-color: #000000 !important; 
+}
+.nspArt h4.nspHeader {
+   color: #000000;
+}
+
+.nspArt p.nspText a {
+    color: #000000;
+}
+
+#s5_shape5_logo {
+display: none;
+}
+#s5_linked_in {
+display: none;
+}
+#s5_google {
+display: none;
+}
+
+/* border: 1px solid #000000; */
+a.readon {
+border-radius: 5px; 
+-moz-border-radius: 5px; 
+-webkit-border-radius: 5px; 
+color: #ffffff;
+background-color: #001F5C;
+}
+
+div.nspTopInterface { position: absolute; bottom: 0; }
+.nspArts { position: relative}
+
+.alert-info {
+color: #ffffff;
+background-color: #001F5C;
+}
+
+.footerc a {
+display: none;
+}
+
+h4.alert-message {
+	margin-bottom: 5px;
+}
+.alert {
+	padding-bottom: 5px !important;
+	padding-top: 5px !important;
+	margin-bottom: 10px !important;
+	background-image: none !important;
+}

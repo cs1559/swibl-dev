@@ -1,0 +1,38 @@
+.scorboard-table {
+	width: 100% !important;
+	font-size: 10px;
+}
+.scoreboard-message {
+	text-align: center;
+	color: red;
+	font-weight: bold;	
+	margin-bottom: 10px;
+}
+.scoreboard-division {
+	text-align: center;
+	color: #0000a0;
+	font-size: 10px;
+}
+.scorboard-table-odd {
+	background-color: #f5f6f7;
+        width: 100%;
+}
+.scorboard-table-even {
+	background-color: #ffffff;
+        width: 100%;
+}
+
+.scoreboard-gamedate {
+	text-align: center;
+	width: 5%;
+}
+
+.scoreboard-team {
+	text-align: left;
+	width: 75%;
+}
+
+.scoreboard-score {
+	text-align: center;
+	width: 5%;	
+}

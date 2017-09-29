@@ -1,0 +1,8 @@
+<div id="standings-filter">
+	<span id="standings-filter-season">SEASON: <?php echo $filter; ?></span><span id="standings-activity-image">&nbsp;</span>
+</div>
+<div id="standings-wrapper">
+<?php
+	echo $standingstable; 
+?>
+</div>

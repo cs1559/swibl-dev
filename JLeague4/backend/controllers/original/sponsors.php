@@ -1,0 +1,183 @@
+<?php
+/**
+ * @version		$Id: sponsors.php 330 2011-12-28 12:10:38Z Chris Strieter $
+ * @package 	JLeague
+ * @subpackage	Controller
+ * @copyright 	(C) 2008,2011 Chris Strieter 
+ * 				Firestorm Technologies, LLC
+ * 				http://www.firestorm-technologies.com
+ * @license 	http://www.gnu.org/copyleft/lgpl.html GNU/LGPL
+ * 
+ */
+
+// Disallow direct access to this file
+defined('_JEXEC') or die('Restricted access');
+
+jimport( 'joomla.application.component.controller' );
+
+/**
+ * Division Controller
+ */
+class JLeagueControllerSponsors extends JLeagueController
+{
+	
+	var $redirectUrl = 'index.php?option=com_jleague&controller=sponsors&task=listSponsors';
+	/*
+	var $redirectUrl = 'index.php?option=com_jleague&controller=divisions&task=listDivision';
+	var $listview = 'DivisionsListView';
+	var $editview = 'DivisionEditView';
+	var $listtemplate = 'divisionlist';
+	var $edittemplate = 'divisionedit';
+	
+*/
+	function __construct() {
+   		require_once(JLEAGUE_SERVICES_PATH . DS. 'sponsorservice.class.php');
+		parent::__construct();
+		$service = &JLSponsorService::getInstance();
+		$this->setService($service);
+	}
+	
+	function display() {
+		require_once(JLEAGUE_CLASSES_VIEW_PATH . DS. 'sponsors.php');
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'listtemplate.class.php');
+		
+		$mainframe	=& JFactory::getApplication();
+		$service = &JLSponsorService::getInstance();
+		
+		// Get the pagination request variables
+		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
+		$limitstart	= $mainframe->getUserStateFromRequest( 'com_jleague.limitstart', 'limitstart', 0, 'int' );
+		// In case limit has been changed, adjust limitstart accordingly
+		$limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
+		
+		$total_sponsors = $service->getTotalRows();
+		jimport('joomla.html.pagination');
+		$pagination = new JPagination($total_sponsors, $limitstart, $limit);
+
+		$sponsors = $service->getRecords($pagination->limitstart,$pagination->limit,'ORDER BY SPONSORNAME');
+
+		$view = new JLSponsorsView();
+		$tmpl = new JLListTemplate("sponsorlist");
+		$tmpl->setPagination($pagination);
+		$tmpl->setObject('sponsors',$sponsors);
+		$view->addTemplate($tmpl);
+		$view->display();
+	}
+		
+	function save() {
+		require_once(JLEAGUE_CLASSES_VIEW_PATH . DS. 'sponsors.php');		
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'template.class.php');
+		$service = $this->service;
+		$view = new JLSponsorsView($this->_task);		
+		$obj = $view->bindRequestToObject();
+		$rc = $service->save($obj);
+		if ($rc) {
+			$this->setRedirect($this->redirectUrl,"Sponsor successfully updated");
+		} else {
+			JError::raiseError( 500, "Operation failed (save)");
+		}		
+			
+	}
+	
+	function edit() {
+		require_once(JLEAGUE_CLASSES_VIEW_PATH . DS. 'sponsors.php');
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'template.class.php');		
+		require_once(JLEAGUE_CLASSES_PATH . DS. 'helpers' . DS . 'html.php');
+		$service = $this->getService();
+		if ($this->_task == 'edit') {
+			$cid	= JRequest::getVar('cid', array(0), 'method', 'array');
+			$cid	= array((int) $cid[0]);
+		} else {
+			$cid	= array( 0 );
+		}
+		$obj = $service->getRow($cid[0]);
+		
+		$view = new JLSponsorsView($this->_task);
+		$tmpl = new JLTemplate("sponsoredit");
+		$tmpl->setObject('sponsor',$obj);
+		$view->addTemplate($tmpl);
+		$view->display(); 			
+	}
+	
+	function newsponsor() {
+		require_once(JLEAGUE_CLASSES_VIEW_PATH . DS. 'sponsors.php');
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'template.class.php');		
+		require_once(JLEAGUE_CLASSES_PATH . DS. 'helpers' . DS . 'html.php');
+		$obj = new JLSponsor();
+		$view = new JLSponsorsView("edit");
+		$tmpl = new JLTemplate("sponsoredit");
+		$tmpl->setObject('sponsor',$obj);
+		$view->addTemplate($tmpl);
+		$view->display();
+	}	
+	
+	function createCampaign() {
+		require_once(JLEAGUE_CLASSES_VIEW_PATH . DS. 'sponsors.php');
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'template.class.php');
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'campaign.class.php');		
+		require_once(JLEAGUE_CLASSES_PATH . DS. 'helpers' . DS . 'html.php');
+		$service = &JLSponsorService::getInstance();
+		
+		$campaign = new JLCampaign();
+		$campaign->setId(0);
+		$campaign->setSponsorId(JLApp::getRequestParam("id"));
+		$view = new JLSponsorsView("EditCampaign");
+		$tmpl = new JLTemplate("campaignedit");
+		$tmpl->setObject('campaign',$campaign);
+		$view->addTemplate($tmpl);
+		$view->display(); 
+	}
+
+	function editCampaign() {
+		require_once(JLEAGUE_CLASSES_VIEW_PATH . DS. 'sponsors.php');
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'template.class.php');		
+		require_once(JLEAGUE_CLASSES_PATH . DS. 'helpers' . DS . 'html.php');
+		$service = &JLSponsorService::getInstance();
+		
+		$cid = JLApp::getRequestParam("cid");
+		$obj = $service->getCampaign($cid);
+		
+		$view = new JLSponsorsView("EditCampaign");
+		$tmpl = new JLTemplate("campaignedit");
+		$tmpl->setObject('campaign',$obj);
+		$view->addTemplate($tmpl);
+		$view->display(); 
+	}
+	
+	function saveCampaign() {
+		require_once(JLEAGUE_CLASSES_VIEW_PATH . DS. 'sponsors.php');		
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'template.class.php');
+		$service = &JLSponsorService::getInstance();
+		$view = new JLSponsorsView("edit");		
+		$obj = $view->bindRequestToCampaignObject();
+		try {
+			$service->saveCampaign($obj);
+//			http://localhost/j15/administrator/index.php?option=com_jleague&controller=sponsors&task=edit&cid[]=3
+			$redirectUrl = 'index.php?option=com_jleague&controller=sponsors&task=edit&cid[]=' . $obj->getSponsorId();
+			$this->setRedirect($redirectUrl,"Campaign successfully updated");
+		} catch (Exception $e) {
+			echo $e;
+//			JError::raiseError( 500, "Operation failed (save)");
+		}	
+	}
+	
+	function deleteCampaign() {
+		require_once(JLEAGUE_CLASSES_VIEW_PATH . DS. 'sponsors.php');		
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'template.class.php');
+		$service = &JLSponsorService::getInstance();
+		// Set Sponsor ID
+		$sid = JLApp::getRequestParam("sid");
+		// Set Campaign ID		
+		$cid = JLApp::getRequestParam("cid");		
+		$view = new JLSponsorsView("edit");		
+		try {
+			$service->deleteCampaign($cid);
+//			http://localhost/j15/administrator/index.php?option=com_jleague&controller=sponsors&task=edit&cid[]=3
+			$redirectUrl = 'index.php?option=com_jleague&controller=sponsors&task=edit&cid[]=' . $sid;
+			$this->setRedirect($redirectUrl,"Campaign successfully deleted");
+		} catch (Exception $e) {
+			echo $e;
+//			JError::raiseError( 500, "Operation failed (save)");
+		}	
+	}	
+}

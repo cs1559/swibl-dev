@@ -1,0 +1,107 @@
+<?php
+/**
+ * @version		$Id: standingsservice.class.php 391 2012-02-12 12:23:06Z Chris Strieter $
+ * @package 	JLeague
+ * @subpackage	Services
+ * @copyright 	(C) 2006-2012 Chris Strieter, Firestorm Technologies, LLC - All Rights Reserved
+ * @license		GNU/GPL, see LICENSE.php
+ */
+
+require_once(JLEAGUE_CLASSES_DAO_PATH . DS . 'standingsdao.class.php');
+require_once(JLEAGUE_CLASSES_PATH . DS . 'helpers' . DS . 'factory.php');
+require_once(JLEAGUE_SERVICES_PATH . DS . 'baseservice.class.php');
+
+class JLStandingsService  extends JLBaseService  {
+	
+	protected function __construct() {
+		parent::__construct();
+	}
+	
+	/**
+	 * This function will return an instance of this service object.
+	 *
+	 * @return JLStandingsService
+	 */		
+	function getInstance() {
+		static $instance;
+		if (!is_object( $instance )) {
+			$instance = new JLStandingsService();
+		}
+		return $instance;
+	}	
+			
+	protected function getDao() {
+		$dao = &JLFactory::getStandingsDao();
+		return $dao;
+	}
+
+	/**
+	 * This function will retrieve the standings for a league and season.  It will return
+	 * and array of standings objects.  This function will use a "standings engine" to 
+	 * compute the standings.  All rules used to determine standings are within the engine
+	 * object itself.  Now, if the season parameter is for the current season, then this 
+	 * engine will calculate the standings dynamically.  For previous seasons, it will return
+	 * the rows from the standings database table after the season standings have been frozen.
+	 *
+	 * @param int $leagueid
+	 * @param int $season
+	 * @param int $division (optional)
+	 * @return array
+	 */
+	function getStandings($leagueid, $season, $division = null) {
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'standingsengine.class.php');	
+		require_once(JLEAGUE_SERVICES_PATH . DS . 'seasonservice.class.php');
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS .  'standing.class.php');
+
+		// Added next two lines in testing of cache
+		require_once(JLEAGUE_CLASSES_OBJECTS_PATH . DS . 'cache.class.php');
+		$cache = & JLCache::getInstance();
+		
+
+		if (!is_numeric($leagueid)) {
+			return null;
+		}
+		if (!is_numeric($season)) {
+			return null;
+		}
+		$seasonsvc = & JLSeasonService::getInstance();
+		$sobj = $seasonsvc->getRow($season);
+		
+		$dao = &JLStandingsDAO::getInstance();
+		if (!$sobj->getActive()) {
+			$rows = $dao->getStandings($leagueid,$season,$division);
+		} else {
+			try {
+				$rows = $cache->get('getStandings_' . $leagueid . '_' . $season . '_' . $division);
+			} catch (Exception $e) {
+				$rows = array();
+				$engine = new JLStandingsEngine();
+				$rows = $engine->generateStandings( $sobj->getId(),$division);
+				$cache->store('getStandings_' . $leagueid . '_' . $season . '_' . $division,null,$rows);
+			}
+		}
+		
+		return $rows;
+	}
+
+	/**
+	 * This function will calculate the standings via the existing function and then insert the records
+	 * into the standings table.
+	 *
+	 * @param int $leagueid
+	 * @param int $seasonid
+	 */
+	function migrateStandings($leagueid, $seasonid) {
+		$standings = $this->getStandings($leagueid, $seasonid);
+		$dao = &JLStandingsDAO::getInstance();
+	    foreach ($standings as $standing) { 
+	    	try {
+    			$rc = $dao->insert($standing);
+	    	} catch (Exception $e) {
+	    		throw $e;
+	    	}
+    	} 
+	}
+}
+
+?>

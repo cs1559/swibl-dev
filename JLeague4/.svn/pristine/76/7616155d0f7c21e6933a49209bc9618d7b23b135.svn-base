@@ -1,0 +1,97 @@
+<?php
+
+
+class mHtmlHelper {
+	
+	static function getTeamQuickLinks($element_name, $default_value) {
+
+		$app = &mFactory::getApp();
+		// Instantiate the cache
+		$cache = & JLCache::getInstance();
+		$cache_key = "getTeamQuickLinks";
+		try {
+			$obj = $cache->get($cache_key, "system");
+			if (_APPDEBUG) {
+				$app->writeDebug("Team Quicklinks object retrieved from cache");
+			}
+		} catch (Exception $e) {
+				$obj = new fsSelectList($element_name, $default_value);
+				$svc = &JLTeamService::getInstance();
+				$rows = $svc->getActiveTeams();
+				
+				$obj->setHeader("------- Select Team Profile -------");
+				if (sizeof($rows) == 0) {
+					$obj->addOption('0','NO ACTIVE SEASON/TEAMS' );
+				}
+				foreach ($rows as $row) {
+					$div = $row->getDivision();
+		// 			$config = & JLConfig::getInstance();
+					$url = 'index.php?controller=teams&task=viewTeamProfile&teamid='.$row->getId();
+					$obj->addOption($url,$row->getName() . " (" . $div->getAgeGroup() . ") ");
+				}
+				$obj->setAttribute("onchange", "window.location	= this.value;");
+				$obj->setAttribute("class", "select-quicklink");		
+				$cache->store($cache_key,"system",$obj,120);
+		}
+		return $obj->toHtml();
+	}
+	
+	static function getSeasonSelectList($element_name, $default_value, $className="select-seasonlist",$changeEvent = null) {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$leagueid = $config->getLeagueId();
+		
+		// Instantiate the cache
+		$cache = & JLCache::getInstance();
+		$cache_key = "getSeasonSelectList_" . $element_name . "_" . $default_value;
+		try {
+			$obj = $cache->get($cache_key, "system");
+			if (_APPDEBUG) {
+				$app->writeDebug("getSeasonSelectList object retrieved from cache - " . $default_value);
+			}
+			return $obj;
+		} catch (Exception $e) {
+			$db = &mFactory::getDBO(); 
+			$sql = "select id, title from #__jleague_seasons order by title desc";
+			$obj = new fsDatabaseSelectList($db, $sql, "id", "title", $element_name, $default_value);
+			if ($changeEvent != null) {
+				$obj->setAttribute("onchange", $changeEvent);
+			}
+			$obj->setAttribute("class", $className);
+			$cache->store($cache_key,"system",$obj->toHtml(),120);
+		}
+		return $obj->toHtml();		
+	}
+	
+
+	static function getTeamOwnerSelectList($element_name, $default_value, $className="select-ownerlist",$changeEvent = null) {
+		$app = &mFactory::getApp();
+		$config = $app->getConfig();
+		$svc = JLSecurityService::getInstance();
+		$rows = $svc->getAvailableProfileOwners();
+		
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->setHeader("------- Select Team Profile -------");
+		foreach ($rows as $row) {
+			$obj->addOption($row->id, $row->name . " (" . $row->username . ") ");
+			$obj->setAttribute("class", $classname);		
+		}
+		return $obj->toHtml();
+	}
+	
+
+	static function getClassification($element_name, $default_value, $classname="select-classification", $event = '') {
+		$obj = new fsSelectList($element_name, $default_value);
+		$obj->setHeader("---- Select Classification ----");
+		$obj->addOption("Open", "Open");
+		$obj->addOption("A", "A");
+		$obj->addOption("AA", "AA");
+		$obj->addOption("AAA", "AAA");
+		$obj->addOption("Major", "Major");
+		$obj->addOption("All-Star", "All-Star");
+		$obj->setAttribute("class", $classname);		
+		return $obj->toHtml();
+	}
+	
+	
+}

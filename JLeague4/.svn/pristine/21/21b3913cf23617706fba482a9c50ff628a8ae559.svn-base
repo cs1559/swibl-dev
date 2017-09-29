@@ -1,0 +1,43 @@
+    
+
+<div class="jleague-title">
+	<div class="row">
+	
+	    <!-- Button to trigger modal -->
+    <a href="#myModal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
+     
+    <!-- Modal -->
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    <h3 id="myModalLabel">Modal header</h3>
+	    </div>
+	    <div class="modal-body">
+		    <p>One fine body…</p>
+	    </div>
+	    <div class="modal-footer">
+	    	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		    <button class="btn btn-primary">Save changes</button>
+	    </div>
+    </div>
+	
+	
+		<div class="pull-left swibl-pad-l-20">
+		<h2><?php echo $team->getName(); ?> - Manage Schedule</h2>
+		</div>
+		<div class="pull-right swibl-pad-r-20">
+			<form class="button-form">
+		    <button id="cancelButton" 
+		    	name="cancelButton" 
+		    	class="btn btn-primary"
+		    	formmethod="post"
+		    	formaction="<?php echo mRouter::translateUrl('index.php?option=com_jleague&controller=teams&task=viewTeamProfile&teamid='. $team->getSlug()); ?>"
+		    	value="Return">Return to Profile</button>
+			</form>
+		</div>
+	</div> 
+</div>
+
+<div id="current-seasons-games">
+	<?php  echo $scheduletable; ?>
+</div>
