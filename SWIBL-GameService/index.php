@@ -1,9 +1,19 @@
 <?php
 
+/**
+ * This is the 
+ */
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require 'vendor/autoload.php';
+
+// Bootstrap the service
+if (file_exists('bootstrap.php'))
+{
+    include_once 'bootstrap.php';
+}
 
 // Routes
 /* TEST DATA
@@ -22,20 +32,15 @@ $config = [
         
     ],
 ];
+
 $app = new \Slim\App($config);
 
-$app->get('/games/{id}', function (Request $request, Response $response) {
-    
-    $parms["driver"] = "MySQL";
-    $parms["host"] = "127.0.0.1";
-    $parms["database"] = "games";
-    $parms["user"] = "swibl";
-    $parms["password"] = "bas3!ball";
-    
-    $db = &cjs\lib\Database::getInstance($parms);
-    $db->setQuery("select * from joom_jleague_scores where id = " . $request->getAttribute('id'));
-    $game = $db->loadObjectList();
-    
+
+$app->get('/{id}', function (Request $request, Response $response) {
+
+    $dao = new swibl\GamesDAO();
+    $game = $dao->getGame($request->getAttribute('id'));
+
     if($game) {
         $response->withHeader('Content-Type', 'application/json');
         $response->write(json_encode($game));
@@ -46,13 +51,8 @@ $app->get('/games/{id}', function (Request $request, Response $response) {
 });
     
     
-    $app->get('/games/schedule/{teamid}', function (Request $request, Response $response, $args) {
+$app->get('/schedule/{teamid}', function (Request $request, Response $response, $args) {
         
-        $parms["driver"] = "MySQL";
-        $parms["host"] = "127.0.0.1";
-        $parms["database"] = "games";
-        $parms["user"] = "swibl";
-        $parms["password"] = "bas3!ball";
         
         $uri = $request->getUri();
         
@@ -63,7 +63,7 @@ $app->get('/games/{id}', function (Request $request, Response $response) {
         } else {
             $svcresponse = new cjs\lib\ServiceResponse();
             $error = new cjs\lib\Error();
-            $error->setReference($uri);
+            $error->setReference("URL=".$uri);
             $error->setUserMessage("Missing key parameter - NO SEASON ID provided");
             $error->setMethod("index.php");
             $svcresponse->addError($error);
@@ -73,12 +73,14 @@ $app->get('/games/{id}', function (Request $request, Response $response) {
         }
         
         $teamid = $request->getAttribute("teamid");
+        $dao = new swibl\GamesDAO();
+        $games = $dao->getGameSchedule($teamid, $season);
         
-        $db = &cjs\lib\Database::getInstance($parms);
-        $db->setQuery("select * from joom_jleague_scores where season = " . $season . " and (awayteam_id = " . $teamid . " or hometeam_id = " . $teamid . ")");
-        $games = $db->loadObjectList();
+//         $db = cjs\lib\Factory::getDatabase();
+//         $db->setQuery("select * from joom_jleague_scores where season = " . $season . " and (awayteam_id = " . $teamid . " or hometeam_id = " . $teamid . ")");
+//         $games = $db->loadObjectList();
         
-        if($game) {
+        if($games) {
             $response->withHeader('Content-Type', 'application/json');
             $response->write(json_encode($games));
             
@@ -87,6 +89,22 @@ $app->get('/games/{id}', function (Request $request, Response $response) {
         return $response;
     });
     
+    $app->get('/{id}?upcoming={games}', function (Request $request, Response $response) {
+ 
+        echo "getting upcoiming gameS";
+        die;
+//         $dao = new swibl\GamesDAO();
+//         $game = $dao->getGame($request->getAttribute('id'));
+        
+        if($game) {
+            $response->withHeader('Content-Type', 'application/json');
+            $response->write(json_encode($game));
+            
+        } else { throw new Exception('No records found');}
+        
+        return $response;
+    });
+        
     
     
-    $app->run();
+$app->run();
